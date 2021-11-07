@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://gitlab.com/flaissaoui/rightnow_flutter.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[user]
+	name = flaissaoui
+	email = flaissaoui@brenco-algerie.com
