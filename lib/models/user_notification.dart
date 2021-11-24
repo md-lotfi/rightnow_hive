@@ -6,7 +6,7 @@ part 'user_notification.g.dart';
 
 @HiveType(typeId: 25)
 @JsonSerializable()
-class UserNotification {
+class UserNotification extends HiveObject {
   @HiveField(0)
   int? id;
 
@@ -36,6 +36,9 @@ class UserNotification {
   @JsonKey(name: 'created_at')
   String? createdAt;
 
+  @HiveField(8, defaultValue: 0)
+  int? viewed;
+
   String getTitle(String? lang) {
     return (lang == LANGUAGE_FR ? titleFr : (lang == null ? titleFr : titleAr)) ?? "";
   }
@@ -53,6 +56,7 @@ class UserNotification {
     this.sender,
     this.targeting,
     this.createdAt,
+    this.viewed,
   });
 
   factory UserNotification.fromJson(Map<String, dynamic> json) => _$UserNotificationFromJson(json);

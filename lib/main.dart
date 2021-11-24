@@ -57,6 +57,7 @@ import 'package:rightnow/models/province.dart';
 import 'package:rightnow/models/reclamations.dart';
 import 'package:rightnow/models/super_category.dart';
 import 'package:rightnow/models/tag.dart';
+import 'package:rightnow/models/user_notification.dart';
 import 'package:rightnow/questions_screen.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/upload_profile_screen.dart';
@@ -166,6 +167,7 @@ Future<void> main() async {
   Hive.registerAdapter(QuestionAdapter());
   Hive.registerAdapter(ReclamationsAdapter());
   Hive.registerAdapter(TagAdapter());
+  Hive.registerAdapter(UserNotificationAdapter());
   Hive.registerAdapter(FCMNotificationAdapter());
   Hive.registerAdapter(MultiSelectAnswerAdapter());
   /** End Hive */

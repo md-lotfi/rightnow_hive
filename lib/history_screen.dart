@@ -12,6 +12,7 @@ import 'package:rightnow/fieldsets.dart';
 import 'package:rightnow/fieldsets_answered.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FieldSet.dart';
+import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/reclamations.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
@@ -274,12 +275,14 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _tile(AnswerHolder data, String f) {
-    int totalQuestions = 0;
+    /*int totalQuestions = 0;
     for (FieldSet item in data.formFields?.fieldSets ?? []) {
       totalQuestions += item.questionsCount ?? 0;
     }
     double progress = (data.answers?.length.toDouble() ?? 0);
-    print("progress $progress, $totalQuestions, ${data.answers?.length}");
+    print("progress $progress, $totalQuestions, ${data.answers?.length}");*/
+    AnswersCount answersCount = countAnswersHolder(data);
+    print("Answers count is ${answersCount.realTotalQuestions}, ${answersCount.totalQuestions}, ${answersCount.progress}");
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,14 +327,14 @@ class _HistoryPageState extends State<HistoryPage> {
             alignment: Alignment.center,
             children: [
               Text(
-                progress.floor().toString(),
+                answersCount.realTotalQuestions.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
               CircularProgressIndicator(
                 backgroundColor: Colors.grey,
-                color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) != 1 ? Colors.red : Colors.green),
-                value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
+                color: answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
+                value: answersCount.totalQuestions == 0 ? 0 : (answersCount.progress),
               ),
             ],
           ),

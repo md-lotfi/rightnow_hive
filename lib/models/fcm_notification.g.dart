@@ -20,7 +20,7 @@ class FCMNotificationAdapter extends TypeAdapter<FCMNotification> {
       id: fields[0] as int?,
       title: fields[1] as String?,
       message: fields[2] as String?,
-      viewed: fields[3] as int?,
+      viewed: fields[3] == null ? 0 : fields[3] as int?,
     );
   }
 

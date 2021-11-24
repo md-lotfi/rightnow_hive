@@ -39,10 +39,7 @@ class _FieldSetState extends State<FieldsSetPage> {
   @override
   void initState() {
     super.initState();
-    _checkData();
   }
-
-  _checkData() {}
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +201,11 @@ class _FieldSetState extends State<FieldsSetPage> {
 
   _checkSend(FormFields form) async {
     ApiRepository api = ApiRepository();
+    bool connected = await api.hasInternetConnection();
+    if (!connected) {
+      noInternetDialog(context);
+      return;
+    }
     AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!);
     if (waitingUploadAnswerHolder != null) {
       if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
@@ -259,25 +261,7 @@ class _FieldSetState extends State<FieldsSetPage> {
             )
           ],
         ).show();
-        /*showActionMessage(
-          context,
-          title: "Missing Fields".tr(),
-          messages: [Text("You have some missing fields, please complete before submitting.".tr())],
-          positiveBtn: "OK".tr(),
-        );*/
       }
-      //print("answers post bloc uploading answer holder " + waitingUploadAnswerHolder.length.toString());
-      //await getDataBase().answerHolderDao.closeAnswerHolderAndSetCompletedTime(_answerHolder!);
-      /*for (var i = 0; i < waitingUploadAnswerHolder.length; i++) {
-            bool sent = await apiRepository.postAnswerHolder(lu?.user ?? 0, waitingUploadAnswerHolder[i]);
-            if (sent) {
-              print("terminating answer holder ....");
-              getDataBase().answerHolderDao.terminateAnswerHolder(waitingUploadAnswerHolder[i].id!);
-            } else {
-              print("deleting answer holder ....");
-              getDataBase().answerHolderDao.deleteAnswerHolder(waitingUploadAnswerHolder[i].id!);
-            }
-          }*/
     }
   }
 
@@ -312,9 +296,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                 ),
               ),
             ).then((value) {
-              setState(() {
-                _checkData();
-              });
+              setState(() {});
             });
           },
           child: Container(

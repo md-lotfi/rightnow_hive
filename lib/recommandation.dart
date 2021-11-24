@@ -18,7 +18,7 @@ class RecommandationPage extends StatelessWidget {
     return ScreenViewerWidget(
         page: Scaffold(
       appBar: AppBar(
-        title: Text("Bilan".tr()),
+        title: Text("Bilan".tr()), // Résultat
         centerTitle: true,
         elevation: 1,
       ),

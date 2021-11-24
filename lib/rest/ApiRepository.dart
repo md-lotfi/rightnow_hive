@@ -1,10 +1,15 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/rendering.dart';
+import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/db/ReclamationsDao.dart';
+import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/db/blood_group_dao.dart';
 import 'package:rightnow/db/disease_dao.dart';
 import 'package:rightnow/health_profile_widget.dart';
@@ -18,6 +23,7 @@ import 'package:rightnow/models/blood_group.dart';
 import 'package:rightnow/models/category_forms.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/disease.dart';
+import 'package:rightnow/models/fcm_notification.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/hash.dart';
 import 'package:rightnow/models/local_user.dart';
@@ -39,6 +45,16 @@ class ApiRepository {
     var dio = Dio();
 
     apiClient = ApiClient(dio);
+  }
+
+  Future<bool> hasInternetConnection() async {
+    try {
+      await apiClient.get("api/forms/forms/hash/");
+      return true;
+    } catch (e) {
+      print("error when processing data response " + e.toString());
+      return false;
+    }
   }
 
   Future<Map<String, dynamic>> uploadProfilePicture(File file, Function(int received, int total) progress) async {
@@ -127,12 +143,22 @@ class ApiRepository {
   }
 
   Future<List<UserNotification>> notificationHistory() async {
-    try {
-      final response = await apiClient.get("api/notifications/message/"); //, queryParameters: {"api_key": _apiKey}
-      return NotificationList.fromJson(response).fields.cast<UserNotification>();
-    } catch (e) {
-      print("error when processing data response " + e.toString());
-      return [];
+    List<FCMNotification> newFCM = await getDataBase<FCMNotificationsDao>().fetchFCMNotification();
+    List<UserNotification> n = await getDataBase<UserNotificationsDao>().fetchUserNotification();
+    if (newFCM.length <= 0 && n.length <= 0) {
+      try {
+        final response = await apiClient.get("api/notifications/message/"); //, queryParameters: {"api_key": _apiKey}
+        List<UserNotification> u = NotificationList.fromJson(response).fields.cast<UserNotification>();
+        //await getDataBase<UserNotificationsDao>().removeAllUserNotification();
+
+        await getDataBase<UserNotificationsDao>().insertUserNotificationsIfNotPresent(u);
+        return await getDataBase<UserNotificationsDao>().fetchUserNotification();
+      } catch (e) {
+        print("error when processing data response " + e.toString());
+        return [];
+      }
+    } else {
+      return n;
     }
   }
 
@@ -268,9 +294,10 @@ class ApiRepository {
   Future<DecisionResponse?> postAnswerHolder(int userId, AnswerHolder answerHolder) async {
     try {
       AnswerPostObject ap = AnswerPostObject(answerHolder, userId);
+      Map<String, dynamic> r = await ap.make();
       //printWrapped("trying to post answers ready to post " + ap.make().toString());
-      print("trying to post answers ready to post ${ap.make()}");
-      final response = await apiClient.post("api/forms/responses/create_response/", data: ap.make()); //, queryParameters: {"api_key": _apiKey}
+      log("trying to post answers ready to post $r");
+      final response = await apiClient.post("api/forms/responses/create_response/", data: r); //, queryParameters: {"api_key": _apiKey}
       print("response received " + response.toString());
       return DecisionResponse.fromJson(response);
     } catch (e) {
@@ -477,7 +504,7 @@ class ApiRepository {
     }
   }
 
-  Future<Map<String, dynamic>> uploadFile(Question question, File file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
+  Future<Map<String, dynamic>> uploadFile(int questionId, File file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       late List<int> l;
@@ -491,7 +518,7 @@ class ApiRepository {
       print("data 2 ******************");
       FormData formData = FormData.fromMap({
         "file": asByte ? MultipartFile.fromBytes(l, filename: fileName) : await MultipartFile.fromFile(file.path, filename: fileName),
-        "question": question.id,
+        "question": questionId,
       });
 
       print("data 3 ******************");
@@ -504,13 +531,13 @@ class ApiRepository {
     }
   }
 
-  Future<Map<String, dynamic>> uploadSignature(Question question, File file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
+  Future<Map<String, dynamic>> uploadSignature(int questionId, File file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString() + ".png";
       late List<int> l = i!.toList();
       FormData formData = FormData.fromMap({
         "file": MultipartFile.fromBytes(l, filename: fileName),
-        "question": question.id,
+        "question": questionId,
       });
 
       final response = await apiClient.post("api/forms/responses/upload_signature/", data: formData, onSendProgress: progress); //, queryParameters: {"api_key": _apiKey}
@@ -567,22 +594,57 @@ class AnswerPostObject {
         }
       }
       return ints;
-    } /* else if (answer.resourcetype == GEO_RESPONSE) {
-      List<double> ints = List();
-      if (answer.multiSelectAnswer != null) {
-        for (var item in answer.multiSelectAnswer) {
-          print('geo answer is ' + item.geoHolder.toString());
-          ints.add(item.geoHolder);
-        }
-      }
-      return ints;
-    }*/
-    else {
+    } else {
       return answer.answerValue;
     }
   }
 
-  Map<String, dynamic> make() {
+  Future<int> uploadSignatureFile(Answer answer) async {
+    Uint8List? f = await getUint8ListFile(answer.valueExtra ?? "");
+    print("checking file upload .... ${answer.valueExtra}");
+    if (f != null) {
+      print("checking file upload f is not null ....");
+      ApiRepository apiRepository = ApiRepository();
+      Map<String, dynamic> result = await apiRepository.uploadSignature(answer.qustionId!, File.fromRawPath(f), (r, t) {
+        print("total sending $r | $t ");
+      }, asByte: true, i: f);
+      print("checking file upload .... result $result");
+      if (result['id'] != null) {
+        print("checking file upload .... result id is not null ${result['id']}");
+        return result['id'];
+      }
+    }
+    return -1;
+  }
+
+  Future<int> uploadFile(Answer answer) async {
+    File _image = File(answer.valueExtra ?? "");
+    print("checking file upload (uploading file) .... ${answer.valueExtra}");
+    if (await _image.exists()) {
+      ApiRepository apiRepository = ApiRepository();
+      Map<String, dynamic> result = await apiRepository.uploadFile(answer.qustionId!, _image, (r, t) {
+        print("total sending $r | $t ");
+      });
+      if (result['id'] != null) {
+        return result['id'];
+      }
+    }
+    return -1;
+  }
+
+  Future<int> uploadFileSound(Answer answer) async {
+    File f = File(answer.valueExtra!);
+    ApiRepository api = ApiRepository();
+    Map<String, dynamic> result = await api.uploadSound(answer.question!, f, (received, total) {
+      print("progress $received / $total");
+    });
+    if (result['id'] != null) {
+      return result['id'];
+    }
+    return -1;
+  }
+
+  Future<Map<String, dynamic>> make() async {
     List<Map<String, dynamic>> aMap = [];
     if (answerHolder.answers != null) {
       for (var answer in answerHolder.answers!) {
@@ -593,12 +655,31 @@ class AnswerPostObject {
           //'extra': answer.valueExtra,
         };
         if (answer.resourcetype != GEO_RESPONSE) {
+          if (answer.resourcetype == SIGNATURE_RESPONSE) {
+            //log("answers in SignResponse ${answer.toJson()}");
+            int rId = await uploadSignatureFile(answer);
+            print("signature rId is $rId");
+            if (rId != -1) {
+              answer.answerValue = rId.toString();
+              //m['value'] = answer.answerValue;
+            }
+          } else if (answer.resourcetype == FILE_RESPONSE) {
+            int rId = await uploadFile(answer);
+            print("file rId is $rId");
+            if (rId != -1) {
+              answer.answerValue = rId.toString();
+              //m['value'] = answer.answerValue;
+            }
+          } else if (answer.resourcetype == SOUND_RESPONSE) {
+            int rId = await uploadFileSound(answer);
+            print("sound rId is $rId");
+            if (rId != -1) {
+              answer.answerValue = rId.toString();
+              //m['value'] = answer.answerValue;
+            }
+          }
           m['value'] = _formatValue(answer);
-        } /* else if (answer.resourcetype == DATE_QUESTION) {
-          print('formating date ' + (answer.answerValue ?? "empty"));
-          m['value'] = Jiffy(answer.answerValue).format("YYYY-MM-DD");
-        } */
-        else {
+        } else {
           List<double> latlng = getLatLng(answer);
           if (latlng.length > 0) {
             m['lat'] = latlng[0];

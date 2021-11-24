@@ -4,13 +4,16 @@ import 'dart:typed_data';
 import 'package:jiffy/jiffy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rightnow/FormsDescription.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
+import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/db/ProfileDao.dart';
 import 'package:rightnow/db/QuestionsDao.dart';
+import 'package:rightnow/db/decision_response_dao.dart';
 import 'package:rightnow/dialogs/questions_validate_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/login_page.dart';
@@ -19,6 +22,7 @@ import 'package:rightnow/models/FieldSet.dart';
 import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/actualite.dart';
+import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/local_user.dart';
 import 'package:rightnow/models/profile.dart';
@@ -303,96 +307,6 @@ showResponseDialog(BuildContext context, DecisionResponse? decision, Function() 
       MaterialPageRoute(
         builder: (context) => RecommandationPage(decision: decision),
       )).then((value) => onClose);
-  /*print("decision algo ${decision.toJson().toString()}");
-  AlertDialog alert = AlertDialog(
-    content: Container(
-      //height: MediaQuery.of(context).size.height - 200,
-      //width: MediaQuery.of(context).size.width - 80,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            alignment: Alignment.center,
-            child: Text("Votre Résultat".tr(), style: TextStyle(color: COLOR_PRIMARY, fontWeight: FontWeight.bold, fontSize: 28)),
-          ),
-          SizedBox(height: 10),
-          if (decision.imageActive == true) ...[
-            Container(
-              child: Image.network(
-                IMG_BASE_URL + (decision.image ?? ""),
-                fit: BoxFit.contain,
-              ),
-            ),
-            SizedBox(height: 10),
-          ],
-          Container(
-            alignment: Alignment.center,
-            child: Text(
-              decision.getTitle(context.locale.languageCode),
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-          ),
-          if (decision.textActive == true) ...[
-            Container(
-              height: 300,
-              width: 300,
-              child: ListView(
-                children: [
-                  Text(
-                    //"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                    decision.getText(context.locale.languageCode),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.black, fontSize: 18),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 10),
-          ],
-          if (decision.urlActive == true) ...[
-            InkWell(
-              onTap: () async {
-                bool ok = await canLaunch(decision.url ?? "");
-                if (ok) {
-                  Navigator.pop(context);
-                  launch(decision.url ?? "");
-                }
-              },
-              child: Container(
-                child: Text(
-                  decision.url ?? "",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.blue, fontSize: 18),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-          ],
-          TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                onClose();
-              },
-              child: Text("Compris".tr())),
-        ],
-      ),
-    ),
-  );
-  /*,
-  );*/
-  showDialog(
-    barrierDismissible: false,
-    context: context,
-    builder: (BuildContext context) {
-      if (decision.soundActive == true) {
-        if (decision.url != null) {
-          PlaySoundWidget(fileUrl: decision.url ?? "");
-        }
-      }
-      return alert;
-    },
-  );*/
 }
 
 Future<int> countAnswersOpenHolder(int? formId) async {
@@ -1035,6 +949,11 @@ Future<String?> saveFile(File f, String filename) async {
   return null;
 }
 
+String getFilename(String file) {
+  File f = File(file);
+  return basename(f.path);
+}
+
 Future<bool> saveUint8ListFile(Uint8List f, String filename) async {
   print("saving file to disk");
   final dir = await getExternalStorageDirectory();
@@ -1121,4 +1040,132 @@ Widget fieldData(String? content) {
     ),
     child: Text(content ?? ""),
   );
+}
+
+Widget fieldDataMultiLine(List<String>? content) {
+  return Container(
+    padding: EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 15),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey.shade300),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Column(
+      children: [
+        for (var item in content ?? []) Text(item),
+      ],
+    ),
+  );
+}
+
+void noInternetDialog(BuildContext context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Pas d'internet".tr(),
+    desc: "Veuillez vérifier votre connexion.".tr(),
+    buttons: [
+      DialogButton(
+        child: Text(
+          "Ok".tr(),
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.red,
+        onPressed: () => Navigator.pop(context),
+        width: 120,
+      )
+    ],
+  ).show();
+}
+
+/// Not Implemented Yet */
+Future<void> postWaitingForms(BuildContext context) async {
+  ApiRepository api = ApiRepository();
+  bool connected = await api.hasInternetConnection();
+  if (!connected) {
+    noInternetDialog(context);
+    return;
+  }
+  List<FormFields> forms = await getDataBase<FormFieldsDao>().fetchFormsAny(context);
+
+  for (var form in forms) {
+    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!);
+    if (waitingUploadAnswerHolder != null) {
+      if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
+        LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
+        showLoaderDialog(context);
+        DecisionResponse? sent = await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
+        Navigator.pop(context);
+        if (sent != null) {
+          print("terminating answer holder ....");
+          await getDataBase<AnswerHolderDao>().closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
+          await getDataBase<AnswerHolderDao>().terminateAnswerHolder(waitingUploadAnswerHolder.id!);
+          sent.answerHolderId = waitingUploadAnswerHolder.id;
+          await getDataBase<DecisionResponseDao>().insertDecisionResponse(sent);
+          showResponseDialog(context, sent, () {
+            /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+              setState(() {});
+            });*/
+          });
+        } else {
+          Alert(
+            context: context,
+            type: AlertType.error,
+            title: "Erreur".tr(),
+            desc: "Erreur au niveau du serveur.".tr(),
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Ok".tr(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                color: Colors.red,
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
+        }
+      } else {
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Attention".tr(),
+          desc: "Vous devez répondre sur toute les questions obligatoires pour pouvoir envoyer vos réponses.".tr(),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Ok".tr(),
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              color: Colors.red,
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+        ).show();
+      }
+    }
+  }
+}
+
+/// Count answers in forms page */
+AnswersCount countAnswersForm(FormFields form) {
+  AnswersCount a = AnswersCount();
+  for (FieldSet item in form.fieldSets ?? []) {
+    a.realTotalQuestions += countActiveQuestions(item);
+    a.totalQuestions += countQuestions(item);
+  }
+  a.progress = ((form.answerHolder?.answers?.length ?? 0).toDouble()) / a.totalQuestions;
+  return a;
+}
+
+/// Count answers in history page */
+AnswersCount countAnswersHolder(AnswerHolder holder) {
+  AnswersCount a = AnswersCount();
+  for (FieldSet item in holder.formFields?.fieldSets ?? []) {
+    a.realTotalQuestions += countActiveQuestions(item);
+    a.totalQuestions += countQuestions(item);
+  }
+  a.progress = ((holder.answers?.length ?? 0).toDouble()) / a.totalQuestions;
+  return a;
 }

@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
+import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/models/user_notification.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,6 +19,9 @@ class NotificationDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await getDataBase<UserNotificationsDao>().setUserNotificationViewed(notification.id!);
+    });
     return ScreenViewerWidget(
         page: Scaffold(
       appBar: AppBar(

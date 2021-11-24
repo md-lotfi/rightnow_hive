@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:jiffy/jiffy.dart';
@@ -22,6 +24,9 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await getDataBase<FCMNotificationsDao>().removeAllFCMNotification();
+    });
     return ScreenViewerWidget(
         page: Scaffold(
       appBar: AppBar(
@@ -37,27 +42,24 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
-                  await getDataBase<FCMNotificationsDao>().removeAllFCMNotification();
-                });
                 return Center(
-                    child: RefreshIndicator(
-                  child: Container(
-                    //color: Colors.red,
-                    child: RawScrollbar(
+                  child: RawScrollbar(
                       isAlwaysShown: true,
                       thumbColor: COLOR_PRIMARY,
-                      child: _notificationBuilder(snapshot.data ?? []),
-                    ),
-                    margin: EdgeInsets.only(left: 20, right: 20),
-                  ),
-                  onRefresh: () async {
-                    setState(() {});
-                    return await Future.delayed(
-                      Duration(seconds: 3),
-                    );
-                  },
-                ));
+                      child: RefreshIndicator(
+                        child: Container(
+                          //color: Colors.red,
+                          child: _notificationBuilder(snapshot.data ?? []),
+                          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        ),
+                        onRefresh: () async {
+                          setState(() {});
+                          return await Future.delayed(
+                            Duration(seconds: 3),
+                          );
+                        },
+                      )),
+                );
                 //return _notificationBuilder(snapshot.data!);
               }
             }
@@ -78,45 +80,50 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.only(top: 20, bottom: 20, left: 17, right: 17),
-              child: ListTile(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NotificationDetail(
-                      notification: data[index],
-                    ),
-                  ),
-                ),
-                title: Text(data[index].getTitle(context.locale.languageCode), style: TextStyle(fontWeight: FontWeight.bold)),
-                trailing: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(Jiffy(data[index].createdAt).yMMMd, textAlign: TextAlign.center),
-                    Text(
-                      Jiffy(data[index].createdAt).Hm,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.blue),
-                    ),
-                  ],
-                ),
-                subtitle: Container(
-                  margin: EdgeInsets.only(top: 12),
-                  child: Text(
-                    "Par Rightnow".tr(),
-                    style: TextStyle(color: Colors.grey.shade300),
-                  ),
-                ),
-              ),
-            ),
-            /*Text(
-              "Par AXA Algérie".tr(),
-              style: TextStyle(color: Colors.grey.shade300),
-            ),*/
+            _item(data[index]),
           ],
         );
       },
+    );
+  }
+
+  Widget _item(UserNotification data) {
+    log("viewed state ${data.viewed}");
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: data.viewed == 0 ? Colors.red.shade400 : null,
+      ),
+      padding: EdgeInsets.only(top: 20, bottom: 20, left: 17, right: 17),
+      child: ListTile(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NotificationDetail(
+              notification: data,
+            ),
+          ),
+        ).then((value) => setState(() {})),
+        title: Text(data.getTitle(context.locale.languageCode), style: TextStyle(fontWeight: FontWeight.bold)),
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(Jiffy(data.createdAt).yMMMd, textAlign: TextAlign.center),
+            Text(
+              Jiffy(data.createdAt).Hm,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.blue),
+            ),
+          ],
+        ),
+        subtitle: Container(
+          margin: EdgeInsets.only(top: 12),
+          child: Text(
+            "Par Rightnow".tr(),
+            style: TextStyle(color: Colors.grey.shade300),
+          ),
+        ),
+      ),
     );
   }
 }

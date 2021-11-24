@@ -58,7 +58,7 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
             print("file result is ${answer.qustionId}");
             if (answer.qustionId == question!.id) {
               _file = answer.valueExtra ?? "";
-              _fileState = (answer.answerValue?.isNotEmpty ?? false) ? 1 : 0;
+              _fileState = (_file?.isNotEmpty ?? false) ? 1 : 0;
               print("file result is $_file, $_fileState");
             }
           }
@@ -117,27 +117,27 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             widgetQuestionTitle(question!, context.locale.languageCode),
-            if (!widget.viewOnly)
-              FormField<int>(
-                autovalidateMode: AutovalidateMode.always,
-                initialValue: _fileState,
-                builder: (FormFieldState<int> state) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (_fileState == 1)
-                        Center(
-                            child: Image.asset(
-                          "assets/file.png",
-                          width: 100,
-                          fit: BoxFit.scaleDown,
-                        )),
-                      if (_fileState == 1 && _file != null)
-                        Center(
-                            child: Text(_file!,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ))),
+            FormField<int>(
+              autovalidateMode: AutovalidateMode.always,
+              initialValue: _fileState,
+              builder: (FormFieldState<int> state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_fileState == 1)
+                      Center(
+                          child: Image.asset(
+                        "assets/file.png",
+                        width: 100,
+                        fit: BoxFit.scaleDown,
+                      )),
+                    if (_fileState == 1 && _file != null)
+                      Center(
+                          child: Text(getFilename(_file!),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ))),
+                    if (!widget.viewOnly)
                       showWidget(
                           SizedBox(
                             width: double.infinity,
@@ -172,27 +172,16 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                                     }
 
                                     setState(() {
-                                      _fileState = 2;
-                                    });
-
-                                    _file = result.files.single.name;
-                                    print("File selected is " + file.path);
-
-                                    Map<String, dynamic> r = await apiRepository.uploadFile(question!, file, (received, total) {
-                                      setState(() {
-                                        progress = received / total;
-                                      });
-                                      print("progress $received / $total");
-                                    });
-
-                                    if (r['id'] != null) {
+                                      //_fileState = 2;
                                       _fileState = 1;
-                                      onSelectedValue!(
-                                        Answer.fill(question!.id, question!.fieldSet, r['id'].toString(), _file, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
-                                            answerHolder!.id, null),
-                                      );
-                                    } else
-                                      _fileState = -1;
+                                    });
+                                    _file = result.files.single.name;
+                                    print("saving file path in answer ${result.files.single.path}");
+                                    onSelectedValue!(
+                                      Answer.fill(question!.id, question!.fieldSet, "", result.files.single.path, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
+                                          answerHolder!.id, null),
+                                    );
+
                                     state.didChange(_fileState);
                                   }
                                 });
@@ -202,31 +191,31 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                           ),
                           _setProgressBar(),
                           (_fileState == 0 || _fileState == 1 || _fileState == -1)),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
-                    ],
-                  );
-                },
-                validator: (value) {
-                  if (isRequired(widget.question)) {
-                    if (value != 1) {
-                      if (value == -1)
-                        return FORM_SELECT_FILE_NOT_UPLOADED;
-                      else if (value == 3)
-                        return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
-                      else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
-                      return FORM_SELECT_FILE;
-                    }
-                  } else {
+                    state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                  ],
+                );
+              },
+              validator: (value) {
+                if (isRequired(widget.question)) {
+                  if (value != 1) {
                     if (value == -1)
                       return FORM_SELECT_FILE_NOT_UPLOADED;
                     else if (value == 3)
                       return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
                     else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                    return FORM_SELECT_FILE;
                   }
-                  return null;
-                },
-              ),
-            if (widget.viewOnly) fieldData(_file),
+                } else {
+                  if (value == -1)
+                    return FORM_SELECT_FILE_NOT_UPLOADED;
+                  else if (value == 3)
+                    return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
+                  else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                }
+                return null;
+              },
+            ),
+            //if (widget.viewOnly) fieldData(_file),
             Divider(),
           ],
         ),

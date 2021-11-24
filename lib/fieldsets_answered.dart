@@ -222,16 +222,18 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QuestionsHistoryPage(
-                        fieldSet: data[index],
-                        answerHolder: widget.answerHolder,
+                onTap: () async {
+                  AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, any: true);
+                  if (answerHolder != null)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuestionsHistoryPage(
+                          fieldSet: data[index],
+                          answerHolder: answerHolder,
+                        ),
                       ),
-                    ),
-                  );
+                    );
                 },
                 dense: true,
                 contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),

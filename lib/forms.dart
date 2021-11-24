@@ -13,6 +13,7 @@ import 'package:rightnow/fieldsets.dart';
 import 'package:rightnow/history_screen.dart';
 import 'package:rightnow/models/FieldSet.dart';
 import 'package:rightnow/models/FormFields.dart';
+import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/category.dart';
 import 'package:rightnow/models/hash.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
@@ -250,17 +251,18 @@ class _FormsState extends State<FormsPage> {
       //shrinkWrap: true,
       itemCount: data.length,
       itemBuilder: (context, index) {
-        int totalQuestions = 0;
+        AnswersCount answersCount = countAnswersForm(data[index]);
+        /*int totalQuestions = 0;
         int realTotalQuestions = 0;
         for (FieldSet item in data[index].fieldSets ?? []) {
           realTotalQuestions += countActiveQuestions(item);
           totalQuestions += countQuestions(item);
-        }
-        double time = (totalQuestions * 10) / 60;
+        }*/
+        double time = (answersCount.totalQuestions * 10) / 60;
         int fx = 0;
         if (time > 0) fx = time.ceil();
 
-        double progress = ((data[index].answerHolder?.answers?.length ?? 0).toDouble());
+        //double progress = ((data[index].answerHolder?.answers?.length ?? 0).toDouble());
         return InkWell(
           onTap: () {
             SchedulerBinding.instance!.addPostFrameCallback((_) {
@@ -340,14 +342,14 @@ class _FormsState extends State<FormsPage> {
                     alignment: Alignment.center,
                     children: [
                       Text(
-                        realTotalQuestions.toString(), //progress.floor().toString(),
+                        answersCount.realTotalQuestions.toString(), //progress.floor().toString(),
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey),
                       ),
                       CircularProgressIndicator(
                         backgroundColor: Colors.grey,
-                        color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) < 1 ? Colors.red : Colors.green),
-                        value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
+                        color: answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
+                        value: answersCount.totalQuestions == 0 ? 0 : (answersCount.progress),
                       ),
                     ],
                   ),

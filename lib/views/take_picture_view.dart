@@ -66,37 +66,44 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       if (_image != null) {
-        int s = (await _image!.length());
-        double fileSize = s / 1000;
+        String? fPath = await saveFile(_image!, _getPictureFilename());
+        if (fPath != null) {
+          int s = (await _image!.length());
+          double fileSize = s / 1000;
 
-        print("image size is $s, $fileSize");
+          print("image size is $s, $fileSize");
 
-        if (question?.maxSizeKb != null) {
-          if (fileSize > question!.maxSizeKb!) {
-            state.didChange(3);
-            return;
+          if (question?.maxSizeKb != null) {
+            if (fileSize > question!.maxSizeKb!) {
+              state.didChange(3);
+              return;
+            }
           }
-        }
-        if (question?.minSizeKb != null) {
-          if (fileSize < question!.minSizeKb!) {
-            state.didChange(4);
-            return;
+          if (question?.minSizeKb != null) {
+            if (fileSize < question!.minSizeKb!) {
+              state.didChange(4);
+              return;
+            }
           }
+
+          setState(() {
+            //imageState = 2;
+            imageState = 1;
+          });
+
+          onSelectedValue!(
+            Answer.fill(question!.id, question!.fieldSet, "", fPath, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder?.id, null),
+          );
         }
 
-        setState(() {
-          imageState = 2;
-        });
-
-        ApiRepository apiRepository = ApiRepository();
-        Map<String, dynamic> result = await apiRepository.uploadFile(question!, _image!, (r, t) {
+        /*ApiRepository apiRepository = ApiRepository();
+        Map<String, dynamic> result = await apiRepository.uploadFile(question!.id!, _image!, (r, t) {
           setState(() {
             progress = r / t;
           });
           print("total sending $r | $t " + progress.toString());
         });
         if (result['id'] != null) {
-          String? fPath = await saveFile(_image!, _getPictureFilename());
           setState(() {
             imageState = 1;
           });
@@ -107,7 +114,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
           setState(() {
             imageState = -1;
           });
-        }
+        }*/
       }
     }
     state.didChange(imageState);

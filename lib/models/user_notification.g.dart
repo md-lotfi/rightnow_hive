@@ -25,13 +25,14 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
       sender: fields[5] as int?,
       targeting: fields[6] as int?,
       createdAt: fields[7] as String?,
+      viewed: fields[8] == null ? 0 : fields[8] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserNotification obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
       ..writeByte(6)
       ..write(obj.targeting)
       ..writeByte(7)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(8)
+      ..write(obj.viewed);
   }
 
   @override
@@ -75,6 +78,7 @@ UserNotification _$UserNotificationFromJson(Map<String, dynamic> json) {
     sender: json['sender'] as int?,
     targeting: json['targeting'] as int?,
     createdAt: json['created_at'] as String?,
+    viewed: json['viewed'] as int?,
   );
 }
 
@@ -88,4 +92,5 @@ Map<String, dynamic> _$UserNotificationToJson(UserNotification instance) =>
       'sender': instance.sender,
       'targeting': instance.targeting,
       'created_at': instance.createdAt,
+      'viewed': instance.viewed,
     };

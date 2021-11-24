@@ -144,6 +144,7 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                   return null;
                 },
               ),
+            if (widget.viewOnly) Text("select view"),
             if (widget.viewOnly) fieldData(_currentChoice?.getName(context.locale.languageCode) ?? ""),
             Divider(),
           ],

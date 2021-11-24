@@ -160,20 +160,20 @@ class _QuestionsPageState extends State<QuestionsPage> {
     });
   }
 
-  bool _hasSoundQuestions() {
+  /*bool _hasSoundQuestions() {
     for (Answer answer in _answerHolder?.answers ?? []) {
       if (answer.resourcetype == SOUND_RESPONSE) {
         return true;
       }
     }
     return false;
-  }
+  }*/
 
   Future<void> _confirmSave() async {
     if (_answerHolder != null) {
       print("saving answer holder " + _answerHolder!.toJson().toString());
 
-      if (_hasSoundQuestions()) {
+      /*if (_hasSoundQuestions()) {
         ApiRepository api = ApiRepository();
         showLoaderDialog(context);
         for (Answer answer in _answerHolder?.answers ?? []) {
@@ -188,7 +188,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
           }
         }
         Navigator.pop(context);
-      }
+      }*/
 
       await getDataBase<AnswerHolderDao>().setAnswers(_answerHolder!);
       await getDataBase<FieldSetsDao>().setAnsweredCounts(widget.fieldSet.id!, _answerHolder?.answers?.length ?? 0);
@@ -276,7 +276,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
                         0);
                     return LinearProgressIndicator(
                       backgroundColor: Colors.grey,
-                      color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) < 1 ? ((progress / totalQuestions) > 0.5 ? Colors.amber : Colors.red) : Colors.green),
+                      color: totalQuestions == 0
+                          ? Colors.grey
+                          : ((progress / totalQuestions) != 1 ? ((progress / totalQuestions) > 0.5 && (progress / totalQuestions) < 1 ? Colors.amber : Colors.red) : Colors.green),
                       value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
                     );
                     //return Container();
@@ -363,8 +365,11 @@ class _QuestionsPageState extends State<QuestionsPage> {
   void _replaceAnswerIfExists(Question question, Answer answer) {
     print("value notifier value ${_refreshProgress.value}");
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      if (viewState[question.id]!) _refreshProgress.value = _refreshProgress.value++;
+      _refreshProgress.value = _refreshProgress.value++;
     });
+    /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+      if (viewState[question.id]!) _refreshProgress.value = _refreshProgress.value++;
+    });*/
     //print("replace question is " + question.toJson().toString());
     ConditionDisplay.branchedConditions(question, answer.answerValue!, answer.multiSelectAnswer, (q, v) {
       WidgetsBinding.instance!.addPostFrameCallback((_) {

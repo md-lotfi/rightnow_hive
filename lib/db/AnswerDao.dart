@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:rightnow/db/MultiSelectAnswersDao.dart';
@@ -24,7 +26,9 @@ class AnswersDao extends MultiSelectAnswersDao {
   //@Query("select * from Answer where answerHolderId = :answerHolderId")
   Future<List<Answer>?> fetchAnswersOfAnswerHolder(int answerHolderId) async {
     var r = await getAnswerDb();
-    print("answers in raw ${r.values}");
+    /*for (Answer item in r.values) {
+      log("answers in raw ${item.toJson()}");
+    }*/
     return r.values.where((element) => element.answerHolderId == answerHolderId).toList();
   }
 

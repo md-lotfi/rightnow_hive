@@ -16,7 +16,7 @@ import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/states/result_state.dart';
 import 'package:rightnow/views/boolean_view.dart';
 import 'package:rightnow/views/checkbox_view.dart';
-import 'package:rightnow/views/multi_select_view.dart';
+import 'package:rightnow/views/conditional_display.dart';
 import 'package:rightnow/views/date_view.dart';
 import 'package:rightnow/views/decimal_view.dart';
 import 'package:rightnow/views/email_view.dart';
@@ -26,11 +26,8 @@ import 'package:rightnow/views/geo_view.dart';
 import 'package:rightnow/views/integer_view.dart';
 import 'package:rightnow/views/phone_view.dart';
 import 'package:rightnow/views/radiobox_view.dart';
-import 'package:rightnow/views/scanner_view.dart';
 import 'package:rightnow/views/select_view.dart';
 import 'package:rightnow/views/short_text_view.dart';
-import 'package:rightnow/views/signature_view.dart';
-import 'package:rightnow/views/sound_view.dart';
 import 'package:rightnow/views/take_picture_view.dart';
 import 'package:rightnow/views/time_view.dart';
 import 'package:uuid/uuid.dart';
@@ -51,9 +48,13 @@ class QuestionsHistoryPage extends StatefulWidget {
 }
 
 class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
+  //AnswerHolder? _answerHolder;
+
   List<Question>? questions;
 
   Map<int, bool> viewState = {};
+
+  //bool _hasValidAnswerHolder = false;
 
   @override
   void initState() {
@@ -154,39 +155,6 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
         } else
           print("setting question view state is " + viewState[q.id].toString() + ", " + q.id.toString());
         switch (q.resourcetype) {
-          case SCANNER_QUESTION:
-            return Visibility(
-              child: ScannerWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
-            );
-          case SOUND_QUESTION:
-            return Visibility(
-              child: SoundView(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
-            );
-          case SIGNATURE_QUESTION:
-            return Visibility(
-              child: SignatureView(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
-            );
           case SHORT_TEXT_QUESTION:
             return Visibility(
               child: ShortTextWidget(
@@ -312,7 +280,7 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
                   ),
                   visible: viewState[q.id]!,
                 );
-              case DROPDOWN_UNIQUE_CHOICE:
+              default:
                 print("select widget " + viewState[questions[index].id].toString());
                 return Visibility(
                   child: SelectWidget(
@@ -323,22 +291,6 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
                     question: q,
                   ),
                   visible: viewState[q.id]!,
-                );
-              case DROPDOWN_MULTIPLE_CHOICE:
-                print("select widget " + viewState[questions[index].id].toString());
-                return Visibility(
-                  child: MultiSelectView(
-                    key: Key('__RIKEY__' + q.id!.toString()),
-                    viewOnly: true,
-                    answerHolder: widget.answerHolder,
-                    onSelectedValue: (Answer answer) {},
-                    question: q,
-                  ),
-                  visible: viewState[q.id]!,
-                );
-              default:
-                return Container(
-                  child: Text("Select Not implemented: " + q.getName(context.locale.languageCode)),
                 );
             }
           case GEO_QUESTION:

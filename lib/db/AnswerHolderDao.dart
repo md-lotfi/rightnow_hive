@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hive/hive.dart';
 import 'package:rightnow/db/AnswerDao.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -37,7 +39,7 @@ class AnswerHolderDao extends AnswersDao {
   Future<AnswerHolder?> fetchAnswerHolderOne(int formId) async {
     var r = await getAnswerHolderDb();
     for (var item in r.values) {
-      if (item.formId == formId && item.uploaded == false) {
+      if (item.formId == formId && (item.uploaded == false)) {
         print("answerHolder found $formId, ${item.toJson().toString()}");
         return item;
       } else {
@@ -264,7 +266,11 @@ class AnswerHolderDao extends AnswersDao {
     return ah;
   }
 
-  Future<AnswerHolder?> fetchAnswerHolderWithChildren(int formId, {bool any = false, bool withFormFields = false}) async {
+  Future<AnswerHolder?> fetchAnswerHolderWithChildren(
+    int formId, {
+    bool any = false,
+    bool withFormFields = false,
+  }) async {
     AnswerHolder? ah;
     if (any)
       ah = await fetchAnswerHolderAny(formId);
@@ -287,9 +293,11 @@ class AnswerHolderDao extends AnswersDao {
             answer.question = await fetchQuestionOne(answer.qustionId!);
             answer.multiSelectAnswer = [];
             List<MultiSelectAnswer>? mA = await fetchMultiSelectAnswers(answer.id!);
-            if (mA != null) answer.multiSelectAnswer!.addAll(List.from(mA));
+            if (mA != null) {
+              log("answers found == result ${mA.length}, ${answer.qustionId}");
+              answer.multiSelectAnswer!.addAll(List.from(mA));
+            }
             ah.answers!.add(answer);
-            //print("answers found == result ${ah.answers?.length}, ${answers.length}");
           }
           //j
         }

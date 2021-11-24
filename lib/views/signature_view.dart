@@ -69,32 +69,32 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             widgetQuestionTitle(widget.question!, context.locale.languageCode),
-            if (!widget.viewOnly)
-              FutureBuilder<Uint8List?>(
-                future: getUint8ListFile(getSignatureFilename()),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (imageState == 1) _image = snapshot.data;
-                    return Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.only(bottom: 10, top: 10),
-                      child: showWidget(
-                          _image != null
-                              ? Image.memory(
-                                  _image!,
-                                  width: 200,
-                                  height: 180,
-                                )
-                              : Container(),
-                          Container(),
-                          _image != null),
-                    );
-                  }
-                  return Center(
-                    child: CircularProgressIndicator(),
+            //if (!widget.viewOnly)
+            FutureBuilder<Uint8List?>(
+              future: getUint8ListFile(getSignatureFilename()),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (imageState == 1) _image = snapshot.data;
+                  return Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(bottom: 10, top: 10),
+                    child: showWidget(
+                        _image != null
+                            ? Image.memory(
+                                _image!,
+                                width: 200,
+                                height: 180,
+                              )
+                            : Container(),
+                        Container(),
+                        _image != null),
                   );
-                },
-              ),
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
             if (!widget.viewOnly)
               FormField<int>(
                 autovalidateMode: AutovalidateMode.always,
@@ -152,7 +152,7 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
                   return null;
                 },
               ),
-            if (widget.viewOnly) fieldData(""),
+            //if (widget.viewOnly) fieldData(""),
           ],
         ),
       ),
@@ -161,25 +161,32 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
 
   _setSignature(FormFieldState<int> state) async {
     if (_image != null) {
+      await saveUint8ListFile(_image!, getSignatureFilename());
       progress = 0;
-      setState(() {
-        imageState = 2;
-      });
+      //setState(() {
+      imageState = 1;
+      //});
+      print("signature filename ${getSignatureFilename()} ...........");
+      widget.onSelectedValue!(
+        Answer.fill(widget.question!.id, widget.question!.fieldSet, "", getSignatureFilename(), DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
+            widget.answerHolder?.id, null),
+      );
+      state.didChange(imageState);
+      setState(() {});
       //_image = await signatureController.toPngBytes();
-      ApiRepository apiRepository = ApiRepository();
-      Map<String, dynamic> result = await apiRepository.uploadSignature(widget.question!, File.fromRawPath(_image!), (r, t) {
+      /*ApiRepository apiRepository = ApiRepository();
+      Map<String, dynamic> result = await apiRepository.uploadSignature(widget.question!.id!, File.fromRawPath(_image!), (r, t) {
         setState(() {
           progress = r / t;
         });
         print("total sending $r | $t " + progress.toString());
       }, asByte: true, i: _image);
       if (result['id'] != null) {
-        await saveUint8ListFile(_image!, getSignatureFilename());
         //setState(() {
         imageState = 1;
         //});
         widget.onSelectedValue!(
-          Answer.fill(widget.question!.id, widget.question!.fieldSet, result['id'].toString(), null, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
+          Answer.fill(widget.question!.id, widget.question!.fieldSet, result['id'].toString(), getSignatureFilename(), DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
               widget.answerHolder?.id, null),
         );
       } else {
@@ -188,7 +195,7 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
         //});
       }
       state.didChange(imageState);
-      setState(() {});
+      setState(() {});*/
     }
   }
 

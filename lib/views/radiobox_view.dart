@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -42,20 +44,22 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
       setState(() {
         if (answerHolder != null) {
           if (answerHolder!.answers != null) {
+            log("radiobow selected answer not null ${answerHolder!.answers!.length}");
             if (answerHolder!.answers!.length > 0) {
               for (var answer in answerHolder!.answers!) {
+                log("radiobow selected answer not null ${answer.qustionId} and ${question!.id}");
                 if (answer.qustionId == question!.id) {
                   if (answer.multiSelectAnswer != null) {
                     if (answer.multiSelectAnswer!.length > 0) {
                       for (var choice in question!.choices!) {
-                        if (choice != null) {
-                          if (choice.id == answer.multiSelectAnswer![0].selectedId) {
-                            setState(() {
-                              _checkValue = choice.id!;
-                              _selectedAnswer = choice.getName(context.locale.languageCode);
-                            });
-                            break;
-                          }
+                        log("radiobow selected answer first ${answer.multiSelectAnswer![0].selectedId}");
+                        if (choice.id == answer.multiSelectAnswer![0].selectedId) {
+                          setState(() {
+                            _checkValue = choice.id!;
+                            _selectedAnswer = choice.getName(context.locale.languageCode);
+                            log("radiobow selected answer $_selectedAnswer");
+                          });
+                          break;
                         }
                       }
                     }
@@ -122,6 +126,7 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
                   return null;
                 },
               ),
+            if (widget.viewOnly) Text("radio box view"),
             if (widget.viewOnly) fieldData(_selectedAnswer),
             Divider(),
           ],

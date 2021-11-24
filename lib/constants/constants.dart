@@ -15,6 +15,7 @@ import 'package:rightnow/db/ProvinceDao.dart';
 import 'package:rightnow/db/QuestionsDao.dart';
 import 'package:rightnow/db/ReclamationsDao.dart';
 import 'package:rightnow/db/TagsDao.dart';
+import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/db/allowed_types_Dao.dart';
 import 'package:rightnow/db/blood_group_dao.dart';
 import 'package:rightnow/db/branched_cond_Dao.dart';
@@ -164,6 +165,8 @@ T getDataBase<T>() {
       return new SuperCategoryDao() as T;
     case FCMNotificationsDao:
       return new FCMNotificationsDao() as T;
+    case UserNotificationsDao:
+      return new UserNotificationsDao() as T;
     case AnswerHolderDao:
       return new AnswerHolderDao() as T;
     case QuestionsDao:

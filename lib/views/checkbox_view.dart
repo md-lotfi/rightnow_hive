@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -31,7 +33,7 @@ class CheckboxWidget extends StatefulWidget {
 class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAliveClientMixin {
   Map<int, bool> _values = {};
 
-  String? _selectedAnswer;
+  Choice? _selectedAnswer;
   bool _hasData = false;
 
   _CheckboxWidgetState();
@@ -56,15 +58,18 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
       if (widget.answerHolder!.answers != null) {
         if (widget.answerHolder!.answers!.length > 0) {
           for (var answer in widget.answerHolder!.answers!) {
+            log("checkbox selected answer not null ${answer.qustionId} and ${widget.question!.id}");
             if (answer.qustionId == widget.question!.id) {
               if (answer.multiSelectAnswer != null) {
                 if (answer.multiSelectAnswer!.length > 0) {
-                  print("multiselect length ${answer.multiSelectAnswer?.length}");
+                  log("multiselect length ${answer.multiSelectAnswer?.length}");
                   for (var m in answer.multiSelectAnswer ?? []) {
-                    for (var choice in widget.question!.choices ?? []) {
+                    log("checkbox selected multiselect ${m.selectedId}");
+                    for (Choice choice in widget.question!.choices ?? []) {
                       if (choice.id == m.selectedId) {
                         _values[choice.id!] = true;
                         _hasData = true;
+                        _selectedAnswer = choice;
                       }
                       //print("multiselect length and choice ${_values[choice.id!]}, ${choice.id == m.selectedId}, ${choice.id}, ${m.selectedId}");
                     }
@@ -80,6 +85,11 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
         }
       }
     }
+    /*if (_selectedAnswer != null) {
+      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+        _selectedAnswer = choice.getName(context.locale.languageCode);
+      });
+    }*/
     print("multiselect length result $_values");
     //_setOnSelectedValue();
   }
@@ -123,7 +133,8 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
                   }
                 },
               ),
-            if (widget.viewOnly) fieldData(_selectedAnswer),
+            if (widget.viewOnly) Text("ceheck box view"),
+            if (widget.viewOnly) fieldData(_selectedAnswer?.getName(context.locale.languageCode)),
             Divider(),
           ],
         ),

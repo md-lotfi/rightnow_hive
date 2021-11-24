@@ -15,7 +15,7 @@ class FCMNotification extends HiveObject {
   @HiveField(2)
   String? message;
 
-  @HiveField(3)
+  @HiveField(3, defaultValue: 0)
   int? viewed;
 
   FCMNotification({

@@ -231,7 +231,7 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
                   return null;
                 },
               ),
-            if (!widget.viewOnly && _answer != null) _playerMode(),
+            if (_answer != null) _playerMode(),
           ],
         ),
       ),

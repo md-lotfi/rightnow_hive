@@ -155,7 +155,31 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
                 return null;
               },
             ),
-          if (widget.viewOnly) fieldData(geoValue),
+          if (widget.viewOnly)
+            FutureBuilder<Uint8List?>(
+              future: getUint8ListFile(getMapFilename()),
+              builder: (context, snapshot) {
+                if (ConnectionState.done == snapshot.connectionState) {
+                  _image = snapshot.data;
+                  return Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(bottom: 10, top: 10),
+                    child: showWidget(
+                        _image != null
+                            ? Image.memory(
+                                _image!,
+                                width: 200,
+                                height: 180,
+                              )
+                            : Container(),
+                        Container(),
+                        _image != null),
+                  );
+                }
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
+          //fieldData(geoValue),
         ],
       ),
     );
