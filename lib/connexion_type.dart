@@ -139,17 +139,6 @@ class _ConnexionTypeScreenState extends State<ConnexionTypeScreen> {
                 padding: EdgeInsets.only(top: 25),
                 child: TextButton(
                   onPressed: () {
-                    launch("https://app.rightnow-by-brenco.com/");
-                  },
-                  child: Text("Connexion Admin".tr()),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                margin: kIsWeb ? null : EdgeInsets.only(left: 30, right: 30),
-                padding: EdgeInsets.only(top: 25),
-                child: TextButton(
-                  onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -158,6 +147,17 @@ class _ConnexionTypeScreenState extends State<ConnexionTypeScreen> {
                     );
                   },
                   child: Text("S'identifier".tr()),
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                margin: kIsWeb ? null : EdgeInsets.only(left: 30, right: 30),
+                padding: EdgeInsets.only(top: 25),
+                child: TextButton(
+                  onPressed: () {
+                    launch("https://app.rightnow-by-brenco.com/");
+                  },
+                  child: Text("Connexion Admin".tr()),
                 ),
               ),
               SizedBox(

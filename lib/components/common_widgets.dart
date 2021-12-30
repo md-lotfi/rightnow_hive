@@ -312,7 +312,7 @@ showResponseDialog(BuildContext context, DecisionResponse? decision, Function() 
 Future<int> countAnswersOpenHolder(int? formId) async {
   if (formId == null) return 0;
   int c = 0;
-  AnswerHolder? a = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId);
+  AnswerHolder? a = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, HOLDER_NOT_COMPLETED);
   if (a != null) {
     for (var answer in a.answers ?? []) {
       c++;
@@ -324,7 +324,7 @@ Future<int> countAnswersOpenHolder(int? formId) async {
 Future<int> countAnswers(int? formId, {bool any = false}) async {
   if (formId == null) return 0;
   int c = 0;
-  AnswerHolder? a = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, any: any);
+  AnswerHolder? a = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, HOLDER_NOT_COMPLETED, any: any);
   if (a != null) {
     for (var answer in a.answers ?? []) {
       c++;
@@ -1062,7 +1062,7 @@ void noInternetDialog(BuildContext context) {
     context: context,
     type: AlertType.warning,
     title: "Pas d'internet".tr(),
-    desc: "Veuillez vérifier votre connexion.".tr(),
+    desc: "Impossible d’envoyer le formulaire! Veuillez vérifier votre connexion à internet puis réessayer. Cependant, le formulaire sera enregistré sur votre historique!".tr(),
     buttons: [
       DialogButton(
         child: Text(
@@ -1088,7 +1088,7 @@ Future<void> postWaitingForms(BuildContext context) async {
   List<FormFields> forms = await getDataBase<FormFieldsDao>().fetchFormsAny(context);
 
   for (var form in forms) {
-    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!);
+    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_COMPLETED);
     if (waitingUploadAnswerHolder != null) {
       if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
         LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
@@ -1130,7 +1130,7 @@ Future<void> postWaitingForms(BuildContext context) async {
           context: context,
           type: AlertType.warning,
           title: "Attention".tr(),
-          desc: "Vous devez répondre sur toute les questions obligatoires pour pouvoir envoyer vos réponses.".tr(),
+          desc: "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses".tr(),
           buttons: [
             DialogButton(
               child: Text(

@@ -159,7 +159,7 @@ class LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 10),
                 if (unauthorized)
-                  errorMessage(context, "Nom d'utilisateur ou mot de passe incorrect".tr(), () {
+                  errorMessage(context, "Nom d'utilisateur, mot de passe, ou clé organisation incorrect".tr(), () {
                     unauthorized = false;
                   }),
                 SizedBox(height: 10),

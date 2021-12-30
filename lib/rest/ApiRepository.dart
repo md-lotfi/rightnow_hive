@@ -305,49 +305,6 @@ class ApiRepository {
     }
   }
 
-  /*Future<ApiResult<void>> postAnswerHolder(int userId, List<AnswerHolder> answerHolders) async {
-    Map<int, bool> lb = Map();
-    for (var i = 0; i < answerHolders.length; i++) {
-      lb[i] = false;
-      try {
-        if (answerHolders != null) if (answerHolders.length > 0) {
-          print("trying to post answers answerholders > 0 and not null");
-          AnswerPostObject ap = AnswerPostObject(answerHolders[i], userId);
-          printWrapped("trying to post answers ready to post " + ap.make().toString());
-          final response = await apiClient.post("api/forms/responses/create_response/", data: ap.make()); //, queryParameters: {"api_key": _apiKey}
-          print("response received " + response.toString());
-          lb[i] = true;
-          //CategoriesResponse.fromJson(response).cats.cast<CategoryForms>();
-          //return ApiResult.success(data: true);
-        }
-        //return ApiResult.success(data: false);
-      } catch (e) {
-        return ApiResult.failure(error: NetworkExceptions.getDioException(e));
-        /*if (e is DioError) {
-          //print("error when processing data response " + e.response.data.toString() + ", ");
-          return ApiResult.failure(error: NetworkExceptions.getDioException(e));
-        }
-        return ApiResult.failure(error: NetworkExceptions.getDioException(e));*/
-      }
-    }
-    return ApiResult.success(data: true);
-  }*/
-
-  /*Future<ApiResult<String>> registerUser(LocalUser localUser) async {
-    try {
-      if (localUser != null) {
-        final response = await apiClient.post("api/accounts/register/", data: {"username": localUser.phone, "password": localUser.firebaseUid}); //, queryParameters: {"api_key": _apiKey}
-        print("response received " + response);
-        //CategoriesResponse.fromJson(response).cats.cast<CategoryForms>();
-        return ApiResult.success(data: "");
-      }
-      return ApiResult.success(data: "");
-    } catch (e) {
-      print("error when processing data response " + e.toString());
-      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
-    }
-  }*/
-
   //deprecated
   Future<ApiResult<int>> currentUser() async {
     try {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/events/ActualiteEvent.dart';
 import 'package:rightnow/events/FormsEvent.dart';
@@ -22,7 +23,7 @@ class FormsBloc extends Bloc<FormsEvent, ResultState<List<FormFields>>> {
     if (event is Distract) {
       yield ResultState.idle();
     } else if (event is LoadLocalForms) {
-      ApiResult<List<FormFields>> apiResult = await getDataBase<FormFieldsDao>().loadFormsCategoryId(null, null).then((value) {
+      ApiResult<List<FormFields>> apiResult = await getDataBase<FormFieldsDao>().loadFormsCategoryId(null, null, HOLDER_ANY_COMPLETED).then((value) {
         print("loading forms success " + value.toString());
         return ApiResult.success(data: value);
       });

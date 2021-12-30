@@ -1,22 +1,30 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
+
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:path/path.dart';
 
 class TakePictureWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final bool imageOnly;
 
-  const TakePictureWidget({Key? key, this.question, this.onSelectedValue, this.answerHolder}) : super(key: key);
+  const TakePictureWidget({
+    Key? key,
+    this.question,
+    this.onSelectedValue,
+    this.answerHolder,
+    required this.imageOnly,
+  }) : super(key: key);
   @override
   _TakePictureWidgetState createState() => _TakePictureWidgetState(this.question, this.onSelectedValue, this.answerHolder);
 }
@@ -95,26 +103,6 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
             Answer.fill(question!.id, question!.fieldSet, "", fPath, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder?.id, null),
           );
         }
-
-        /*ApiRepository apiRepository = ApiRepository();
-        Map<String, dynamic> result = await apiRepository.uploadFile(question!.id!, _image!, (r, t) {
-          setState(() {
-            progress = r / t;
-          });
-          print("total sending $r | $t " + progress.toString());
-        });
-        if (result['id'] != null) {
-          setState(() {
-            imageState = 1;
-          });
-          onSelectedValue!(
-            Answer.fill(question!.id, question!.fieldSet, result['id'].toString(), fPath, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder?.id, null),
-          );
-        } else {
-          setState(() {
-            imageState = -1;
-          });
-        }*/
       }
     }
     state.didChange(imageState);
@@ -142,53 +130,54 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
                 Container(),
                 _image != null),
           ),
-          FormField<int>(
-            autovalidateMode: AutovalidateMode.always,
-            initialValue: imageState,
-            builder: (FormFieldState<int> state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  showWidget(
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextButton.icon(
-                          icon: showWidget(Icon(Icons.add_a_photo), imageState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green), imageState == 0),
-                          label: Flexible(
-                            child: Text(_image != null ? (imageState != -1 ? "Prendre une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prendre une Photo".tr()),
+          if (!widget.imageOnly)
+            FormField<int>(
+              autovalidateMode: AutovalidateMode.always,
+              initialValue: imageState,
+              builder: (FormFieldState<int> state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    showWidget(
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton.icon(
+                            icon: showWidget(Icon(Icons.add_a_photo), imageState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green), imageState == 0),
+                            label: Flexible(
+                              child: Text(_image != null ? (imageState != -1 ? "Prendre une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prendre une Photo".tr()),
+                            ),
+                            onPressed: () {
+                              getImage(state);
+                            },
                           ),
-                          onPressed: () {
-                            getImage(state);
-                          },
                         ),
-                      ),
-                      _setProgressBar(),
-                      (imageState == 0 || imageState == 1 || imageState == -1)),
-                  state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
-                ],
-              );
-            },
-            validator: (value) {
-              if (isRequired(widget.question)) {
-                if (value != 1) {
+                        _setProgressBar(),
+                        (imageState == 0 || imageState == 1 || imageState == -1)),
+                    state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                  ],
+                );
+              },
+              validator: (value) {
+                if (isRequired(widget.question)) {
+                  if (value != 1) {
+                    if (value == -1)
+                      return FORM_SELECT_PICTURE_NOT_UPLOADED;
+                    else if (value == 3)
+                      return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
+                    else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                    return FORM_SELECT_PICTURE;
+                  }
+                } else {
                   if (value == -1)
                     return FORM_SELECT_PICTURE_NOT_UPLOADED;
                   else if (value == 3)
                     return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
                   else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
-                  return FORM_SELECT_PICTURE;
                 }
-              } else {
-                if (value == -1)
-                  return FORM_SELECT_PICTURE_NOT_UPLOADED;
-                else if (value == 3)
-                  return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
-                else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
-              }
-              return null;
-            },
-          )
+                return null;
+              },
+            )
         ],
       ),
     );

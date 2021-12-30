@@ -92,7 +92,7 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: data.viewed == 0 ? Colors.red.shade400 : null,
+        color: data.viewed == 0 ? Colors.grey.shade400 : null,
       ),
       padding: EdgeInsets.only(top: 20, bottom: 20, left: 17, right: 17),
       child: ListTile(

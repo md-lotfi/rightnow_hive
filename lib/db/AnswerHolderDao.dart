@@ -9,6 +9,10 @@ import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
 import 'package:collection/collection.dart';
 
+const HOLDER_NOT_COMPLETED = 0;
+const HOLDER_COMPLETED = 1;
+const HOLDER_ANY_COMPLETED = 2;
+
 class AnswerHolderDao extends AnswersDao {
   Future<Box<AnswerHolder>> getAnswerHolderDb() async {
     return await Hive.openBox<AnswerHolder>('AnswerHolder');
@@ -36,10 +40,10 @@ class AnswerHolderDao extends AnswersDao {
   }
 
   //@Query("select * from AnswerHolder where formId = :formId and uploaded = 0 limit 1")
-  Future<AnswerHolder?> fetchAnswerHolderOne(int formId) async {
+  Future<AnswerHolder?> fetchAnswerHolderOne(int formId, int completed) async {
     var r = await getAnswerHolderDb();
     for (var item in r.values) {
-      if (item.formId == formId && (item.uploaded == false)) {
+      if (item.formId == formId && (item.uploaded == false) && (((item.completed ?? false) ? 1 : 0) == completed || completed == HOLDER_ANY_COMPLETED)) {
         print("answerHolder found $formId, ${item.toJson().toString()}");
         return item;
       } else {
@@ -50,9 +54,11 @@ class AnswerHolderDao extends AnswersDao {
   }
 
   //@Query("select * from AnswerHolder where formId = :formId limit 1")
-  Future<AnswerHolder?> fetchAnswerHolderAny(int formId) async {
+  Future<AnswerHolder?> fetchAnswerHolderAny(int formId, int completed) async {
+    //completed == 0 false, 1 true, 2 any
     var r = await getAnswerHolderDb();
-    return r.values.firstWhereOrNull((element) => element.formId == formId);
+    if (completed == HOLDER_ANY_COMPLETED) return r.values.firstWhereOrNull((element) => (element.formId == formId));
+    return r.values.firstWhereOrNull((element) => (element.formId == formId) && (element.completed == (completed == HOLDER_NOT_COMPLETED ? false : true)));
   }
 
   //@Query("select * from AnswerHolder order by id DESC") //createdAt, completedAt
@@ -241,11 +247,11 @@ class AnswerHolderDao extends AnswersDao {
     return List.from(ahsTmp);
   }
 
-  Future<AnswerHolder?> fetchAnswerHolderNotClosedWithChildren(int formId) async {
-    AnswerHolder? ah = await fetchAnswerHolderOne(formId); //fetchAnswerHolderNotClosed
+  Future<AnswerHolder?> fetchAnswerHolderNotClosedWithChildren(int formId, int completed) async {
+    AnswerHolder? ah = await fetchAnswerHolderOne(formId, completed); //fetchAnswerHolderNotClosed
 
     if (ah != null) {
-      ah.formFields = await loadFormFieldSets(formId);
+      ah.formFields = await loadFormFieldSets(formId, completed);
       ah.decisionResponse = await fetchDecisionResponse(ah.id!);
       List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
       if (answers != null) {
@@ -267,19 +273,20 @@ class AnswerHolderDao extends AnswersDao {
   }
 
   Future<AnswerHolder?> fetchAnswerHolderWithChildren(
-    int formId, {
+    int formId,
+    int completed, {
     bool any = false,
     bool withFormFields = false,
   }) async {
     AnswerHolder? ah;
     if (any)
-      ah = await fetchAnswerHolderAny(formId);
+      ah = await fetchAnswerHolderAny(formId, completed);
     else
-      ah = await fetchAnswerHolderOne(formId);
+      ah = await fetchAnswerHolderOne(formId, completed);
     //print("formId and fieldsetId ara $ah");
     if (ah != null) {
       //print("formId and fieldsetId not null ara ${ah.id}");
-      if (withFormFields) ah.formFields = await loadFormFieldSets(formId);
+      if (withFormFields) ah.formFields = await loadFormFieldSets(formId, completed);
       //print("formId and fieldsetId form fiilds");
       ah.decisionResponse = await fetchDecisionResponse(ah.id!);
       //print("formId and fieldsetId desicision response");
@@ -306,7 +313,7 @@ class AnswerHolderDao extends AnswersDao {
     return ah;
   }
 
-  Future<List<AnswerHolder>> fetchAnswerHolderWithChildrenAll(int uploadedState) async {
+  Future<List<AnswerHolder>> fetchAnswerHolderWithChildrenAll(int uploadedState, int completed) async {
     List<AnswerHolder>? answerHolders;
     if (uploadedState == -1) answerHolders = await fetchAllAnswerHolder();
     if (uploadedState == -2) answerHolders = await fetchAnswerHoldersUploaded();
@@ -317,7 +324,7 @@ class AnswerHolderDao extends AnswersDao {
     List<AnswerHolder> holders = [];
     if (answerHolders != null) {
       for (var ah in answerHolders) {
-        ah.formFields = await loadFormFieldSets(ah.formId!);
+        ah.formFields = await loadFormFieldSets(ah.formId!, completed);
         ah.decisionResponse = await fetchDecisionResponse(ah.id!);
         //print("decision response loading ${ah.decisionResponse}, ${ah.id}");
         List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
@@ -357,10 +364,16 @@ class AnswerHolderDao extends AnswersDao {
     if (r.values.firstWhereOrNull((element) => element.id == answer.id) != null) return -1;
     await r.add(answer);
     return answer.id!;
-    /*AnswerHolder? a = r.getAt(index)!;
-    a.id = index;
-    await a.save();
-    return a.id!;*/
+  }
+
+  Future<AnswerHolder?> completeAnswerHolder(int id) async {
+    var r = await getAnswerHolderDb();
+    AnswerHolder? x = r.values.firstWhereOrNull((element) => element.id == id);
+    if (x != null) {
+      x.completed = true;
+      await x.save();
+    }
+    return x;
   }
 
   Future<void> setAnswers(AnswerHolder answerHolder) async {
@@ -386,25 +399,4 @@ class AnswerHolderDao extends AnswersDao {
       }
     }
   }
-
-  /*Future<List<FormFields>> loadHolderFormsCategoryId(int? categoryId) async {
-    late List<FormFields> forms;
-    if (categoryId == null)
-      forms = await fetchFormsAny();
-    else
-      forms = await fetchFormsCategory(categoryId);
-    List<FormFields> tmp = [];
-    for (var form in forms) {
-      var d = await fetchFields(form.id!);
-      //form.answerHolder = await fetchAnswerHolderWithChildren(form.id!);
-      form.reclamations = await fetchReclamations(form.id ?? -1); //fetchReclamations(form.id!);
-      form.category = await getCategory(form.categoryId ?? -1);
-      form.fieldSets = [];
-      for (var field in d) {
-        form.fieldSets!.add(field);
-      }
-      tmp.add(form);
-    }
-    return List.from(tmp);
-  }*/
 }

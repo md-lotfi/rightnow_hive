@@ -7,6 +7,7 @@ import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
 import 'package:rightnow/components/search_text_widget.dart';
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/HashDao.dart';
 import 'package:rightnow/fieldsets.dart';
@@ -210,7 +211,7 @@ class _FormsState extends State<FormsPage> {
 
   Widget _bloc() {
     return FutureBuilder<List<FormFields>>(
-      future: getDataBase<FormFieldsDao>().loadFormsCategoryId(context, widget.category.id, searchFormTitle: _searchText),
+      future: getDataBase<FormFieldsDao>().loadFormsCategoryId(context, widget.category.id, HOLDER_NOT_COMPLETED, searchFormTitle: _searchText),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
@@ -353,33 +354,6 @@ class _FormsState extends State<FormsPage> {
                       ),
                     ],
                   ),
-                  /*FutureBuilder<int>(
-                    future: countAnswers(data[index].id),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        double progress = ((snapshot.data ?? 0).toDouble());
-                        //Map<String, dynamic> _prog = _progress(data[index].fieldSets ?? [], snapshot.data ?? 0);
-                        return Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Text(
-                              totalQuestions.toString(), //progress.floor().toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) != 1 ? Colors.red : Colors.green),
-                              value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
-                            ),
-                          ],
-                        );
-                        //return Icon(Icons.alarm);
-                      }
-                      //return Icon(Icons.local_dining);
-                      return CircularProgressIndicator();
-                    },
-                  ),*/
                   subtitle: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.start,

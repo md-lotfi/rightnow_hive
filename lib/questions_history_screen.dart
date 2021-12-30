@@ -283,6 +283,7 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
                 child: TakePictureWidget(
                   key: Key('__RIKEY__' + q.id!.toString()),
                   answerHolder: widget.answerHolder,
+                  imageOnly: true,
                   onSelectedValue: (Answer answer) {},
                   question: q,
                 ),

@@ -26,6 +26,9 @@ class AnswerHolder extends HiveObject {
   @HiveField(3)
   bool? closed = false;
 
+  @HiveField(11)
+  bool? completed = false;
+
   @HiveField(4)
   String? formTitle;
 
@@ -47,6 +50,9 @@ class AnswerHolder extends HiveObject {
   @HiveField(9)
   @JsonKey(ignore: true)
   int? webArchived;
+
+  @HiveField(10)
+  bool? offline = false;
 
   @JsonKey(name: 'responses')
   List<Answer>? answers;

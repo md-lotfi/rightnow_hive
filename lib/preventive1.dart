@@ -25,14 +25,14 @@ class Preventive1 extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        Positioned(
+        /*Positioned(
           top: 60,
           left: 30,
           child: Icon(
             Icons.close,
             color: COLOR_PRIMARY,
           ),
-        ),
+        ),*/
         Positioned(
           bottom: 20,
           right: 30,

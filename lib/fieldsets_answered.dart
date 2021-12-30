@@ -45,7 +45,7 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_FORMS_INDEX),
       backgroundColor: Colors.grey.shade50,
       body: FutureBuilder<FormFields?>(
-        future: getDataBase<FormFieldsDao>().loadFormFieldSets(widget.answerHolder.formId ?? -1),
+        future: getDataBase<FormFieldsDao>().loadFormFieldSets(widget.answerHolder.formId ?? -1, HOLDER_COMPLETED),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             //print("fetching fieldsets id ${widget.formId}, result ${snapshot.data?.id}");
@@ -223,7 +223,7 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
             children: [
               ListTile(
                 onTap: () async {
-                  AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, any: true);
+                  AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, HOLDER_COMPLETED, any: true);
                   if (answerHolder != null)
                     Navigator.push(
                       context,

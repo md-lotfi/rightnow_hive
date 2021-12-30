@@ -100,12 +100,6 @@ class _ProfilePageState extends State<ProfilePage> {
             height: HEADER_HEIGHT,
             child: Column(
               children: [
-                /*CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              (snapshot.data?.picture ?? "").endsWith(".png") ? (snapshot.data?.picture ?? "") : "", //"assets/axa-logo.png"
-                            ),
-                            radius: 60,
-                          ),*/
                 if (kIsWeb)
                   Center(
                     child: CircleAvatar(
@@ -176,12 +170,16 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Expanded(
-            child: ProfileTabsWidget(
+              child: Container(
+            margin: EdgeInsets.only(top: 25, bottom: 25),
+            child: _bodyProfile(data),
+          )
+              /*ProfileTabsWidget(
               onTabChange: (display) {
                 return showWidget(_bodyProfile(data), _bodyHealth(LocalUser.fromJson({})), display == 0);
               },
-            ),
-          ),
+            ),**/
+              ),
         ],
       ),
     );
@@ -191,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return UserProfileWidget(profile: user);
   }
 
-  Widget _bodyHealth(LocalUser user) {
+  /*Widget _bodyHealth(LocalUser user) {
     return HealthProfileWidget(
       onResult: (health) async {
         ApiRepository api = ApiRepository();
@@ -225,5 +223,5 @@ class _ProfilePageState extends State<ProfilePage> {
         }
       },
     );
-  }
+  }*/
 }

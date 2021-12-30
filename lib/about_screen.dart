@@ -66,30 +66,66 @@ class AboutPage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 140,
-            child: RawScrollbar(
-              isAlwaysShown: true,
-              thumbColor: COLOR_PRIMARY,
-              child: _body(context),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 20,
-            child: Container(
-              height: 120,
-              child: getContactWidgets(),
-            ),
-          ),
-        ],
+      body: FutureBuilder<bool>(
+        future: api.hasInternetConnection(),
+        builder: (context, s) {
+          if (s.connectionState == ConnectionState.done) {
+            if (s.data == true) {
+              return Stack(
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 140,
+                    child: RawScrollbar(
+                      isAlwaysShown: true,
+                      thumbColor: COLOR_PRIMARY,
+                      child: _body(context),
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 20,
+                    child: Container(
+                      height: 120,
+                      child: getContactWidgets(),
+                    ),
+                  ),
+                ],
+              );
+            }
+            return _bodyNoInternet(context);
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
+    ));
+  }
+
+  Widget _bodyNoInternet(BuildContext context) {
+    return Center(
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: EdgeInsets.only(left: 25, right: 25),
+          child: Text(
+            "Ce rubrique n’est pas disponible en mode hors ligne, Veuillez vous connectez  à internet pour avoir plus d’informations.",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 15)),
+          ),
+        ),
+        InkWell(
+          onTap: () {},
+          child: Icon(
+            Icons.refresh,
+            color: COLOR_PRIMARY,
+            size: 25,
+          ),
+        ),
+      ],
     ));
   }
 
@@ -176,39 +212,6 @@ class AboutPage extends StatelessWidget {
                 );
               },
             ),
-            //height: 100,
-            /*child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () {
-                    launch("https://fr-fr.facebook.com/BrencoAlgerie/");
-                  },
-                  child: Image(
-                    image: AssetImage('assets/facebook.png'),
-                    width: 50,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    launch("https://www.linkedin.com/company/brenco-engineering-&-consulting-services/mycompany/");
-                  },
-                  child: Image(
-                    image: AssetImage('assets/linkedin.png'),
-                    width: 50,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    launch("https://www.instagram.com/brencoalgerie/");
-                  },
-                  child: Image(
-                    image: AssetImage('assets/instagram.png'),
-                    width: 50,
-                  ),
-                ),
-              ],
-            ),*/
           ),
         ),
         Expanded(
@@ -219,7 +222,7 @@ class AboutPage extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(top: 5, left: 15, right: 15),
               child: Text(
-                "Suivez-nous sur \n nos réseaux".tr(),
+                "Suivez-nous sur".tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.blue,

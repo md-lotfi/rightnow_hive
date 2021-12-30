@@ -1,6 +1,7 @@
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/HashDao.dart';
 import 'package:rightnow/health_profile_page.dart';
@@ -124,7 +125,7 @@ class _HashPageState extends State<HashPage> {
       //BlocProvider.of<HashBloc>(context).add(HashEvent.loadCategories(currentHash));
       List<FormFields>? result = await api.fetchFormFieldsRaw();
       if (result != null) await getDataBase<FormFieldsDao>().setForms(result, new Hashes.fill(currentHash, HASH_TYPE_CATEGORIES));
-      List<FormFields> f = await getDataBase<FormFieldsDao>().loadFormsCategoryId(context, null);
+      List<FormFields> f = await getDataBase<FormFieldsDao>().loadFormsCategoryId(context, null, HOLDER_ANY_COMPLETED);
       if (f.length > 0) {
         _redirectToHome();
       } else {

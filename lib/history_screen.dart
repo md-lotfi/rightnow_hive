@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/blocs/reclamations_bloc.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
@@ -108,8 +110,9 @@ class _HistoryPageState extends State<HistoryPage> {
                     future: api.fetchReclamationsRaw(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
+                        log("reclamations data is ${snapshot.data?.length}");
                         return FutureBuilder<List<AnswerHolder>>(
-                          future: getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildrenAll(_selectedId),
+                          future: getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildrenAll(_selectedId, HOLDER_ANY_COMPLETED),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.done) {
                               return _dataWidget(snapshot.data);
@@ -283,6 +286,7 @@ class _HistoryPageState extends State<HistoryPage> {
     print("progress $progress, $totalQuestions, ${data.answers?.length}");*/
     AnswersCount answersCount = countAnswersHolder(data);
     print("Answers count is ${answersCount.realTotalQuestions}, ${answersCount.totalQuestions}, ${answersCount.progress}");
+    log("and=swer holder ${data.formFields?.getName(context.locale.languageCode)}");
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

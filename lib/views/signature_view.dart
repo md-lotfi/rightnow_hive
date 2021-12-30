@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -10,7 +10,6 @@ import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:rightnow/rest/ApiRepository.dart';
 
 class SignatureView extends StatefulWidget {
   final Question? question;
@@ -41,7 +40,9 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
       if (widget.answerHolder!.answers != null) {
         if (widget.answerHolder!.answers!.length > 0) {
           for (var answer in widget.answerHolder!.answers!) {
+            log("has answer ${answer.qustionId}, ${widget.question!.id}");
             if (answer.qustionId == widget.question!.id) {
+              log("has answer after ${answer.answerValue}");
               imageState = (answer.answerValue?.isNotEmpty ?? false) ? 1 : 0;
             }
           }
@@ -74,7 +75,11 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
               future: getUint8ListFile(getSignatureFilename()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  if (imageState == 1) _image = snapshot.data;
+                  log("checking image exists ?? $imageState");
+                  if (imageState == 1) {
+                    _image = snapshot.data;
+                  }
+
                   return Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(bottom: 10, top: 10),
@@ -120,10 +125,11 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
                                           color: Colors.green,
                                         ),
                                   imageState == 0),
-                              label: Flexible(
+                              label: Text("Ajouter une signature".tr()),
+                              /*Flexible(
                                 //child: Text(_controller.isNotEmpty ? (imageState != -1 ? "Reprend une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prend une Photo".tr()),
                                 child: Text("Ajouter une signature".tr()),
-                              ),
+                              ),*/
                               onPressed: () async {
                                 //getImage();
                                 _image = await Navigator.push(
@@ -168,7 +174,7 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
       //});
       print("signature filename ${getSignatureFilename()} ...........");
       widget.onSelectedValue!(
-        Answer.fill(widget.question!.id, widget.question!.fieldSet, "", getSignatureFilename(), DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
+        Answer.fill(widget.question!.id, widget.question!.fieldSet, getSignatureFilename(), getSignatureFilename(), DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
             widget.answerHolder?.id, null),
       );
       state.didChange(imageState);

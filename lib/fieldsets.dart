@@ -49,7 +49,7 @@ class _FieldSetState extends State<FieldsSetPage> {
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_FORMS_INDEX),
       backgroundColor: Colors.grey.shade50,
       body: FutureBuilder<FormFields?>(
-        future: getDataBase<FormFieldsDao>().loadFormFieldSets(widget.formId),
+        future: getDataBase<FormFieldsDao>().loadFormFieldSets(widget.formId, HOLDER_NOT_COMPLETED),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             //print("fetching fieldsets id ${widget.formId}, result ${snapshot.data?.id}");
@@ -168,7 +168,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                 child: dataWidget(data, form),
               ),
               FutureBuilder(
-                future: getDataBase<AnswerHolderDao>().fetchAnswerHolderOne(form.id!),
+                future: getDataBase<AnswerHolderDao>().fetchAnswerHolderOne(form.id!, HOLDER_NOT_COMPLETED),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.data != null) {
@@ -206,7 +206,7 @@ class _FieldSetState extends State<FieldsSetPage> {
       noInternetDialog(context);
       return;
     }
-    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!);
+    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_NOT_COMPLETED);
     if (waitingUploadAnswerHolder != null) {
       if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
         LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
@@ -215,6 +215,7 @@ class _FieldSetState extends State<FieldsSetPage> {
         Navigator.pop(context);
         if (sent != null) {
           print("terminating answer holder ....");
+          await getDataBase<AnswerHolderDao>().completeAnswerHolder(waitingUploadAnswerHolder.id!);
           await getDataBase<AnswerHolderDao>().closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
           await getDataBase<AnswerHolderDao>().terminateAnswerHolder(waitingUploadAnswerHolder.id!);
           sent.answerHolderId = waitingUploadAnswerHolder.id;
@@ -248,7 +249,7 @@ class _FieldSetState extends State<FieldsSetPage> {
           context: context,
           type: AlertType.warning,
           title: "Attention".tr(),
-          desc: "Vous devez répondre sur toute les questions obligatoires pour pouvoir envoyer vos réponses.".tr(),
+          desc: "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses".tr(),
           buttons: [
             DialogButton(
               child: Text(

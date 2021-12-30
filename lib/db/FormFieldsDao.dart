@@ -59,7 +59,7 @@ class FormFieldsDao extends FieldSetsDao {
     }
   }
 
-  Future<List<FormFields>> loadFormsCategoryId(BuildContext? context, int? categoryId, {String? searchFormTitle}) async {
+  Future<List<FormFields>> loadFormsCategoryId(BuildContext? context, int? categoryId, int completed, {String? searchFormTitle}) async {
     late List<FormFields> forms;
     if (categoryId == null)
       forms = await fetchFormsAny(context, searchFormText: searchFormTitle);
@@ -68,7 +68,7 @@ class FormFieldsDao extends FieldSetsDao {
     List<FormFields> tmp = [];
     for (var form in forms) {
       var d = await fetchFields(form.id!);
-      form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(form.id!);
+      form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(form.id!, completed);
       form.reclamations = await fetchReclamations(form.id ?? -1); //fetchReclamations(form.id!);
       form.category = await getCategory(form.categoryId ?? -1);
       form.fieldSets = [];
@@ -96,13 +96,13 @@ class FormFieldsDao extends FieldSetsDao {
     return List.from(tmp);
   }
 
-  Future<FormFields> loadFormFieldSets(int formId) async {
+  Future<FormFields> loadFormFieldSets(int formId, int completed) async {
     FormFields? form = await fetchForms(formId);
     if (form != null) {
       form.reclamations = await fetchReclamations(form.id ?? -1);
       print("getting category ${form.categoryId}, ${form.id}");
       form.category = await getCategory(form.categoryId ?? -1);
-      form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId);
+      form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, completed);
       form.fieldSets = [];
       var d = await getFieldSetWithQuestions(form.id ?? -1);
       for (var field in d) {

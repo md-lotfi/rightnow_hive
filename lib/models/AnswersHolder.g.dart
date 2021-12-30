@@ -27,13 +27,15 @@ class AnswerHolderAdapter extends TypeAdapter<AnswerHolder> {
       createdAt: fields[6] as String?,
       deviceId: fields[7] as String?,
       webArchived: fields[9] as int?,
-    );
+    )
+      ..completed = fields[11] as bool?
+      ..offline = fields[10] as bool?;
   }
 
   @override
   void write(BinaryWriter writer, AnswerHolder obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -42,6 +44,8 @@ class AnswerHolderAdapter extends TypeAdapter<AnswerHolder> {
       ..write(obj.uploaded)
       ..writeByte(3)
       ..write(obj.closed)
+      ..writeByte(11)
+      ..write(obj.completed)
       ..writeByte(4)
       ..write(obj.formTitle)
       ..writeByte(5)
@@ -53,7 +57,9 @@ class AnswerHolderAdapter extends TypeAdapter<AnswerHolder> {
       ..writeByte(8)
       ..write(obj.state)
       ..writeByte(9)
-      ..write(obj.webArchived);
+      ..write(obj.webArchived)
+      ..writeByte(10)
+      ..write(obj.offline);
   }
 
   @override
@@ -82,6 +88,8 @@ AnswerHolder _$AnswerHolderFromJson(Map<String, dynamic> json) {
     createdAt: json['createdAt'] as String?,
     deviceId: json['device_id'] as String?,
   )
+    ..completed = json['completed'] as bool?
+    ..offline = json['offline'] as bool?
     ..answers = (json['responses'] as List<dynamic>?)
         ?.map((e) => Answer.fromJson(e as Map<String, dynamic>))
         .toList()
@@ -100,10 +108,12 @@ Map<String, dynamic> _$AnswerHolderToJson(AnswerHolder instance) =>
       'form': instance.formId,
       'uploaded': instance.uploaded,
       'closed': instance.closed,
+      'completed': instance.completed,
       'formTitle': instance.formTitle,
       'completed_at': instance.completedAt,
       'createdAt': instance.createdAt,
       'device_id': instance.deviceId,
+      'offline': instance.offline,
       'responses': instance.answers,
       'formFields': instance.formFields,
       'decisionResponse': instance.decisionResponse,

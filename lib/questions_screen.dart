@@ -87,7 +87,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
   void initState() {
     //_refreshProgress = ValueNotifier<int>(0);
     _refreshProgress.value = 0;
-    getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(widget.fieldSet.form!).then((AnswerHolder? value) {
+    getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(widget.fieldSet.form!, HOLDER_NOT_COMPLETED).then((AnswerHolder? value) {
       if (value == null) {
         print("new answer holder");
         _answerHolder = AnswerHolder.fill(
@@ -154,8 +154,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   _errorFieldsDialog() {
-    showActionMessage(context, title: "Fields data error".tr(), messages: [Text("You have some fields with error, please check your data before validating".tr())], positiveBtn: "OK".tr(),
-        whichTaped: (w) async {
+    showActionMessage(context,
+        title: "Erreur de données de champs".tr(),
+        messages: [Text("Vous avez quelques champs contenant des erreurs, veuillez vérifier vos données avant de valider".tr())],
+        positiveBtn: "OK".tr(), whichTaped: (w) async {
       await _onWillPop();
     });
   }
@@ -172,23 +174,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
   Future<void> _confirmSave() async {
     if (_answerHolder != null) {
       print("saving answer holder " + _answerHolder!.toJson().toString());
-
-      /*if (_hasSoundQuestions()) {
-        ApiRepository api = ApiRepository();
-        showLoaderDialog(context);
-        for (Answer answer in _answerHolder?.answers ?? []) {
-          if (answer.resourcetype == SOUND_RESPONSE) {
-            File f = File(answer.valueExtra!);
-            Map<String, dynamic> result = await api.uploadSound(answer.question!, f, (received, total) {
-              print("progress $received / $total");
-            });
-            if (result['id'] != null) {
-              answer.answerValue = result['id'].toString();
-            }
-          }
-        }
-        Navigator.pop(context);
-      }*/
 
       await getDataBase<AnswerHolderDao>().setAnswers(_answerHolder!);
       await getDataBase<FieldSetsDao>().setAnsweredCounts(widget.fieldSet.id!, _answerHolder?.answers?.length ?? 0);
@@ -599,6 +584,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 child: TakePictureWidget(
                   key: Key('__RIKEY__' + q.id!.toString()),
                   answerHolder: _answerHolder,
+                  imageOnly: false,
                   onSelectedValue: (Answer answer) {
                     _replaceAnswerIfExists(q, answer);
                   },

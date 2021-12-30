@@ -308,7 +308,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,
-        title: 'AXA',
+        title: 'Rightnow',
         theme: ThemeData(
             fontFamily: "PoppinsMedium",
             canvasColor: Colors.white,

@@ -24,7 +24,7 @@ class ActualiteDetailsPage extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_PROFILE_INDEX),
       appBar: AppBar(
-        title: Text("Axa"),
+        title: Text("Rightnow"),
       ),
       body: Container(
         padding: EdgeInsets.all(15),
