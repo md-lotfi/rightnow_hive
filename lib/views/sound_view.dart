@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -8,7 +12,6 @@ import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
-import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class SoundView extends StatefulWidget {
@@ -30,7 +33,6 @@ class SoundView extends StatefulWidget {
 
 class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixin {
   Answer? _answer;
-
   double progress = 0;
 
   FlutterSoundRecorder? _myRecorder = FlutterSoundRecorder();
@@ -85,8 +87,12 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
   }
 
   Future<String> _getRecordPath() async {
-    var tempDir = await getTemporaryDirectory();
-    return '${tempDir.path}/myFile.mp4';
+    if (!kIsWeb) {
+      var tempDir = await getTemporaryDirectory();
+      return '${tempDir.path}/myFile_${widget.question?.id}_${Jiffy().unix()}.mp4';
+    } else {
+      return 'myFile_${widget.question?.id}_${Jiffy().unix()}';
+    }
   }
 
   Future<void> _record(FormFieldState<bool>? state) async {
@@ -159,9 +165,9 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
   Future<void> _playRecorded() async {
     await _myPlayer?.startPlayer(
       fromURI: recordPath,
-      codec: Codec.aacMP4,
-      numChannels: 1,
-      sampleRate: 16000, // Used only with codec == Codec.pcm16
+      codec: kIsWeb ? Codec.opusWebM : Codec.aacMP4,
+      //numChannels: 1,
+      //sampleRate: 16000, // Used only with codec == Codec.pcm16
       whenFinished: () {
         setState(() {});
       },
@@ -209,10 +215,7 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
                             backgroundColor: _isRecording() ? Colors.red : COLOR_PRIMARY,
                           ),
                           icon: _isRecording() ? Icon(Icons.stop) : Icon(Icons.mic),
-                          label: Flexible(
-                            //child: Text(_controller.isNotEmpty ? (imageState != -1 ? "Reprend une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prend une Photo".tr()),
-                            child: _isRecording() ? Text("Stop recording".tr()) : Text("Enregistrer un audio".tr()),
-                          ),
+                          label: _isRecording() ? Text("Stop recording".tr()) : Text("Enregistrer un audio".tr()),
                           onPressed: () async {
                             if (!_isRecording()) {
                               await _record(state);

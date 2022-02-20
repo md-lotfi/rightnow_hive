@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -184,13 +186,13 @@ Widget fieldTitle(BuildContext context, String title) {
   );
 }
 
-showLoaderDialog(BuildContext context) {
+showLoaderDialog(BuildContext context, {String? title}) {
   AlertDialog alert = AlertDialog(
     content: new Row(
       children: [
         CircularProgressIndicator(),
         Expanded(
-          child: Container(margin: EdgeInsets.only(left: 7), child: Text("Sending data".tr())),
+          child: Container(margin: EdgeInsets.only(left: 7), child: Text(title == null ? "Sending data".tr() : title)),
         )
       ],
     ),
@@ -457,10 +459,26 @@ void fieldsAnswersAlreadyExists(BuildContext context, FormFields formFields) {
   });
 }
 
-Widget loadImage(String? src) {
+Widget loadImage(String? src, {Widget? defaultImg, double? width, double? height, BoxFit? fit}) {
   if (src != null) {
     if (src != "") {
-      FadeInImage.assetNetwork(placeholder: 'assets/loading.gif', image: src);
+      return FadeInImage.assetNetwork(
+        placeholder: 'assets/loading.gif',
+        fit: fit,
+        image: src,
+        width: width,
+        height: height,
+        imageErrorBuilder: (context, error, stackTrace) {
+          if (defaultImg == null)
+            return Image.asset(
+              "assets/axa-logo.png",
+              fit: BoxFit.contain,
+              width: 70,
+            );
+          else
+            return defaultImg;
+        },
+      );
     }
   }
   return Image(
@@ -820,7 +838,14 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
   return Container(
     child: Stack(
       children: [
-        Image.network(
+        loadImage(
+          actualite.thumbnail,
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height / 2,
+          fit: BoxFit.fill,
+          defaultImg: Image.asset('assets/welcome.png', width: double.infinity, fit: BoxFit.fill),
+        ),
+        /*Image.network(
           actualite.thumbnail ?? "",
           width: double.infinity,
           height: MediaQuery.of(context).size.height / 2,
@@ -828,12 +853,6 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
           errorBuilder: (context, error, stackTrace) {
             return Image.asset('assets/welcome.png', width: double.infinity, fit: BoxFit.fill);
           },
-        ),
-        /*Positioned(
-          bottom: MediaQuery.of(context).size.height / 2,
-          left: 0,
-          right: 0,
-          child: Image.asset("assets/transparent_bg.png"),
         ),*/
         Positioned(
           bottom: 0,
@@ -956,33 +975,41 @@ String getFilename(String file) {
 
 Future<bool> saveUint8ListFile(Uint8List f, String filename) async {
   print("saving file to disk");
-  final dir = await getExternalStorageDirectory();
-  if (dir != null) {
-    print("saving file to disk $dir");
-    final fPath = dir.path + "/$filename";
-    print("saving file to disk $fPath");
-    File fFile = File(fPath);
-    if (!await fFile.exists()) {
-      await fFile.create(recursive: true);
-    } else {
-      await fFile.delete();
+  if (!kIsWeb) {
+    final dir = await getExternalStorageDirectory();
+    if (dir != null) {
+      print("saving file to disk $dir");
+      final fPath = dir.path + "/$filename";
+      print("saving file to disk $fPath");
+      File fFile = File(fPath);
+      if (!await fFile.exists()) {
+        await fFile.create(recursive: true);
+      } else {
+        await fFile.delete();
+      }
+      await fFile.writeAsBytes(f);
+      return true;
     }
-    await fFile.writeAsBytes(f);
-    return true;
+  } else {
+    MimeType type = MimeType.JPEG;
+    String path = await FileSaver.instance.saveFile(filename, f, "jpeg", mimeType: type);
+    print(path);
   }
   return false;
 }
 
 Future<Uint8List?> getUint8ListFile(String filename) async {
   print("getting saved file from disk");
-  final dir = await getExternalStorageDirectory();
-  if (dir != null) {
-    final fPath = dir.path + "/$filename";
-    print("getting saved file from disk $fPath");
-    File fFile = File(fPath);
-    if (await fFile.exists()) {
-      print("getting saved file from disk file exists, loading it ...");
-      return fFile.readAsBytesSync();
+  if (!kIsWeb) {
+    final dir = await getExternalStorageDirectory();
+    if (dir != null) {
+      final fPath = dir.path + "/$filename";
+      print("getting saved file from disk $fPath");
+      File fFile = File(fPath);
+      if (await fFile.exists()) {
+        print("getting saved file from disk file exists, loading it ...");
+        return fFile.readAsBytesSync();
+      }
     }
   }
   return null;
@@ -1039,6 +1066,26 @@ Widget fieldData(String? content) {
       borderRadius: BorderRadius.circular(8),
     ),
     child: Text(content ?? ""),
+  );
+}
+
+Widget fieldDataEdit(TextEditingController controller, {bool readOnly = false}) {
+  return TextFormField(
+    controller: controller,
+    readOnly: readOnly,
+    decoration: InputDecoration(
+      isDense: true,
+      contentPadding: EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 15),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: COLOR_PRIMARY),
+      ),
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+    ),
   );
 }
 
@@ -1168,4 +1215,78 @@ AnswersCount countAnswersHolder(AnswerHolder holder) {
   }
   a.progress = ((holder.answers?.length ?? 0).toDouble()) / a.totalQuestions;
   return a;
+}
+
+Future<void> checkSend(BuildContext context, FormFields form, Function() onFinish, {bool showResult = true}) async {
+  ApiRepository api = ApiRepository();
+  bool connected = await api.hasInternetConnection();
+  if (!connected) {
+    noInternetDialog(context);
+    return;
+  }
+  AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_NOT_COMPLETED);
+  if (waitingUploadAnswerHolder != null) {
+    if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
+      LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
+      if (showResult) showLoaderDialog(context);
+      DecisionResponse? sent = await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
+      if (showResult) Navigator.pop(context);
+      if (sent != null) {
+        print("terminating answer holder ....");
+        await getDataBase<AnswerHolderDao>().completeAnswerHolder(waitingUploadAnswerHolder.id!);
+        await getDataBase<AnswerHolderDao>().closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
+        await getDataBase<AnswerHolderDao>().terminateAnswerHolder(waitingUploadAnswerHolder.id!);
+        sent.answerHolderId = waitingUploadAnswerHolder.id;
+        await getDataBase<DecisionResponseDao>().insertDecisionResponse(sent);
+        if (showResult) {
+          showResponseDialog(context, sent, () {
+            onFinish();
+            /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+              setState(() {});
+            });*/
+          });
+        } else {
+          onFinish();
+        }
+      } else {
+        if (showResult)
+          Alert(
+            context: context,
+            type: AlertType.error,
+            title: "Erreur".tr(),
+            desc: "Erreur au niveau du serveur.".tr(),
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Ok".tr(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                color: Colors.red,
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show();
+      }
+    } else {
+      if (showResult)
+        Alert(
+          context: context,
+          type: AlertType.warning,
+          title: "Attention".tr(),
+          desc: "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses".tr(),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Ok".tr(),
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              color: Colors.red,
+              onPressed: () => Navigator.pop(context),
+              width: 120,
+            )
+          ],
+        ).show();
+    }
+  }
 }

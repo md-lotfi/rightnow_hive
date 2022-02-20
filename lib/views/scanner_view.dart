@@ -86,10 +86,7 @@ class _ScannerWidgetState extends State<ScannerWidget> with AutomaticKeepAliveCl
                                   color: Colors.green,
                                 )
                               : Icon(Icons.qr_code),
-                          label: Flexible(
-                            //child: Text(_controller.isNotEmpty ? (imageState != -1 ? "Reprend une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prend une Photo".tr()),
-                            child: Text("Scanner un QR Code".tr()),
-                          ),
+                          label: Text("Scanner un QR Code".tr()),
                           onPressed: () async {
                             selectedBarCode = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Annuler", true, ScanMode.QR);
                             widget.onSelectedValue!(

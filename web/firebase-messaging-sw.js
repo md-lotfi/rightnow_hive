@@ -1,64 +1,19 @@
-importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js");
+//importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js");
+//importScripts("https://www.gstatic.com/firebasejs/9.6.0/firebase-messaging.js");
 
-firebase.initializeApp({
-    apiKey: "AIzaSyDRF7BMLI17OgI2vNWOCm3m56_b56dwTbw",
-    authDomain: "axxa-e81e3.firebaseapp.com",
-    //databaseURL: "https://[YOUR_PROJECT].firebaseio.com",
-    projectId: "axxa-e81e3",
-    storageBucket: "axxa-e81e3.appspot.com",
-    messagingSenderId: "137626525780",
-    appId: "1:137626525780:web:f4fb5b34e9dc7853c78dc1",
-    measurementId: "G-1DMMQVLN1V",
+/*firebase.initializeApp({
+  apiKey: "AIzaSyBKbFg9I6rjtZsOk9BcEKy2pb5Ap66-BZk",
+  authDomain: "dalti-48780.firebaseapp.com",
+  databaseURL: "https://dalti-48780.firebaseio.com",
+  projectId: "dalti-48780",
+  storageBucket: "dalti-48780.appspot.com",
+  messagingSenderId: "918786960423",
+  appId: "1:918786960423:web:081cbfdc584deca9e83202",
 });
 // Necessary to receive background messages:
 const messaging = firebase.messaging();
-/*messaging.setBackgroundMessageHandler(function (payload) {
-    const promiseChain = clients
-        .matchAll({
-            type: "window",
-            includeUncontrolled: true
-        })
-        .then(windowClients => {
-            for (let i = 0; i < windowClients.length; i++) {
-                const windowClient = windowClients[i];
-                windowClient.postMessage(payload);
-            }
-        })
-        .then(() => {
-            const title = payload.notification.title;
-            const options = {
-                body: payload.notification.score
-              };
-            return registration.showNotification(title, options);
-        });
-    return promiseChain;
-});
-self.addEventListener('notificationclick', function (event) {
-    console.log('notification received: ', event)
-});*/
-
 
 // Optional:
 messaging.onBackgroundMessage((m) => {
   console.log("onBackgroundMessage", m);
-});
-
-/*const messaging = firebase.messaging();
-messaging.setBackgroundMessageHandler(function (payload) {
-    const promiseChain = clients
-        .matchAll({
-            type: "window",
-            includeUncontrolled: true
-        })
-        .then(windowClients => {
-            for (let i = 0; i < windowClients.length; i++) {
-                const windowClient = windowClients[i];
-                windowClient.postMessage(payload);
-            }
-        })
-        .then(() => {
-            return registration.showNotification("New Message");
-        });
-    return promiseChain;
 });*/

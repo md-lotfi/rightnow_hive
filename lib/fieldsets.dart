@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rightnow/answers_uploader_screen.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
@@ -134,18 +136,20 @@ class _FieldSetState extends State<FieldsSetPage> {
                     width: double.infinity,
                     height: 10,
                     child: Center(
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        separatorBuilder: (context, index) {
-                          return Container(
-                            width: 10,
-                          );
-                        },
-                        itemCount: elements.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return elements[index];
-                        },
+                      child: ScrollTouchWidget(
+                        listChild: ListView.separated(
+                          shrinkWrap: true,
+                          separatorBuilder: (context, index) {
+                            return Container(
+                              width: 10,
+                            );
+                          },
+                          itemCount: elements.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return elements[index];
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -161,7 +165,7 @@ class _FieldSetState extends State<FieldsSetPage> {
           child: Stack(
             children: [
               Positioned(
-                top: 0,
+                top: kIsWeb ? 20 : 0,
                 left: 0,
                 right: 0,
                 bottom: 70,
@@ -180,7 +184,11 @@ class _FieldSetState extends State<FieldsSetPage> {
                           child: TextButton(
                             onPressed: () async {
                               //BlocProvider.of<AnswersPostBloc>(context).add(AnswersEvent.uploadAnswerHolder());
-                              await _checkSend(form);
+                              await checkSend(context, form, () {
+                                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+                                  setState(() {});
+                                });
+                              });
                             },
                             child: Text("Envoyer".tr()),
                           ),
@@ -199,7 +207,7 @@ class _FieldSetState extends State<FieldsSetPage> {
     );
   }
 
-  _checkSend(FormFields form) async {
+  /*_checkSend(FormFields form) async {
     ApiRepository api = ApiRepository();
     bool connected = await api.hasInternetConnection();
     if (!connected) {
@@ -264,7 +272,7 @@ class _FieldSetState extends State<FieldsSetPage> {
         ).show();
       }
     }
-  }
+  }*/
 
   int _filterAnswers(AnswerHolder? answerHolder, int? fieldSetId) {
     if (answerHolder == null) return 0;
@@ -276,202 +284,112 @@ class _FieldSetState extends State<FieldsSetPage> {
   }
 
   Widget dataWidget(List<FieldSet> data, FormFields form) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        int f = _filterAnswers(form.answerHolder, data[index].id);
-        int activeTotalQuestions = countActiveQuestions(data[index]);
-        int totalQuestions = countQuestions(data[index]);
-        double progress = (f.toDouble());
-        print("progress $progress, $totalQuestions, $f");
+    return ScrollTouchWidget(
+      listChild: ListView.separated(
+        itemBuilder: (context, index) {
+          int f = _filterAnswers(form.answerHolder, data[index].id);
+          int activeTotalQuestions = countActiveQuestions(data[index]);
+          int totalQuestions = countQuestions(data[index]);
+          double progress = (f.toDouble());
+          print("progress $progress, $totalQuestions, $f");
 
-        return InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => QuestionsPage(
-                  //key: MyApp.fileWidgetState,
-                  key: UniqueKey(),
-                  fieldSet: data[index],
-                  anonymous: form.isAnonymous ?? false,
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuestionsPage(
+                    //key: MyApp.fileWidgetState,
+                    key: UniqueKey(),
+                    fieldSet: data[index],
+                    anonymous: form.isAnonymous ?? false,
+                  ),
                 ),
+              ).then((value) {
+                setState(() {});
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: Offset(0, 0), // changes position of shadow
+                  ),
+                ],
               ),
-            ).then((value) {
-              setState(() {});
-            });
-          },
-          child: Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 0), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  //onTap: () {},
-                  dense: true,
-                  contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-                  title: Text(
-                    data[index].getName(context.locale.languageCode),
-                    style: TextStyle(color: COLOR_PRIMARY, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 16), fontWeight: FontWeight.bold),
-                  ),
-                  trailing: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Text(
-                        activeTotalQuestions.toString(), //progress.floor().toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      CircularProgressIndicator(
-                        backgroundColor: Colors.grey,
-                        color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) < 1 ? Colors.red : Colors.green),
-                        value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
-                      ),
-                    ],
-                  ),
-                  /*trailing: FutureBuilder<int>(
-                    future: countFieldSetAnswers(form.answerHolder, data[index].id),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        int totalQuestions = data[index].questionsCount ?? 0;
-                        double progress = (snapshot.data?.toDouble() ?? 0);
-                        print("progress $progress, $totalQuestions, ${snapshot.data}");
-                        return Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Text(
-                              totalQuestions.toString(), //progress.floor().toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                            CircularProgressIndicator(
-                              backgroundColor: Colors.grey,
-                              color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) != 1 ? Colors.red : Colors.green),
-                              value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
-                            ),
-                          ],
-                        );
-                        //return Icon(Icons.alarm);
-                      }
-                      //return Icon(Icons.local_dining);
-                      return CircularProgressIndicator();
-                    },
-                  ),*/
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          data[index].getDescription(context.locale.languageCode),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    //onTap: () {},
+                    dense: true,
+                    contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+                    title: Text(
+                      data[index].getName(context.locale.languageCode),
+                      style: TextStyle(color: COLOR_PRIMARY, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 16), fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          activeTotalQuestions.toString(), //progress.floor().toString(),
+                          textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey),
                         ),
-                      ),
-                      InkWell(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(text: "Répondre ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
-                              WidgetSpan(
-                                child: Icon(Icons.arrow_forward, size: 14),
-                              ),
-                            ],
+                        CircularProgressIndicator(
+                          backgroundColor: Colors.grey,
+                          color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) < 1 ? Colors.red : Colors.green),
+                          value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            data[index].getDescription(context.locale.languageCode),
+                            style: TextStyle(color: Colors.grey),
                           ),
                         ),
-                      ),
-                    ],
+                        InkWell(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(text: "Répondre ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
+                                WidgetSpan(
+                                  child: Icon(Icons.arrow_forward, size: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Container(
-          height: 15,
-          //child: Text(Jiffy().yMMMEd),
-        );
-      },
-      itemCount: data.length,
-    );
-    /*return GridView.builder(
-      itemCount: data.length,
-      itemBuilder: (BuildContext context, int index) {
-        /*print("current field sets questions " +
-            data[index].questions.length.toString());*/
-        return InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => QuestionsPage(
-                  key: MyApp.fileWidgetState,
-                  fieldSet: data[index],
-                ),
+                ],
               ),
-            ).then((value) {
-              setState(() {
-                _checkData();
-              });
-            });
-          },
-          child: Container(
-            margin: EdgeInsets.only(top: 15),
-            color: Colors.white,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(color: COLOR_PRIMARY, borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0, bottom: 0),
-                        child: Image(
-                          width: 50,
-                          color: Colors.white,
-                          image: AssetImage(
-                            "assets/formulaire.png",
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Text(
-                    data[index].getName(context.locale.languageCode),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: COLOR_PRIMARY, fontSize: 15),
-                  ),
-                ),
-              ],
             ),
-          ),
-        );
-      },
-      padding: const EdgeInsets.all(10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-    );*/
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Container(
+            height: 15,
+            //child: Text(Jiffy().yMMMEd),
+          );
+        },
+        itemCount: data.length,
+      ),
+    );
   }
 
   Widget _addFloatingButton() {

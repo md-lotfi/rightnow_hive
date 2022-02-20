@@ -10,8 +10,10 @@ import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/db/HashDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/db/MultiSelectAnswersDao.dart';
+import 'package:rightnow/db/OrganisationDao.dart';
 import 'package:rightnow/db/ProfileDao.dart';
 import 'package:rightnow/db/ProvinceDao.dart';
+import 'package:rightnow/db/ProvincesDao.dart';
 import 'package:rightnow/db/QuestionsDao.dart';
 import 'package:rightnow/db/ReclamationsDao.dart';
 import 'package:rightnow/db/TagsDao.dart';
@@ -133,7 +135,8 @@ String transtypeResourceType(String questionResource) {
   return "";
 }
 
-const String SIGNATURE_FILENAME = "signature.png";
+const String SIGNATURE_FILENAME = "rightnow_signatureXYZ.png";
+const String SIGNATURE_FILENAME_EXT = ".png";
 const String PICTURE_FILENAME = "picture";
 const String MAP_FILENAME = "map";
 
@@ -161,6 +164,8 @@ const String FORM_PHONE_ERROR = "Your phone number must start with country code 
 
 T getDataBase<T>() {
   switch (T) {
+    case OrganisationDao:
+      return new OrganisationDao() as T;
     case SuperCategoryDao:
       return new SuperCategoryDao() as T;
     case FCMNotificationsDao:
@@ -211,6 +216,8 @@ T getDataBase<T>() {
       return new ProfileDao() as T;
     case ProvinceDao:
       return new ProvinceDao() as T;
+    case ProvincesDao:
+      return new ProvincesDao() as T;
     case QuestionsDao:
       return new QuestionsDao() as T;
     case ReclamationsDao:

@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FieldSetsDao.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
@@ -14,6 +16,7 @@ import 'package:rightnow/views/multi_select_view.dart';
 import 'package:rightnow/views/scanner_view.dart';
 import 'package:rightnow/views/signature_view.dart';
 import 'package:rightnow/views/sound_view.dart';
+import 'package:rightnow/views/sound_web_view.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:rightnow/blocs/questions_bloc.dart';
@@ -238,6 +241,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           appBar: AppBar(
             backgroundColor: Colors.white,
+            foregroundColor: COLOR_PRIMARY,
             title: Text(widget.fieldSet.getName(context.locale.languageCode)),
             actions: [
               if (widget.anonymous) Image.asset("assets/anonymous.png", width: 25),
@@ -315,7 +319,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                       thumbColor: COLOR_PRIMARY,
                       child: Form(
                         key: _formKey,
-                        child: dataWidget(data),
+                        child: ScrollTouchWidget(listChild: dataWidget(data)),
                       ),
                     ),
                   ),
@@ -445,18 +449,33 @@ class _QuestionsPageState extends State<QuestionsPage> {
               visible: viewState[q.id]!,
             );
           case SOUND_QUESTION:
-            return Visibility(
-              child: SoundView(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: false,
-                answerHolder: _answerHolder,
-                onSelectedValue: (Answer answer) {
-                  _replaceAnswerIfExists(q, answer);
-                },
-                question: q,
-              ),
-              visible: viewState[q.id]!,
-            );
+            if (!kIsWeb) {
+              return Visibility(
+                child: SoundView(
+                  key: Key('__RIKEY__' + q.id!.toString()),
+                  viewOnly: false,
+                  answerHolder: _answerHolder,
+                  onSelectedValue: (Answer answer) {
+                    _replaceAnswerIfExists(q, answer);
+                  },
+                  question: q,
+                ),
+                visible: viewState[q.id]!,
+              );
+            } else {
+              return Visibility(
+                child: SoundWebView(
+                  key: Key('__RIKEY__' + q.id!.toString()),
+                  viewOnly: false,
+                  answerHolder: _answerHolder,
+                  onSelectedValue: (Answer answer) {
+                    _replaceAnswerIfExists(q, answer);
+                  },
+                  question: q,
+                ),
+                visible: viewState[q.id]!,
+              );
+            }
           case SIGNATURE_QUESTION:
             return Visibility(
               child: SignatureView(

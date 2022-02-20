@@ -79,7 +79,7 @@ class HomeNavBarComp extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.check_circle_outlined,
+            Icons.person,
           ),
           label: "Profil".tr(),
         ),

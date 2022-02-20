@@ -10,7 +10,6 @@ class ScreenViewerWidget extends StatelessWidget {
   }) : super(key: key);
 
   Widget _home(BuildContext context) {
-    print("width is " + MediaQuery.of(context).size.width.toString());
     if (!kIsWeb)
       return page;
     else {
@@ -22,7 +21,7 @@ class ScreenViewerWidget extends StatelessWidget {
             bottom: 0,
             right: MediaQuery.of(context).size.width / 2.8,
             child: FittedBox(
-              child: Image.asset("assets/AXA_web.jpg"),
+              child: Image.asset("assets/rightnow_splash.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -50,9 +49,9 @@ class ScreenViewerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+    /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       print("width 2 is " + MediaQuery.of(context).size.width.toString());
-    });
+    });*/
     //return _home(context);
     return Scaffold(
       body: _home(context),

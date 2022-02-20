@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
+import 'package:rightnow/components/scroll_widget.dart';
+import 'package:rightnow/components/scrollable_listview.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/login_page.dart';
 import 'package:rightnow/screen_viewer.dart';
@@ -78,9 +82,33 @@ class _ConnexionTypeScreenState extends State<ConnexionTypeScreen> {
 
   List<Widget> _getItem(BuildContext context) {
     return [
-      _content(context, Image.asset('assets/file_1.png'), "Une data accessible instantanément".tr(), "Accédez à votre data à tout moment instantanément".tr(), 0),
-      _content(context, Image.asset('assets/file_2.png'), "Crées des formulaires sans limite".tr(), "Des formulaires illimités paramétrables selon votre besoin".tr(), 1),
-      _content(context, Image.asset('assets/file_3.png'), "Une data sécurisée".tr(), "Toutes vos données sont sécurisées".tr(), 2),
+      _content(
+          context,
+          Image.asset(
+            'assets/file_1.png',
+            height: kIsWeb ? 200 : null,
+          ),
+          "Une data accessible instantanément".tr(),
+          "Accédez à votre data à tout moment instantanément".tr(),
+          0),
+      _content(
+          context,
+          Image.asset(
+            'assets/file_2.png',
+            height: kIsWeb ? 200 : null,
+          ),
+          "Crées des formulaires sans limite".tr(),
+          "Des formulaires illimités paramétrables selon votre besoin".tr(),
+          1),
+      _content(
+          context,
+          Image.asset(
+            'assets/file_3.png',
+            height: kIsWeb ? 200 : null,
+          ),
+          "Une data sécurisée".tr(),
+          "Toutes vos données sont sécurisées".tr(),
+          2),
     ];
   }
 
@@ -92,78 +120,84 @@ class _ConnexionTypeScreenState extends State<ConnexionTypeScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Container(
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  "assets/axxa_logo_transparent.png",
-                  width: 100,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                height: AdaptiveTextSize().getadaptiveTextSize(context, 360), //420
-                child: PageView.builder(
-                  controller: _controller,
-                  itemCount: _getItem(context).length,
-                  itemBuilder: (context, index) {
-                    return _getItem(context)[index];
-                  },
-                ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _indice(_index == 0),
-                  SizedBox(
-                    width: 5,
+          child: ScrollTouchWidget(
+            listChild: ListView(
+              shrinkWrap: true,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    "assets/axxa_logo_transparent.png",
+                    width: 100,
+                    fit: BoxFit.contain,
                   ),
-                  _indice(_index == 1),
-                  SizedBox(
-                    width: 5,
+                ),
+                SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  height: AdaptiveTextSize().getadaptiveTextSize(context, kIsWeb ? 260 : 360), //420
+                  child: PageView.builder(
+                    scrollBehavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                    }),
+                    controller: _controller,
+                    itemCount: _getItem(context).length,
+                    itemBuilder: (context, index) {
+                      return _getItem(context)[index];
+                    },
                   ),
-                  _indice(_index == 2),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: double.infinity,
-                margin: kIsWeb ? null : EdgeInsets.only(left: 30, right: 30),
-                padding: EdgeInsets.only(top: 25),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ),
-                    );
-                  },
-                  child: Text("S'identifier".tr()),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                margin: kIsWeb ? null : EdgeInsets.only(left: 30, right: 30),
-                padding: EdgeInsets.only(top: 25),
-                child: TextButton(
-                  onPressed: () {
-                    launch("https://app.rightnow-by-brenco.com/");
-                  },
-                  child: Text("Connexion Admin".tr()),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _indice(_index == 0),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    _indice(_index == 1),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    _indice(_index == 2),
+                  ],
                 ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: kIsWeb ? null : EdgeInsets.only(left: 30, right: 30),
+                  padding: EdgeInsets.only(top: 25),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    },
+                    child: Text("S'identifier".tr()),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  margin: kIsWeb ? null : EdgeInsets.only(left: 30, right: 30),
+                  padding: EdgeInsets.only(top: 25),
+                  child: TextButton(
+                    onPressed: () {
+                      launch("https://app.rightnow-by-brenco.com/");
+                    },
+                    child: Text("Connexion Admin".tr()),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/actualite.dart';
 import 'package:rightnow/screen_viewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -106,22 +109,40 @@ class _ActualiteVideoPageState extends State<ActualiteVideoPage> {
                 left: 0,
                 right: 0,
                 bottom: 60,
-                child: ListView(
-                  children: [
-                    AppBar(
-                      title: Text("Actualité".tr()),
-                    ),
-                    player,
-                    articlaHeaderColumn(context, widget.actualite),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      child: Text(
+                child: ScrollTouchWidget(
+                  listChild: ListView(
+                    children: [
+                      AppBar(
+                        title: Text("Actualité".tr()),
+                      ),
+                      player,
+                      articlaHeaderColumn(context, widget.actualite),
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        child: Html(
+                          data: widget.actualite.getDescription(context.locale.languageCode),
+                          style: {
+                            "p": Style(
+                              //color: Colors.black,
+                              //fontSize: FontSize(15),
+                              fontFamily: "PoppinsMedium",
+                              textAlign: TextAlign.justify,
+                            ),
+                          },
+                          onLinkTap: (url, _, __, ___) async {
+                            print("Opening $url...");
+                            bool b = await canLaunch(url ?? "");
+                            if (b) launch(url ?? "");
+                          },
+                        ),
+                        /*Text(
                         widget.actualite.getDescription(context.locale.languageCode),
                         textAlign: TextAlign.justify,
                         style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 13)),
+                      ),*/
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Positioned(

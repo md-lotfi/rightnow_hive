@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/login_page.dart';
 import 'package:rightnow/screen_viewer.dart';
@@ -18,70 +19,72 @@ class ForgotPasswordConfirmationPage extends StatelessWidget {
       body: Center(
         child: Container(
           margin: EdgeInsets.all(30),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.check_circle_outline_outlined,
-                  size: 80,
-                  color: Colors.green,
+          child: ScrollTouchWidget(
+            listChild: ListView(
+              shrinkWrap: true,
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Icon(
+                    Icons.check_circle_outline_outlined,
+                    size: 80,
+                    color: Colors.green,
+                  ),
                 ),
-              ),
-              SizedBox(height: 30),
-              Text(
-                "Email envoyé!".tr(),
-                textAlign: TextAlign.center,
-                style: TextStyle(color: COLOR_PRIMARY, fontSize: 35, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Consulter votre boite mail et suivez les instructions pour changer votre mot de passe.".tr(),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 25),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.only(top: 25),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ),
-                    );
-                  },
-                  child: Text("Revenir en arrière".tr()),
+                SizedBox(height: 30),
+                Text(
+                  "Email envoyé!".tr(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: COLOR_PRIMARY, fontSize: 35, fontWeight: FontWeight.bold),
                 ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    /*Navigator.pushReplacement(
+                SizedBox(height: 10),
+                Text(
+                  "Consulter votre boite mail et suivez les instructions pour changer votre mot de passe.".tr(),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 25),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(top: 25),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    },
+                    child: Text("Revenir en arrière".tr()),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      /*Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LoginPage(),
                       ),
                     );*/
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Vous n'avez pas reçus l'email? ".tr(),
-                      children: [
-                        TextSpan(text: "Renvoyer".tr(), style: TextStyle(color: Colors.blue)),
-                      ],
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Vous n'avez pas reçus l'email? ".tr(),
+                        children: [
+                          TextSpan(text: "Renvoyer".tr(), style: TextStyle(color: Colors.blue)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

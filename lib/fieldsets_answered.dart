@@ -2,6 +2,7 @@ import 'package:rightnow/answers_uploader_screen.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
@@ -138,7 +139,8 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
                     width: double.infinity,
                     height: 10,
                     child: Center(
-                      child: ListView.separated(
+                        child: ScrollTouchWidget(
+                      listChild: ListView.separated(
                         shrinkWrap: true,
                         separatorBuilder: (context, index) {
                           return Container(
@@ -151,7 +153,7 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
                           return elements[index];
                         },
                       ),
-                    ),
+                    )),
                   ),
                   SizedBox(height: 10),
                 ],
@@ -179,19 +181,20 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
   }
 
   Widget dataWidget(List<FieldSet> data) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
-        //List<Answer>
-        int totalQuestions = 0;
-        double progress = 0;
-        for (FieldSet item in data) {
-          int q = 0;
-          for (Answer answer in widget.answerHolder.answers ?? []) {
-            if (answer.fieldSetId == item.id) q++;
-          }
-          totalQuestions = item.questionsCount ?? 0;
-          progress = (q.toDouble());
-          /*var d = Container(
+    return ScrollTouchWidget(
+      listChild: ListView.separated(
+        itemBuilder: (context, index) {
+          //List<Answer>
+          int totalQuestions = 0;
+          double progress = 0;
+          for (FieldSet item in data) {
+            int q = 0;
+            for (Answer answer in widget.answerHolder.answers ?? []) {
+              if (answer.fieldSetId == item.id) q++;
+            }
+            totalQuestions = item.questionsCount ?? 0;
+            progress = (q.toDouble());
+            /*var d = Container(
             height: 10,
             width: 40,
             decoration: BoxDecoration(
@@ -201,98 +204,99 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
           );
 
           elements.add(d);*/
-        }
+          }
 
-        return Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(0, 0), // changes position of shadow
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                onTap: () async {
-                  AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, HOLDER_COMPLETED, any: true);
-                  if (answerHolder != null)
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => QuestionsHistoryPage(
-                          fieldSet: data[index],
-                          answerHolder: answerHolder,
+          return Container(
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 0), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  onTap: () async {
+                    AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, HOLDER_COMPLETED, any: true);
+                    if (answerHolder != null)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuestionsHistoryPage(
+                            fieldSet: data[index],
+                            answerHolder: answerHolder,
+                          ),
                         ),
-                      ),
-                    );
-                },
-                dense: true,
-                contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-                title: Text(
-                  data[index].getName(context.locale.languageCode),
-                  style: TextStyle(color: COLOR_PRIMARY, fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                trailing: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Text(
-                      progress.floor().toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) != 1 ? Colors.red : Colors.green),
-                      value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        data[index].getDescription(context.locale.languageCode).isEmpty ? "Une petite description de la section pour avoir une idée générale" : "",
+                      );
+                  },
+                  dense: true,
+                  contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+                  title: Text(
+                    data[index].getName(context.locale.languageCode),
+                    style: TextStyle(color: COLOR_PRIMARY, fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  trailing: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Text(
+                        progress.floor().toString(),
+                        textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey),
                       ),
-                    ),
-                    InkWell(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(text: "Réponse ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
-                            WidgetSpan(
-                              child: Icon(Icons.arrow_forward, size: 14),
-                            ),
-                          ],
+                      CircularProgressIndicator(
+                        backgroundColor: Colors.grey,
+                        color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) != 1 ? Colors.red : Colors.green),
+                        value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          data[index].getDescription(context.locale.languageCode).isEmpty ? "Une petite description de la section pour avoir une idée générale" : "",
+                          style: TextStyle(color: Colors.grey),
                         ),
                       ),
-                    ),
-                  ],
+                      InkWell(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(text: "Réponse ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
+                              WidgetSpan(
+                                child: Icon(Icons.arrow_forward, size: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) {
-        return Container(
-          height: 15,
-          //child: Text(Jiffy().yMMMEd),
-        );
-      },
-      itemCount: data.length,
+              ],
+            ),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Container(
+            height: 15,
+            //child: Text(Jiffy().yMMMEd),
+          );
+        },
+        itemCount: data.length,
+      ),
     );
     /*return GridView.builder(
       itemCount: data.length,

@@ -17,6 +17,7 @@ import 'package:rightnow/blocs/forms_bloc.dart';
 import 'package:rightnow/blocs/hash_bloc.dart';
 import 'package:rightnow/blocs/history_bloc.dart';
 import 'package:rightnow/blocs/login_bloc.dart';
+import 'package:rightnow/blocs/profile_update_bloc.dart';
 import 'package:rightnow/blocs/questions_bloc.dart';
 import 'package:rightnow/blocs/reclamations_bloc.dart';
 import 'package:rightnow/blocs/set_user_profile_bloc.dart';
@@ -47,20 +48,24 @@ import 'package:rightnow/models/dependent_condition.dart';
 import 'package:rightnow/models/disease.dart';
 import 'package:rightnow/models/error_model.dart';
 import 'package:rightnow/models/fcm_notification.dart';
+import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/form_entry.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/hash.dart';
 import 'package:rightnow/models/local_user.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
+import 'package:rightnow/models/organisation.dart';
 import 'package:rightnow/models/profile.dart';
 import 'package:rightnow/models/province.dart';
 import 'package:rightnow/models/reclamations.dart';
 import 'package:rightnow/models/super_category.dart';
 import 'package:rightnow/models/tag.dart';
 import 'package:rightnow/models/user_notification.dart';
+import 'package:rightnow/profile.dart';
 import 'package:rightnow/questions_screen.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/upload_profile_screen.dart';
+import 'package:rightnow/user_profile_widget.dart';
 import 'package:rightnow/views/file_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -164,12 +169,15 @@ Future<void> main() async {
   Hive.registerAdapter(FormFieldsAdapter());
   Hive.registerAdapter(HashesAdapter());
   Hive.registerAdapter(ProvinceAdapter());
+  //Hive.registerAdapter(ProvincesAdapter());
   Hive.registerAdapter(QuestionAdapter());
   Hive.registerAdapter(ReclamationsAdapter());
   Hive.registerAdapter(TagAdapter());
   Hive.registerAdapter(UserNotificationAdapter());
   Hive.registerAdapter(FCMNotificationAdapter());
   Hive.registerAdapter(MultiSelectAnswerAdapter());
+  Hive.registerAdapter(OrganisationAdapter());
+  Hive.registerAdapter(FileSaverAdapter());
   /** End Hive */
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -209,16 +217,18 @@ Future<void> main() async {
     );
   }*/
 
-  runApp(
-    Phoenix(
-      child: EasyLocalization(
-        child: MyApp(),
-        supportedLocales: [Locale(LANGUAGE_FR), Locale(LANGUAGE_AR, LANGUAGE_AR_CODE)],
-        startLocale: Locale(LANGUAGE_FR),
-        path: 'assets/translations',
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) {
+    runApp(
+      Phoenix(
+        child: EasyLocalization(
+          child: MyApp(),
+          supportedLocales: [Locale(LANGUAGE_FR), Locale(LANGUAGE_AR, LANGUAGE_AR_CODE)],
+          startLocale: Locale(LANGUAGE_FR),
+          path: 'assets/translations',
+        ),
       ),
-    ),
-  );
+    );
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -231,6 +241,11 @@ class MyApp extends StatelessWidget {
     ]);
     return MultiBlocProvider(
       providers: [
+        BlocProvider<ProfileUpdateBloc>(
+            create: (BuildContext context) {
+              return ProfileUpdateBloc();
+            },
+            child: ProfilePage()),
         BlocProvider<HashBloc>(
             create: (BuildContext context) {
               return HashBloc();

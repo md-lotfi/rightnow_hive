@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -13,6 +15,7 @@ import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/welcome_screen.dart';
 
 class HashPage extends StatefulWidget {
@@ -30,9 +33,11 @@ class _HashPageState extends State<HashPage> {
   @override
   void initState() {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+      await api.getOrganisation();
       await api.fetchFormState();
       await api.getDiseases();
       await api.getBloodGroup();
+      await api.getProvinces();
       String? hash = await api.fetchHashMain();
       if (hash == null) {
         Hashes? dbHash = await getDataBase<HashDao>().fetchHashesByType(HASH_TYPE_CATEGORIES);
@@ -61,35 +66,38 @@ class _HashPageState extends State<HashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        //color: Colors.red,
-        //alignment: Alignment.center,
-        child: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/loading_bg.gif",
-                    fit: BoxFit.contain,
-                    width: double.infinity,
-                  ),
-                ],
+    return ScreenViewerWidget(
+      page: Scaffold(
+        body: Container(
+          //color: Colors.red,
+          //alignment: Alignment.center,
+          child: Stack(
+            children: [
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/loading_bg.gif",
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      //height: MediaQuery.of(context).size.height - 70,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Positioned(
-              bottom: 160,
-              left: 20,
-              right: 20,
-              child: Text(
-                "Chargement en cours".tr(),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
+              Positioned(
+                bottom: 160,
+                left: 20,
+                right: 20,
+                child: Text(
+                  "Chargement en cours".tr(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -127,12 +135,14 @@ class _HashPageState extends State<HashPage> {
       if (result != null) await getDataBase<FormFieldsDao>().setForms(result, new Hashes.fill(currentHash, HASH_TYPE_CATEGORIES));
       List<FormFields> f = await getDataBase<FormFieldsDao>().loadFormsCategoryId(context, null, HOLDER_ANY_COMPLETED);
       if (f.length > 0) {
+        await _uploadForms();
         _redirectToHome();
       } else {
         _databaseEmptyAlert();
       }
     } else {
       print("no result new page");
+      await _uploadForms();
       _redirectToHome();
       /*Navigator.pushReplacement(
         context,
@@ -141,6 +151,15 @@ class _HashPageState extends State<HashPage> {
                   redirect: "homepage",
                 )),
       );*/
+    }
+  }
+
+  Future<void> _uploadForms() async {
+    log("uploading non complited forms");
+    List<FormFields> fields = await getDataBase<FormFieldsDao>().loadFormsCategoryId(context, null, HOLDER_COMPLETED, searchFormTitle: '');
+    for (FormFields field in fields) {
+      log("uploading non complited forms ${field.name}");
+      await checkSend(context, field, () {}, showResult: false);
     }
   }
 
@@ -211,7 +230,13 @@ class _HashPageState extends State<HashPage> {
 
   _redirectToHome() async {
     Profile? p = await getProfile(context); //getDataBase().profileDao.fetchUserProfile();
-    if (p?.updatedMobile == true) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomePage(),
+      ),
+    );
+    /*if (p?.updatedMobile == true) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -225,6 +250,6 @@ class _HashPageState extends State<HashPage> {
           builder: (context) => HealthProfilePage(),
         ),
       );
-    }
+    }*/
   }
 }

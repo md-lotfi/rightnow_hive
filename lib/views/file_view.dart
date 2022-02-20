@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -9,6 +10,7 @@ import 'package:rightnow/inherits/field_controller.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/rest/ApiResult.dart';
 
@@ -144,10 +146,7 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                             child: TextButton.icon(
                               icon: showWidget(Icon(Icons.file_upload), _fileState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green),
                                   _fileState == 0), //Icon(Icons.file_upload),
-                              label: Flexible(
-                                //child: Text(_controller.isNotEmpty ? (imageState != -1 ? "Reprend une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prend une Photo".tr()),
-                                child: _fileState == 0 ? Text("Charger un fichier".tr()) : Text("Charger un nouveau fichier".tr()),
-                              ),
+                              label: _fileState == 0 ? Text("Charger un fichier".tr()) : Text("Charger un nouveau fichier".tr()),
                               onPressed: () async {
                                 selectFile().then((result) async {
                                   if (result != null) {
@@ -155,34 +154,43 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                                       _fileState = 0;
                                       progress = 0;
                                     });
-                                    File file = File(result.files.single.path ?? "");
+                                    //File file = File(result.files.single.path ?? "");
+                                    Uint8List? file = result.files.single.bytes;
+                                    if (file != null) {
+                                      double fileSize = (file.lengthInBytes) / 1024;
+                                      if (question?.maxSizeKb != null) {
+                                        if (fileSize > question!.maxSizeKb!) {
+                                          state.didChange(3);
+                                          return;
+                                        }
+                                      }
+                                      if (question?.minSizeKb != null) {
+                                        if (fileSize < question!.minSizeKb!) {
+                                          state.didChange(4);
+                                          return;
+                                        }
+                                      }
 
-                                    double fileSize = (await file.length()) / 1024;
-                                    if (question?.maxSizeKb != null) {
-                                      if (fileSize > question!.maxSizeKb!) {
-                                        state.didChange(3);
-                                        return;
+                                      setState(() {
+                                        //_fileState = 2;
+                                        _fileState = 1;
+                                      });
+                                      _file = result.files.single.name;
+                                      if (_file != null) {
+                                        print("saving file path in answer ${file.lengthInBytes}");
+                                        await FileSaver.set(FileSaver(questionId: question!.id!, answerHolderId: answerHolder!.id!, name: _file!, path: result.files.single.path ?? "", file: file));
+                                        FileSaver? f = await FileSaver.getLastItem();
+                                        if (f != null) {
+                                          onSelectedValue!(
+                                            Answer.fill(question!.id, question!.fieldSet, _file, result.files.single.path, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
+                                                answerHolder!.id, null,
+                                                fileKey: f.key),
+                                          );
+                                        }
+
+                                        state.didChange(_fileState);
                                       }
                                     }
-                                    if (question?.minSizeKb != null) {
-                                      if (fileSize < question!.minSizeKb!) {
-                                        state.didChange(4);
-                                        return;
-                                      }
-                                    }
-
-                                    setState(() {
-                                      //_fileState = 2;
-                                      _fileState = 1;
-                                    });
-                                    _file = result.files.single.name;
-                                    print("saving file path in answer ${result.files.single.path}");
-                                    onSelectedValue!(
-                                      Answer.fill(question!.id, question!.fieldSet, "", result.files.single.path, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
-                                          answerHolder!.id, null),
-                                    );
-
-                                    state.didChange(_fileState);
                                   }
                                 });
                                 setState(() {});

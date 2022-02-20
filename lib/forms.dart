@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' as kIsWeb;
 import 'package:flutter/scheduler.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/FormsDescription.dart';
@@ -5,6 +6,7 @@ import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/components/search_text_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
@@ -87,7 +89,8 @@ class _FormsState extends State<FormsPage> {
                       Expanded(
                         child: SearchTextWidget(
                           staticWidget: Text(
-                            "Check-up center".tr(),
+                            //"Check-up center".tr(),
+                            widget.category.getName(context.locale.languageCode),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 20), color: COLOR_PRIMARY),
@@ -118,23 +121,6 @@ class _FormsState extends State<FormsPage> {
                       )
                     ],
                   ),
-                  /*SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    height: 40,
-                    child: ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return Container(
-                          width: 10,
-                        );
-                      },
-                      itemCount: elements.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return elements[index];
-                      },
-                    ),
-                  ),*/
                   SizedBox(height: 20),
                 ],
               ),
@@ -229,7 +215,7 @@ class _FormsState extends State<FormsPage> {
       child: Container(
         //color: Colors.red,
         child: _builder(data),
-        margin: EdgeInsets.only(left: 20, right: 20),
+        margin: EdgeInsets.only(left: 20, right: 20, top: kIsWeb.kIsWeb ? 20 : 0),
       ),
       onRefresh: () async {
         setState(() {
@@ -243,161 +229,163 @@ class _FormsState extends State<FormsPage> {
   }
 
   Widget _builder(List<FormFields> data) {
-    return ListView.separated(
-      separatorBuilder: (context, index) {
-        return Container(
-          height: 20,
-        );
-      },
-      //shrinkWrap: true,
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        AnswersCount answersCount = countAnswersForm(data[index]);
-        /*int totalQuestions = 0;
+    return ScrollTouchWidget(
+      listChild: ListView.separated(
+        separatorBuilder: (context, index) {
+          return Container(
+            height: 20,
+          );
+        },
+        //shrinkWrap: true,
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          AnswersCount answersCount = countAnswersForm(data[index]);
+          /*int totalQuestions = 0;
         int realTotalQuestions = 0;
         for (FieldSet item in data[index].fieldSets ?? []) {
           realTotalQuestions += countActiveQuestions(item);
           totalQuestions += countQuestions(item);
         }*/
-        double time = (answersCount.totalQuestions * 10) / 60;
-        int fx = 0;
-        if (time > 0) fx = time.ceil();
+          double time = (answersCount.totalQuestions * 10) / 60;
+          int fx = 0;
+          if (time > 0) fx = time.ceil();
 
-        //double progress = ((data[index].answerHolder?.answers?.length ?? 0).toDouble());
-        return InkWell(
-          onTap: () {
-            SchedulerBinding.instance!.addPostFrameCallback((_) {
-              if (data[index].getDescription(context.locale.languageCode).isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FormsDescription(
-                      form: data[index],
+          //double progress = ((data[index].answerHolder?.answers?.length ?? 0).toDouble());
+          return InkWell(
+            onTap: () {
+              SchedulerBinding.instance!.addPostFrameCallback((_) {
+                if (data[index].getDescription(context.locale.languageCode).isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FormsDescription(
+                        form: data[index],
+                      ),
                     ),
-                  ),
-                ).then((value) {
-                  setState(() {
-                    _checkData();
+                  ).then((value) {
+                    setState(() {
+                      _checkData();
+                    });
                   });
-                });
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FieldsSetPage(
-                      formId: data[index].id!,
-                    ),
-                  ),
-                ).then((value) {
-                  setState(() {});
-                });
-              }
-            });
-          },
-          child: Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 0), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    if (data[index].isAnonymous == true)
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        margin: isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(5)),
-                        child: Text(
-                          "Anonyme".tr(),
-                          style: TextStyle(color: Colors.white, backgroundColor: Colors.black, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 10)),
-                        ),
-                      ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      margin: data[index].isAnonymous == true ? (isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8)) : null,
-                      decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(5)),
-                      child: Text(
-                        "$fx min".tr(),
-                        style: TextStyle(color: Colors.white, backgroundColor: Colors.blue, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 10)),
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FieldsSetPage(
+                        formId: data[index].id!,
                       ),
                     ),
-                  ],
-                ),
-                ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-                  title: Text(data[index].getName(context.locale.languageCode),
-                      style: TextStyle(color: COLOR_PRIMARY, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 16), fontWeight: FontWeight.bold)),
-                  trailing: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Text(
-                        answersCount.realTotalQuestions.toString(), //progress.floor().toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      CircularProgressIndicator(
-                        backgroundColor: Colors.grey,
-                        color: answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
-                        value: answersCount.totalQuestions == 0 ? 0 : (answersCount.progress),
-                      ),
-                    ],
+                  ).then((value) {
+                    setState(() {});
+                  });
+                }
+              });
+            },
+            child: Container(
+              padding: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 5,
+                    offset: Offset(0, 0), // changes position of shadow
                   ),
-                  subtitle: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        data[index].category?.getName(context.locale.languageCode) ?? "",
-                        textAlign: TextAlign.start,
-                        style: TextStyle(color: Colors.blue, fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        Jiffy(data[index].createdAt).yMMMMEEEEd,
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      InkWell(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(text: "Répondre ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
-                              WidgetSpan(
-                                child: Icon(Icons.arrow_forward, size: 14),
-                              ),
-                            ],
+                      if (data[index].isAnonymous == true)
+                        Container(
+                          padding: EdgeInsets.all(5),
+                          margin: isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8),
+                          decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(5)),
+                          child: Text(
+                            "Anonyme".tr(),
+                            style: TextStyle(color: Colors.white, backgroundColor: Colors.black, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 10)),
                           ),
                         ),
-                      )
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        margin: data[index].isAnonymous == true ? (isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8)) : null,
+                        decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(5)),
+                        child: Text(
+                          "$fx min".tr(),
+                          style: TextStyle(color: Colors.white, backgroundColor: Colors.blue, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 10)),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
+                  ListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
+                    title: Text(data[index].getName(context.locale.languageCode),
+                        style: TextStyle(color: COLOR_PRIMARY, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 16), fontWeight: FontWeight.bold)),
+                    trailing: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Text(
+                          answersCount.realTotalQuestions.toString(), //progress.floor().toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        CircularProgressIndicator(
+                          backgroundColor: Colors.grey,
+                          color: answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
+                          value: answersCount.totalQuestions == 0 ? 0 : (answersCount.progress),
+                        ),
+                      ],
+                    ),
+                    subtitle: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          data[index].category?.getName(context.locale.languageCode) ?? "",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: Colors.blue, fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          Jiffy(data[index].createdAt).yMMMMEEEEd,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        InkWell(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(text: "Répondre ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
+                                WidgetSpan(
+                                  child: Icon(Icons.arrow_forward, size: 14),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
     /*return GridView.builder(
       itemCount: data.length,

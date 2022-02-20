@@ -86,6 +86,7 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
                     children: [
                       Container(
                         height: MediaQuery.of(context).size.height / 4,
+                        margin: EdgeInsets.only(left: 30, right: 30),
                         decoration: (answerHolder?.answers?.length ?? 0) == 0
                             ? null
                             : (!_hasDate

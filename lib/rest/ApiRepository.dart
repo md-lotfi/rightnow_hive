@@ -2,12 +2,16 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
+import 'package:rightnow/db/OrganisationDao.dart';
+import 'package:rightnow/db/ProvinceDao.dart';
+import 'package:rightnow/db/ProvincesDao.dart';
 import 'package:rightnow/db/ReclamationsDao.dart';
 import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/db/blood_group_dao.dart';
@@ -24,9 +28,11 @@ import 'package:rightnow/models/category_forms.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/disease.dart';
 import 'package:rightnow/models/fcm_notification.dart';
+import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/hash.dart';
 import 'package:rightnow/models/local_user.dart';
+import 'package:rightnow/models/organisation.dart';
 import 'package:rightnow/models/profile.dart';
 import 'package:rightnow/models/province.dart';
 import 'package:rightnow/models/reclamations.dart';
@@ -184,7 +190,9 @@ class ApiRepository {
       return ApiResult.success(data: reclamations);
     } catch (e) {
       print("error when processing data response " + e.toString());
-      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+      List<Reclamations> r = await getDataBase<ReclamationsDao>().fetchReclamationsAll();
+      return ApiResult.success(data: r);
+      //return ApiResult.failure(error: NetworkExceptions.getDioException(e));
     }
   }
 
@@ -345,7 +353,7 @@ class ApiRepository {
     }
   }
 
-  Future<ApiResult<List<Province>>> getProvinces() async {
+  Future<List<Province>> getProvinces() async {
     try {
       final response = await apiClient.get("api/generic/provinces/"); //, queryParameters: {"api_key": _apiKey}
       List<Province> provs = [];
@@ -354,39 +362,35 @@ class ApiRepository {
           provs.add(Province.fromJson(p));
         }
       }
-      return ApiResult.success(data: provs);
+      await getDataBase<ProvincesDao>().setProvinces(provs);
+      return provs;
     } catch (e) {
       print("error when processing data response " + e.toString());
-      return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+      return [];
     }
   }
 
-  Future<bool> setUserHealth(HealthObject healthObject) async {
+  Future<bool> setUserProfile(Map<String, dynamic> profile) async {
     try {
-      LocalUser? l = await getDataBase<LocalUserDao>().fetchUser();
-      if (l != null) {
-        Map<String, dynamic> h = {
-          "user": l.user,
-          "updated_mobile": true,
-          "vaccination": healthObject.vaccinated,
-          "vaccin_dose": healthObject.dose,
-          "is_smoker": healthObject.smoker,
-          "is_pregnant": healthObject.pregnant,
-          "blood_group": healthObject.groupSanguin,
-          "diseases": healthObject.diseases,
-          "height": healthObject.height,
-          "weight": healthObject.weight,
-          "IMC": healthObject.imc,
-        };
-        print("sending profile " + h.toString());
-        await apiClient.put("api/accounts/profiles/${l.user}/", data: h); //, queryParameters: {"api_key": _apiKey}
-        //print("response received " + response);
-        return true;
-      }
-      return false;
+      print("sending profile " + profile.toString());
+      await apiClient.put("api/accounts/profiles/${profile['user']}/", data: profile); //, queryParameters: {"api_key": _apiKey}
+      //print("response received " + response);
+      return true;
     } catch (e) {
       print("error when processing data response " + e.toString());
       return false;
+    }
+  }
+
+  Future<Organisation?> getOrganisation() async {
+    try {
+      var r = await apiClient.get("api/accounts/organization/get_current_organization/");
+      Organisation o = Organisation.fromJson(r);
+      await getDataBase<OrganisationDao>().setOrganisation(o);
+      return o;
+    } catch (e) {
+      print("error when processing data response " + e.toString());
+      return null;
     }
   }
 
@@ -461,20 +465,21 @@ class ApiRepository {
     }
   }
 
-  Future<Map<String, dynamic>> uploadFile(int questionId, File file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
+  Future<Map<String, dynamic>> uploadFile(int questionId, Uint8List file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      late List<int> l;
+      //late List<int> l;
       print("data 1 ******************");
-      if (!asByte)
+      /*if (!asByte)
         fileName = file.path.split('/').last;
       else {
         print("data inside ******************");
         l = i!.toList();
-      }
+      }*/
       print("data 2 ******************");
       FormData formData = FormData.fromMap({
-        "file": asByte ? MultipartFile.fromBytes(l, filename: fileName) : await MultipartFile.fromFile(file.path, filename: fileName),
+        //"file": asByte ? MultipartFile.fromBytes(file.toList(), filename: fileName) : await MultipartFile.fromFile(file.path, filename: fileName),
+        "file": MultipartFile.fromBytes(file.toList(), filename: fileName),
         "question": questionId,
       });
 
@@ -488,7 +493,7 @@ class ApiRepository {
     }
   }
 
-  Future<Map<String, dynamic>> uploadSignature(int questionId, File file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
+  Future<Map<String, dynamic>> uploadSignature(int questionId, Uint8List file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString() + ".png";
       late List<int> l = i!.toList();
@@ -513,6 +518,23 @@ class ApiRepository {
       print("data 2 ******************");
       FormData formData = FormData.fromMap({
         "file": await MultipartFile.fromFile(file.path, filename: fileName),
+        "question": question.id,
+      });
+
+      final response = await apiClient.post("api/forms/responses/upload_sound/", data: formData, onSendProgress: progress);
+      return response;
+    } catch (e) {
+      print("error when processing data response " + e.toString());
+      return <String, dynamic>{"id": null};
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadSoundUInt(Question question, Uint8List file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString() + ".webm";
+      print("data 2 ******************");
+      FormData formData = FormData.fromMap({
+        "file": MultipartFile.fromBytes(file.toList(), filename: fileName),
         "question": question.id,
       });
 
@@ -557,9 +579,22 @@ class AnswerPostObject {
   }
 
   Future<int> uploadSignatureFile(Answer answer) async {
-    Uint8List? f = await getUint8ListFile(answer.valueExtra ?? "");
-    print("checking file upload .... ${answer.valueExtra}");
-    if (f != null) {
+    FileSaver? x = await FileSaver.getBykey(answer.fileKey);
+    if (x != null) {
+      //getUint8ListFile(answer.valueExtra ?? "");
+      print("checking file upload .... ${answer.valueExtra}");
+      print("checking file upload f is not null ....");
+      ApiRepository apiRepository = ApiRepository();
+      Map<String, dynamic> result = await apiRepository.uploadSignature(answer.qustionId!, x.file, (r, t) {
+        print("total sending $r | $t ");
+      }, asByte: true, i: x.file);
+      print("checking file upload .... result $result");
+      if (result['id'] != null) {
+        print("checking file upload .... result id is not null ${result['id']}");
+        return result['id'];
+      }
+      /*Uint8List? f = x.file; //getUint8ListFile(answer.valueExtra ?? "");
+      print("checking file upload .... ${answer.valueExtra}");
       print("checking file upload f is not null ....");
       ApiRepository apiRepository = ApiRepository();
       Map<String, dynamic> result = await apiRepository.uploadSignature(answer.qustionId!, File.fromRawPath(f), (r, t) {
@@ -569,13 +604,24 @@ class AnswerPostObject {
       if (result['id'] != null) {
         print("checking file upload .... result id is not null ${result['id']}");
         return result['id'];
-      }
+      }*/
     }
     return -1;
   }
 
   Future<int> uploadFile(Answer answer) async {
-    File _image = File(answer.valueExtra ?? "");
+    FileSaver? f = await FileSaver.getBykey(answer.fileKey);
+    if (f != null) {
+      ApiRepository apiRepository = ApiRepository();
+      Map<String, dynamic> result = await apiRepository.uploadFile(answer.qustionId!, f.file, (r, t) {
+        print("total sending $r | $t ");
+      });
+      if (result['id'] != null) {
+        return result['id'];
+      }
+    }
+    return -1;
+    /*File _image = File(answer.valueExtra ?? "");
     print("checking file upload (uploading file) .... ${answer.valueExtra}");
     if (await _image.exists()) {
       ApiRepository apiRepository = ApiRepository();
@@ -586,17 +632,31 @@ class AnswerPostObject {
         return result['id'];
       }
     }
-    return -1;
+    return -1;*/
   }
 
   Future<int> uploadFileSound(Answer answer) async {
-    File f = File(answer.valueExtra!);
-    ApiRepository api = ApiRepository();
-    Map<String, dynamic> result = await api.uploadSound(answer.question!, f, (received, total) {
-      print("progress $received / $total");
-    });
-    if (result['id'] != null) {
-      return result['id'];
+    if (!kIsWeb) {
+      File f = File(answer.valueExtra!);
+      ApiRepository api = ApiRepository();
+      Map<String, dynamic> result = await api.uploadSound(answer.question!, f, (received, total) {
+        print("progress $received / $total");
+      });
+      if (result['id'] != null) {
+        return result['id'];
+      }
+    } else {
+      FileSaver? f = await FileSaver.getBykey(answer.fileKey);
+      if (f != null) {
+        ApiRepository apiRepository = ApiRepository();
+        Map<String, dynamic> result = await apiRepository.uploadSoundUInt(answer.question!, f.file, (r, t) {
+          print("total sending $r | $t ");
+        });
+        if (result['id'] != null) {
+          return result['id'];
+        }
+      }
+      return -1;
     }
     return -1;
   }

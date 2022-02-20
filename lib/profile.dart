@@ -32,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
+          foregroundColor: COLOR_PRIMARY,
           elevation: 0,
           title: Text(
             "Profile".tr(),

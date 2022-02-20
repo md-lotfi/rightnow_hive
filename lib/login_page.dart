@@ -1,9 +1,12 @@
 //import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:rightnow/blocs/hash_bloc.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/events/HashEvent.dart';
@@ -38,14 +41,16 @@ class LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   Future<int> _loginUser(LocalUser user) async {
+    showLoaderDialog(context, title: "Authentification en cours ...");
     ApiRepository api = ApiRepository();
     dynamic auth = await api.loginUserRaw(user);
     if (auth is String) {
       print("storing api key in shared preferences " + auth);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString(AUTH_KEY, auth);
-      await getDataBase<LocalUserDao>().setLocalUser(user);
+      //await getDataBase<LocalUserDao>().setLocalUser(user);
       int userId = await api.currentUserRaw();
+      log("user id is $userId");
       if (userId != -1) {
         print("registring user firbase topic user-$userId");
         String? token = await FirebaseMessaging.instance.getToken();
@@ -55,10 +60,12 @@ class LoginPageState extends State<LoginPage> {
           ApiRepository api = ApiRepository();
           await api.addFirebaseRegistratioinId(userId, token);
         }
+        Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context) => HashPage()));
         return 0;
       }
     } else if (auth is int) {
+      Navigator.pop(context);
       //if (auth == 403) {
       setState(() {
         unauthorized = true;
@@ -66,6 +73,7 @@ class LoginPageState extends State<LoginPage> {
       //}
       return auth;
     }
+    Navigator.pop(context);
     return -1;
   }
 
@@ -89,25 +97,8 @@ class LoginPageState extends State<LoginPage> {
             );
           } else {
             await _loginUser(user);
-            /*Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => LoginHadlerPage(
-                  appDatabase: appDatabase,
-                  localUser: user,
-                ),
-              ),
-            );*/
           }
         }
-        /* else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => LoginPage(),
-            ),
-          );
-        }*/
       });
     });
     super.initState();
@@ -130,175 +121,206 @@ class LoginPageState extends State<LoginPage> {
           thumbColor: COLOR_PRIMARY,
           child: Container(
             margin: kIsWeb ? null : EdgeInsets.all(30),
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    "assets/axxa_logo_transparent.png",
-                    width: 100,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                SizedBox(height: 30),
-                Text(
-                  "Connectez vous".tr(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: COLOR_PRIMARY,
-                    fontSize: MediaQuery.of(context).size.width > 800 ? AdaptiveTextSize().getadaptiveTextSize(context, 25) : AdaptiveTextSize().getadaptiveTextSize(context, 25),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Connectez-vous aves les données que vous avez saisies lors de votre inscription".tr(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 14)),
-                ),
-                SizedBox(height: 10),
-                if (unauthorized)
-                  errorMessage(context, "Nom d'utilisateur, mot de passe, ou clé organisation incorrect".tr(), () {
-                    unauthorized = false;
-                  }),
-                SizedBox(height: 10),
-                Form(
-                  key: _formKey,
-                  child: ScrollConfiguration(
-                    behavior: UnGLowListview(),
-                    child: Column(
-                      //shrinkWrap: true,
-                      //crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Organisation key".tr(),
-                            style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 25),
-                          child: TextFormField(
-                            controller: _organisationController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.none,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: "xxxxxxx",
-                              suffixIcon: Icon(Icons.vpn_key_outlined),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Vous devez saisir une clé organisation".tr();
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Email".tr(),
-                            style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 25),
-                          child: TextFormField(
-                            controller: _usernameController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.none,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: "name@email.com".tr(),
-                              suffixIcon: Icon(Icons.mail_outline),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Vous devez saisir un email".tr();
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Mot de passe".tr(),
-                            style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 25),
-                          child: TextFormField(
-                            controller: _passController,
-                            textAlign: TextAlign.start,
-                            keyboardType: TextInputType.text,
-                            obscureText: _obscureText,
-                            decoration: InputDecoration(
-                              suffixIcon: InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
-                                },
-                                child: Icon(
-                                  _obscureText ? Icons.visibility_off : Icons.visibility,
-                                ),
+            child: ScrollTouchWidget(
+              listChild: ListView(
+                shrinkWrap: true,
+                children: [
+                  if (!kIsWeb)
+                    Align(
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        "assets/axxa_logo_transparent.png",
+                        width: 100,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  if (!kIsWeb) SizedBox(height: 30),
+                  if (kIsWeb)
+                    if (MediaQuery.of(context).size.width > 800)
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Image.asset(
+                                "assets/axxa_logo_transparent.png",
+                                width: 50,
+                                fit: BoxFit.contain,
                               ),
-                              border: OutlineInputBorder(),
-                              hintText: "Mot de passe".tr(),
                             ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Mot de passe ne doit pas ềtre vide".tr();
-                              }
-                              return null;
-                            },
                           ),
-                        ),
-                        Container(
-                            alignment: Alignment.centerRight,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ForgotPasswordPage(),
-                                  ),
-                                );
+                          Text(
+                            "Connectez vous".tr(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: COLOR_PRIMARY,
+                              fontSize: MediaQuery.of(context).size.width > 800 ? AdaptiveTextSize().getadaptiveTextSize(context, 25) : AdaptiveTextSize().getadaptiveTextSize(context, 25),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                  if (!kIsWeb)
+                    Text(
+                      "Connectez vous".tr(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: COLOR_PRIMARY,
+                        fontSize: MediaQuery.of(context).size.width > 800 ? AdaptiveTextSize().getadaptiveTextSize(context, 25) : AdaptiveTextSize().getadaptiveTextSize(context, 25),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Connectez-vous aves les données que vous avez saisies lors de votre inscription".tr(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 14)),
+                  ),
+                  SizedBox(height: 10),
+                  if (unauthorized)
+                    errorMessage(context, "Nom d'utilisateur, mot de passe, ou clé organisation incorrect".tr(), () {
+                      unauthorized = false;
+                    }),
+                  SizedBox(height: 10),
+                  Form(
+                    key: _formKey,
+                    child: ScrollConfiguration(
+                      behavior: UnGLowListview(),
+                      child: Column(
+                        //shrinkWrap: true,
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Organisation key".tr(),
+                              style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10, bottom: 25),
+                            child: TextFormField(
+                              controller: _organisationController,
+                              textAlign: TextAlign.start,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.characters,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: "xxxxxxx",
+                                suffixIcon: Icon(Icons.vpn_key_outlined),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Vous devez saisir une clé organisation".tr();
+                                }
+                                return null;
                               },
-                              child: Text(
-                                "Mot de passe oublié ?".tr(),
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            )),
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.only(top: 25),
-                          child: TextButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _loginUser(
-                                  LocalUser.fill(
-                                    username: _usernameController.text.toLowerCase().trim(),
-                                    password: _passController.text,
-                                    organization: _organisationController.text,
-                                  ),
-                                );
-                              }
-                            },
-                            child: Text("S'identifier".tr()),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        /*Container(
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Nom d'utilisateur ou e-mail".tr(),
+                              style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10, bottom: 25),
+                            child: TextFormField(
+                              controller: _usernameController,
+                              textAlign: TextAlign.start,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.none,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: "name@email.com".tr(),
+                                suffixIcon: Icon(Icons.mail_outline),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Vous devez saisir un email".tr();
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Mot de passe".tr(),
+                              style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10, bottom: 25),
+                            child: TextFormField(
+                              controller: _passController,
+                              textAlign: TextAlign.start,
+                              keyboardType: TextInputType.text,
+                              obscureText: _obscureText,
+                              decoration: InputDecoration(
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _obscureText = !_obscureText;
+                                    });
+                                  },
+                                  child: Icon(
+                                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                                  ),
+                                ),
+                                border: OutlineInputBorder(),
+                                hintText: "Mot de passe".tr(),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return "Mot de passe ne doit pas ềtre vide".tr();
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          Container(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ForgotPasswordPage(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Mot de passe oublié ?".tr(),
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              )),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.only(top: 25),
+                            child: TextButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _loginUser(
+                                    LocalUser.fill(
+                                      username: _usernameController.text.toLowerCase().trim(),
+                                      password: _passController.text,
+                                      organization: _organisationController.text,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Text("S'identifier".tr()),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          /*Container(
                         alignment: Alignment.centerRight,
                         child: RichText(
                             text: TextSpan(children: [
@@ -306,11 +328,12 @@ class LoginPageState extends State<LoginPage> {
                           TextSpan(text: "Enregistrer vous", style: TextStyle(color: Colors.blue)),
                         ])),
                       ),*/
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

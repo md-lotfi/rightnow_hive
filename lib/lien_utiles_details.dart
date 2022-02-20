@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/screen_viewer.dart';
@@ -22,7 +23,8 @@ class LienUtilesDetails extends StatelessWidget {
         child: RawScrollbar(
           isAlwaysShown: true,
           thumbColor: COLOR_PRIMARY,
-          child: ListView(
+          child: ScrollTouchWidget(
+              listChild: ListView(
             children: [
               _image("0001.jpg"),
               Divider(),
@@ -34,7 +36,7 @@ class LienUtilesDetails extends StatelessWidget {
               Divider(),
               _image("0005.jpg"),
             ],
-          ),
+          )),
         ),
       ),
     ));

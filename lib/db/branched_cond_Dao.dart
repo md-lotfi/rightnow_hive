@@ -22,7 +22,7 @@ class BranchedConditionsDao extends BranchedLinksDao {
   Future<void> insertBranchedConditions(List<BranchedConditions> tags) async {
     var b = await getBranchedConditionsDb();
     for (BranchedConditions ch in tags) {
-      if (b.values.firstWhereOrNull((element) => element.id == ch.id) == null) await b.add(ch);
+      if (ch.isActive == true) if (b.values.firstWhereOrNull((element) => element.id == ch.id) == null) await b.add(ch);
     }
     //await b.addAll(tags);
   }

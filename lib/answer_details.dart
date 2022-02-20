@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -32,7 +33,7 @@ class AnswerDetailsPage extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: 70,
-            child: _addBuilder(),
+            child: ScrollTouchWidget(listChild: _addBuilder()),
           ),
           Positioned(
             left: 0,

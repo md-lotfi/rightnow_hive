@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:rightnow/components/bottom_nav_home.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/category_dao.dart';
 import 'package:rightnow/forms.dart';
@@ -44,7 +47,7 @@ class CategoriesPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Container(
             margin: EdgeInsets.only(top: 30, left: 20, right: 20),
-            child: _loader(snapshot.data ?? []),
+            child: ScrollTouchWidget(listChild: _loader(snapshot.data ?? [])),
           );
         }
         return Center(child: CircularProgressIndicator());
@@ -61,6 +64,7 @@ class CategoriesPage extends StatelessWidget {
       },
       itemCount: cats.length,
       itemBuilder: (context, index) {
+        log("categories ${cats[index].icon}");
         return Container(
           padding: EdgeInsets.only(top: 15, bottom: 15, left: 15, right: 15),
           decoration: BoxDecoration(
@@ -81,7 +85,7 @@ class CategoriesPage extends StatelessWidget {
               cats[index].getName(context.locale.languageCode),
               style: TextStyle(color: Colors.white),
             ),
-            trailing: cats[index].icon == null ? Image.network(cats[index].icon!) : null,
+            trailing: cats[index].icon != null ? Image.network(cats[index].icon!) : null,
           ),
         );
       },

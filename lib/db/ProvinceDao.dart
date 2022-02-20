@@ -8,10 +8,10 @@ class ProvinceDao {
   }
 
   //@Query("select * from Province")
-  Future<List<Province>> fetchProvinces() async {
+  /*Future<List<Province>> fetchProvinces() async {
     var r = await getProvinceDb();
     return r.values.toList();
-  }
+  }*/
 
   //@Query("select * from Province where id = :id limit 1")
   Future<Province?> fetchProvince(String id) async {
@@ -24,13 +24,13 @@ class ProvinceDao {
     await r.clear();
   }
 
-  Future<void> insertProvince(Province province) async {
+  /*Future<void> insertProvinces(List<Province> provinces) async {
     var r = await getProvinceDb();
-    await r.add(province);
+    await r.addAll(provinces);
   }
 
-  Future<void> setProvince(Province province) async {
+  Future<void> setProvinces(List<Province> provinces) async {
     await removeAllProvinces();
-    await insertProvince(province);
-  }
+    await insertProvinces(provinces);
+  }*/
 }

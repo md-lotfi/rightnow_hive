@@ -8,7 +8,7 @@
             "name": "rightnow",
             "request": "launch",
             "type": "dart",
-            //"args": ["--no-sound-null-safety"]
+            "args": ["--web-renderer", "html"]
         }
     ]
 }

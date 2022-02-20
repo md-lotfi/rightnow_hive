@@ -6,6 +6,7 @@ import 'package:rightnow/article_details_screen.dart';
 import 'package:rightnow/blocs/actualite_bloc.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/events/ActualiteEvent.dart';
 import 'package:rightnow/models/actualite.dart';
@@ -16,16 +17,17 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ActualitePage extends StatelessWidget {
   const ActualitePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    //BlocProvider.of<ActualiteBloc>(context).add(ActualiteEvent.distract());
     BlocProvider.of<ActualiteBloc>(context).add(ActualiteEvent.getActualite());
     return ScreenViewerWidget(
         page: Scaffold(
       extendBodyBehindAppBar: true,
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
+      //bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
       appBar: AppBar(
         title: Text(""),
+        foregroundColor: COLOR_PRIMARY,
         backgroundColor: Colors.transparent,
         elevation: 0,
         /*actions: [
@@ -67,15 +69,16 @@ class ActualitePage extends StatelessWidget {
   }
 
   Widget _getLeading(Actualite actualite) {
-    if (actualite.thumbnail != null)
-      return Image.network(
+    return loadImage(actualite.thumbnail, defaultImg: Icon(Icons.article_outlined, size: 40));
+    /*if (actualite.thumbnail != null)
+    /*return Image.network(
         actualite.thumbnail!,
         errorBuilder: (context, error, stackTrace) {
           return Icon(Icons.article_outlined, size: 40);
         },
-      );
+      );*/
     else
-      return Icon(Icons.article_outlined, size: 40);
+      return Icon(Icons.article_outlined, size: 40);*/
   }
 
   _goto(BuildContext context, Actualite ac) async {
@@ -136,7 +139,7 @@ class ActualitePage extends StatelessWidget {
           child: RawScrollbar(
             isAlwaysShown: true,
             thumbColor: COLOR_PRIMARY,
-            child: _list(data, act),
+            child: ScrollTouchWidget(listChild: _list(data, act)),
           ),
         )
       ],
@@ -153,7 +156,8 @@ class ActualitePage extends StatelessWidget {
       itemBuilder: (context, index) {
         print("actualities count officiel ${data.length}");
         Actualite ac = data[index];
-        print("is important " + ac.isImportant.toString());
+        //if (ac.stateName != "Activated") return Container();
+        //print("is important " + ac.isImportant.toString());
         return InkWell(
           onTap: () async {
             _goto(context, ac);

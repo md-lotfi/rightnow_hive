@@ -10,6 +10,7 @@ import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:rightnow/models/file_saver.dart';
 
 class SignatureView extends StatefulWidget {
   final Question? question;
@@ -34,6 +35,8 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
 
   Uint8List? _image;
 
+  int? _fileKey;
+
   @override
   void initState() {
     if (widget.answerHolder != null) {
@@ -44,6 +47,7 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
             if (answer.qustionId == widget.question!.id) {
               log("has answer after ${answer.answerValue}");
               imageState = (answer.answerValue?.isNotEmpty ?? false) ? 1 : 0;
+              _fileKey = answer.fileKey;
             }
           }
         }
@@ -58,7 +62,7 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
   }
 
   String getSignatureFilename() {
-    return SIGNATURE_FILENAME + (widget.answerHolder?.id?.toString() ?? "0");
+    return SIGNATURE_FILENAME + (widget.answerHolder?.id?.toString() ?? "0") + SIGNATURE_FILENAME_EXT;
   }
 
   Widget load() {
@@ -71,13 +75,13 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
           children: [
             widgetQuestionTitle(widget.question!, context.locale.languageCode),
             //if (!widget.viewOnly)
-            FutureBuilder<Uint8List?>(
-              future: getUint8ListFile(getSignatureFilename()),
+            FutureBuilder<FileSaver?>(
+              future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getSignatureFilename()),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   log("checking image exists ?? $imageState");
                   if (imageState == 1) {
-                    _image = snapshot.data;
+                    _image = snapshot.data?.file; //snapshot.data;
                   }
 
                   return Container(
@@ -167,41 +171,25 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
 
   _setSignature(FormFieldState<int> state) async {
     if (_image != null) {
-      await saveUint8ListFile(_image!, getSignatureFilename());
-      progress = 0;
-      //setState(() {
-      imageState = 1;
-      //});
-      print("signature filename ${getSignatureFilename()} ...........");
-      widget.onSelectedValue!(
-        Answer.fill(widget.question!.id, widget.question!.fieldSet, getSignatureFilename(), getSignatureFilename(), DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
-            widget.answerHolder?.id, null),
-      );
-      state.didChange(imageState);
-      setState(() {});
-      //_image = await signatureController.toPngBytes();
-      /*ApiRepository apiRepository = ApiRepository();
-      Map<String, dynamic> result = await apiRepository.uploadSignature(widget.question!.id!, File.fromRawPath(_image!), (r, t) {
-        setState(() {
-          progress = r / t;
-        });
-        print("total sending $r | $t " + progress.toString());
-      }, asByte: true, i: _image);
-      if (result['id'] != null) {
-        //setState(() {
-        imageState = 1;
-        //});
+      //await saveUint8ListFile(_image!, getSignatureFilename());
+      String n = getSignatureFilename();
+      await FileSaver.set(FileSaver(name: n, file: _image!, path: "", questionId: widget.question!.id!, answerHolderId: widget.answerHolder!.id!));
+
+      print("signature filename $n ...........");
+      FileSaver? f = await FileSaver.getLastItem();
+      if (f != null) {
+        log("signature question add to key ${f.name}");
+        _fileKey = f.key;
         widget.onSelectedValue!(
-          Answer.fill(widget.question!.id, widget.question!.fieldSet, result['id'].toString(), getSignatureFilename(), DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
-              widget.answerHolder?.id, null),
+          Answer.fill(widget.question!.id, widget.question!.fieldSet, n, n, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!), widget.answerHolder?.id, null,
+              fileKey: f.key),
         );
-      } else {
-        //setState(() {
-        imageState = -1;
-        //});
+        progress = 0;
+        imageState = 1;
+        state.didChange(imageState);
       }
-      state.didChange(imageState);
-      setState(() {});*/
+
+      setState(() {});
     }
   }
 

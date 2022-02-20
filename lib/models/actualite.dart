@@ -6,9 +6,6 @@ part 'actualite.g.dart';
 
 @JsonSerializable()
 class Actualite {
-  @override
-  int get typeId => 0;
-
   int? id;
 
   @JsonKey(name: 'state_name')

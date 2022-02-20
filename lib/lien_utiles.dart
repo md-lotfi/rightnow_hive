@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/lien_utiles_details.dart';
@@ -25,36 +26,37 @@ class LienUtiles extends StatelessWidget {
         child: RawScrollbar(
           isAlwaysShown: true,
           thumbColor: COLOR_PRIMARY,
-          child: ListView(
-            children: [
-              ListTile(
-                onTap: () async {
-                  bool c = await canLaunch("https://www.brenco-algerie.com");
-                  if (c) launch("https://www.brenco-algerie.com");
-                },
-                leading: Image.asset("assets/brenco.png"),
-                subtitle: Text("www.brenco-algerie.com", style: TextStyle(color: Colors.blue)),
-                title: Text(
-                  "Site Web BRENCO E&C".tr(),
-                  style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+          child: ScrollTouchWidget(
+            listChild: ListView(
+              children: [
+                ListTile(
+                  onTap: () async {
+                    bool c = await canLaunch("https://www.brenco-algerie.com");
+                    if (c) launch("https://www.brenco-algerie.com");
+                  },
+                  leading: Image.asset("assets/brenco.png"),
+                  subtitle: Text("www.brenco-algerie.com", style: TextStyle(color: Colors.blue)),
+                  title: Text(
+                    "Site Web BRENCO E&C".tr(),
+                    style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                  ),
+                  trailing: Icon(Icons.link_outlined),
                 ),
-                trailing: Icon(Icons.link_outlined),
-              ),
-              Divider(),
-              ListTile(
-                onTap: () async {
-                  bool c = await canLaunch("https://www.rightnow-by-brenco.com");
-                  if (c) launch("https://www.rightnow-by-brenco.com");
-                },
-                leading: Image.asset("assets/axa-logo.png"),
-                subtitle: Text("www.rightnow-by-brenco.com", style: TextStyle(color: Colors.blue)),
-                title: Text(
-                  "Site Web RIGHTNOW".tr(),
-                  style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                Divider(),
+                ListTile(
+                  onTap: () async {
+                    bool c = await canLaunch("https://www.rightnow-by-brenco.com");
+                    if (c) launch("https://www.rightnow-by-brenco.com");
+                  },
+                  leading: Image.asset("assets/axa-logo.png"),
+                  subtitle: Text("www.rightnow-by-brenco.com", style: TextStyle(color: Colors.blue)),
+                  title: Text(
+                    "Site Web RIGHTNOW".tr(),
+                    style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                  ),
+                  trailing: Icon(Icons.link_outlined),
                 ),
-                trailing: Icon(Icons.link_outlined),
-              ),
-              /*ListTile(
+                /*ListTile(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -83,7 +85,8 @@ class LienUtiles extends StatelessWidget {
                 ),
                 trailing: Icon(Icons.link),
               ),*/
-            ],
+              ],
+            ),
           ),
         ),
       ),

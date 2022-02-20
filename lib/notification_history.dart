@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/models/user_notification.dart';
@@ -71,19 +72,21 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
   }
 
   Widget _notificationBuilder(List<UserNotification> data) {
-    return ListView.separated(
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _item(data[index]),
-          ],
-        );
-      },
+    return ScrollTouchWidget(
+      listChild: ListView.separated(
+        separatorBuilder: (context, index) {
+          return Divider();
+        },
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _item(data[index]),
+            ],
+          );
+        },
+      ),
     );
   }
 

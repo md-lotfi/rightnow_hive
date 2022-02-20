@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/components/tile_checkbox_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/disease_dao.dart';
@@ -41,35 +42,37 @@ class _ChroniqueDeseasesPageState extends State<ChroniqueDeseasesPage> {
                     left: 0,
                     right: 0,
                     bottom: 70,
-                    child: ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Disease d = snapshot.data![index];
-                        var _selected = _index.firstWhereOrNull(
-                              (element) => element?.id == d.id,
-                            ) !=
-                            null;
-                        print("_index list _selected $_index");
-                        return TileCheckBoxWidget(
-                          defaultSelected: _selected,
-                          title: d.name ?? "",
-                          onChange: (value) {
-                            print("selected now");
-                            if (value) {
-                              if (_index.firstWhereOrNull(
-                                    (element) => element?.id == d.id,
-                                  ) ==
-                                  null) {
-                                _index.add(d);
-                                return;
+                    child: ScrollTouchWidget(
+                      listChild: ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          Disease d = snapshot.data![index];
+                          var _selected = _index.firstWhereOrNull(
+                                (element) => element?.id == d.id,
+                              ) !=
+                              null;
+                          print("_index list _selected $_index");
+                          return TileCheckBoxWidget(
+                            defaultSelected: _selected,
+                            title: d.name ?? "",
+                            onChange: (value) {
+                              print("selected now");
+                              if (value) {
+                                if (_index.firstWhereOrNull(
+                                      (element) => element?.id == d.id,
+                                    ) ==
+                                    null) {
+                                  _index.add(d);
+                                  return;
+                                }
                               }
-                            }
-                            print("removing $d");
-                            _index.removeWhere((element) => element?.id == d.id);
-                            print("removed now $_index");
-                          },
-                        );
-                      },
+                              print("removing $d");
+                              _index.removeWhere((element) => element?.id == d.id);
+                              print("removed now $_index");
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Positioned(

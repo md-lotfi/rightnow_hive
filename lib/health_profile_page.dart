@@ -90,7 +90,8 @@ class _HealthProfilePageState extends State<HealthProfilePage> {
   }
 
   Widget _body(BuildContext context) {
-    return HealthProfileWidget(
+    return Container();
+    /*return HealthProfileWidget(
       onResult: (health) async {
         ApiRepository api = ApiRepository();
         showLoaderDialog(context);
@@ -122,6 +123,6 @@ class _HealthProfilePageState extends State<HealthProfilePage> {
           ).show();
         }
       },
-    );
+    );*/
   }
 }

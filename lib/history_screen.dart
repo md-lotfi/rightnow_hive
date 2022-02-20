@@ -5,6 +5,7 @@ import 'package:rightnow/blocs/reclamations_bloc.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/components/tabs_header.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
@@ -19,7 +20,6 @@ import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/reclamations.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/screen_viewer.dart';
 
@@ -40,7 +40,7 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ReclamationsBloc>(context).add(ReclamationsEvent.myReclamations());
+    //BlocProvider.of<ReclamationsBloc>(context).add(ReclamationsEvent.myReclamations());
   }
 
   _HistoryPageState();
@@ -115,6 +115,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           future: getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildrenAll(_selectedId, HOLDER_ANY_COMPLETED),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.done) {
+                              log("loading data widtget $_selectedId, $HOLDER_ANY_COMPLETED,  ${snapshot.data?.length}");
                               return _dataWidget(snapshot.data);
                             }
                             return Center(
@@ -180,45 +181,47 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Widget _builder(List<AnswerHolder>? data) {
     if (data == null) return Container();
-    return ListView.separated(
-      padding: const EdgeInsets.all(10),
-      separatorBuilder: (context, index) {
-        if (data.length == 0) return Container();
-        if ((index + 1) == (data.length + 1)) return Container();
-        if (index == 0) return Container();
-        return _listDivider(Jiffy(data[index].completedAt).format("dd MMMM yyyy"));
-      },
-      itemCount: data.length + 2,
-      itemBuilder: (BuildContext context, int index) {
-        if (data.length == 0) return Container();
-        String f = "";
-        if ((index + 1) == (data.length + 2)) return Container();
-        if (index == 0) {
+    return ScrollTouchWidget(
+      listChild: ListView.separated(
+        padding: const EdgeInsets.all(10),
+        separatorBuilder: (context, index) {
+          if (data.length == 0) return Container();
+          if ((index + 1) == (data.length + 1)) return Container();
+          if (index == 0) return Container();
           return _listDivider(Jiffy(data[index].completedAt).format("dd MMMM yyyy"));
-        }
-        if (data[index - 1].completedAt != null) {
-          DateTime d = DateTime.parse(data[index - 1].completedAt ?? "");
-          f = DateFormat('dd/MM/yyyy').format(d);
-          print('date is ' + f);
-        }
-        return Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(0, 0), // changes position of shadow
-              ),
-            ],
-          ),
-          child: _tile(data[index - 1], f),
-          //child: Card(child: _tile(data[index], f)),
-        );
-      },
+        },
+        itemCount: data.length + 2,
+        itemBuilder: (BuildContext context, int index) {
+          if (data.length == 0) return Container();
+          String f = "";
+          if ((index + 1) == (data.length + 2)) return Container();
+          if (index == 0) {
+            return _listDivider(Jiffy(data[index].completedAt).format("dd MMMM yyyy"));
+          }
+          if (data[index - 1].completedAt != null) {
+            DateTime d = DateTime.parse(data[index - 1].completedAt ?? "");
+            f = DateFormat('dd/MM/yyyy').format(d);
+            print('date is ' + f);
+          }
+          return Container(
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 5,
+                  offset: Offset(0, 0), // changes position of shadow
+                ),
+              ],
+            ),
+            child: _tile(data[index - 1], f),
+            //child: Card(child: _tile(data[index], f)),
+          );
+        },
+      ),
     );
   }
 

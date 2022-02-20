@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rightnow/blocs/questions_bloc.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/events/QuestionsEvent.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -100,7 +101,7 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
                     child: RawScrollbar(
                       isAlwaysShown: true,
                       thumbColor: COLOR_PRIMARY,
-                      child: dataWidget(data),
+                      child: ScrollTouchWidget(listChild: dataWidget(data)),
                     ),
                   ),
                   Positioned(

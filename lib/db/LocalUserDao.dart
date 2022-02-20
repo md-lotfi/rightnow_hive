@@ -26,6 +26,7 @@ class LocalUserDao extends ProfileDao {
     var u = await getLocalUserDb();
     await removeUser();
     await removeProfile();
+    print("saving local user ${localUser.toJson()}");
     await u.add(localUser);
     //await removeProfile();
     //await removeUser();

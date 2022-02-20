@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
+import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/views/geo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -91,31 +93,35 @@ class _GoogleMapsPageState extends State<GoogleMapsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return showWidget(
-        Scaffold(
-          body: GoogleMap(
-            mapType: MapType.normal,
-            markers: _markers,
-            initialCameraPosition: _initPos(),
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-            },
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () async {
-              final GoogleMapController controller = await _controller.future;
-              _imageBytes = await controller.takeSnapshot();
-              Navigator.pop(context, LatLngImage(_imageBytes!, pos));
-            },
-            label: Text('Ok'.tr()),
-            icon: Icon(Icons.gps_fixed),
-          ),
-        ),
-        Center(
-          child: CircularProgressIndicator(),
-        ),
-        _locationData != null);
+    return ScreenViewerWidget(
+        page: showWidget(
+            Scaffold(
+              body: GoogleMap(
+                mapType: MapType.normal,
+                markers: _markers,
+                initialCameraPosition: _initPos(),
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                },
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () async {
+                  if (!kIsWeb) {
+                    log("taking screenshot google map");
+                    final GoogleMapController controller = await _controller.future;
+                    _imageBytes = await controller.takeSnapshot();
+                  }
+                  Navigator.pop(context, LatLngImage(_imageBytes ?? Uint8List.fromList([]), pos));
+                },
+                label: Text('Ok'.tr()),
+                icon: Icon(Icons.gps_fixed),
+              ),
+            ),
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+            _locationData != null));
   }
 
   /*Future<void> _goToTheLake() async {

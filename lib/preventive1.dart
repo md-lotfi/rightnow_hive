@@ -48,27 +48,6 @@ class Preventive1 extends StatelessWidget {
                   builder: (context) => DataPrivacyPage(),
                 ),
               );
-              /*redirectUser(() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HashPage(),
-                  ),
-                );
-              }, () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DataPrivacyPage(),
-                  ),
-                );
-              });*/
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Preventive2(),
-                ),
-              );*/
             },
             child: Text(
               "Suivant".tr(),

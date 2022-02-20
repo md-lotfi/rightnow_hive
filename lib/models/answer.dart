@@ -36,13 +36,17 @@ class Answer extends HiveObject {
   @HiveField(7)
   String? createdAt;
 
+  @HiveField(8)
+  int? fileKey;
+
   List<int>? choices;
 
   List<MultiSelectAnswer>? multiSelectAnswer;
 
   Answer(this.id, this.qustionId, this.fieldSetId, this.answerValue, this.valueExtra, this.createdAt, this.resourcetype, this.answerHolderId);
 
-  Answer.fill(this.qustionId, this.fieldSetId, this.answerValue, this.valueExtra, this.createdAt, this.resourcetype, this.answerHolderId, this.multiSelectAnswer, {this.choices, this.question});
+  Answer.fill(this.qustionId, this.fieldSetId, this.answerValue, this.valueExtra, this.createdAt, this.resourcetype, this.answerHolderId, this.multiSelectAnswer,
+      {this.choices, this.question, this.fileKey});
 
   factory Answer.fromJson(Map<String, dynamic> json) => _$AnswerFromJson(json);
 

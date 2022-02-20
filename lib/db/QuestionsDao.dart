@@ -61,7 +61,7 @@ class QuestionsDao extends ChoicesDao {
         q.depandantConditions = dc;
       });
       await fetchBranchedConditions(q.id!).then((List<BranchedConditions> bc) {
-        print("received branched conditions are " + bc.length.toString());
+        print("received branched conditions are ${bc.map((e) => e.toJson())}"); // + bc.length.toString()
         q.branchedConditions = bc;
       });
 
@@ -100,9 +100,11 @@ class QuestionsDao extends ChoicesDao {
       }
       if (q.branchedConditions != null) {
         for (var c in q.branchedConditions!) {
-          print("saving branched conditions from " + q.id.toString());
-          c.questionId = q.id;
-          bc.add(c);
+          print("saving branched conditions from ${q.id.toString()}, ${c.isActive}");
+          if (c.isActive == true) {
+            c.questionId = q.id;
+            bc.add(c);
+          }
         }
       }
       if (q.branchedLinks != null) {
@@ -119,6 +121,8 @@ class QuestionsDao extends ChoicesDao {
       }
       ql.add(q);
     }
+
+    print("bc is ${bc.map((e) => e.toJson())}");
     await setChoices(cl);
     await insertDependentConditions(dc);
     await insertBranchedLinks(bl);

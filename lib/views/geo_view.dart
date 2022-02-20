@@ -8,6 +8,7 @@ import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
 import 'package:rightnow/views/google_maps_screen.dart';
 
@@ -36,7 +37,10 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
   Uint8List? _image;
   int geoState = 0;
 
+  Answer? _currentAnswer;
+
   String? geoValue;
+  int? _fileKey;
 
   @override
   void initState() {
@@ -49,6 +53,8 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
               setState(() {
                 geoState = answer.answerValue!.isNotEmpty ? 1 : 0;
                 geoValue = answer.answerValue ?? "";
+                _currentAnswer = answer;
+                _fileKey = _currentAnswer?.fileKey;
               });
             }
           }
@@ -69,16 +75,23 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
     );
     if (answerHolder != null) {
       _image = res.image;
-      await saveUint8ListFile(_image!, getMapFilename());
+      //await saveUint8ListFile(_image!, getMapFilename());
+      String n = getMapFilename();
+      await FileSaver.set(FileSaver(name: n, path: n, file: _image!, questionId: question!.id!, answerHolderId: answerHolder!.id!));
       print("getting image from map ");
       geoState = 1;
       List<MultiSelectAnswer> m = [];
       m.add(MultiSelectAnswer.fillGeo(answerHolder!.id, res.latLng.latitude));
       m.add(MultiSelectAnswer.fillGeo(answerHolder!.id, res.latLng.longitude));
-      onSelectedValue!(
-        Answer.fill(question!.id, question!.fieldSet, (res.latLng.latitude.toString() + GPS_SEPARRATOR + res.latLng.longitude.toString()), null, DateTime.now().toString(),
-            transtypeResourceType(question!.resourcetype!), answerHolder!.id, m),
-      );
+      FileSaver? f = await FileSaver.getLastItem();
+      if (f != null) {
+        _fileKey = f.key;
+        onSelectedValue!(
+          Answer.fill(question!.id, question!.fieldSet, (res.latLng.latitude.toString() + GPS_SEPARRATOR + res.latLng.longitude.toString()), null, DateTime.now().toString(),
+              transtypeResourceType(question!.resourcetype!), answerHolder!.id, m,
+              fileKey: f.key),
+        );
+      }
       state.didChange(geoState);
       setState(() {});
       return true;
@@ -99,11 +112,11 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
         children: [
           widgetQuestionTitle(question!, context.locale.languageCode),
           if (!widget.viewOnly)
-            FutureBuilder<Uint8List?>(
-              future: getUint8ListFile(getMapFilename()),
+            FutureBuilder<FileSaver?>(
+              future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getMapFilename()),
               builder: (context, snapshot) {
                 if (ConnectionState.done == snapshot.connectionState) {
-                  _image = snapshot.data;
+                  _image = snapshot.data?.file;
                   return Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(bottom: 10, top: 10),
@@ -156,11 +169,11 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
               },
             ),
           if (widget.viewOnly)
-            FutureBuilder<Uint8List?>(
-              future: getUint8ListFile(getMapFilename()),
+            FutureBuilder<FileSaver?>(
+              future: FileSaver.getBykey(_fileKey),
               builder: (context, snapshot) {
                 if (ConnectionState.done == snapshot.connectionState) {
-                  _image = snapshot.data;
+                  _image = snapshot.data?.file;
                   return Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.only(bottom: 10, top: 10),

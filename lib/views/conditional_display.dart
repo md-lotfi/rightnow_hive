@@ -141,6 +141,7 @@ class ConditionDisplay {
     print('branched condtions check');
     if (question.branchedConditions != null) {
       print('branched condtions are not null ' + question.id.toString() + ", " + question.branchedConditions!.length.toString());
+      loop:
       for (BranchedConditions bc in question.branchedConditions!) {
         print('branched conditions loop start ' + question.branchedConditions!.length.toString());
         switch (question.resourcetype) {
@@ -194,6 +195,7 @@ class ConditionDisplay {
                 }
               }
               visibility(bc.dependantQuestion!, b);
+              if (b) break loop;
             }
             break;
           default:

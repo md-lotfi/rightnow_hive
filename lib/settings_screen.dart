@@ -4,6 +4,7 @@ import 'package:rightnow/change_password_screen.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/language_widget.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
@@ -35,29 +36,30 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         body: Container(
           margin: EdgeInsets.all(15),
-          child: ListView(
-            children: [
-              Container(
-                margin: isFrench(context) ? EdgeInsets.only(left: 20) : EdgeInsets.only(right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Changer la langue".tr(),
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(5),
+          child: ScrollTouchWidget(
+            listChild: ListView(
+              children: [
+                Container(
+                  margin: isFrench(context) ? EdgeInsets.only(left: 20) : EdgeInsets.only(right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Changer la langue".tr(),
+                        style: TextStyle(fontSize: 16),
                       ),
-                      padding: EdgeInsets.all(8),
-                      child: LanguageWidget(),
-                    ),
-                  ],
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding: EdgeInsets.all(8),
+                        child: LanguageWidget(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              /*ListTile(
+                /*ListTile(
               title: Text("Changer la langue".tr()),
               trailing: Container(
                 decoration: BoxDecoration(
@@ -68,52 +70,53 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: LanguageWidget(),
               ),
             ),*/
-              Divider(),
-              ListTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChangePasswordPage(),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Changer le mot de passe".tr(),
-                  style: TextStyle(fontWeight: FontWeight.normal),
+                Divider(),
+                ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChangePasswordPage(),
+                      ),
+                    );
+                  },
+                  title: Text(
+                    "Changer le mot de passe".tr(),
+                    style: TextStyle(fontWeight: FontWeight.normal),
+                  ),
+                  trailing: Icon(Icons.lock_outlined),
                 ),
-                trailing: Icon(Icons.lock_outlined),
-              ),
-              Divider(),
-              ListTile(
-                onTap: () async {
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  await prefs.clear();
-                  await getDataBase<LocalUserDao>().removeUser();
-                  await getDataBase<FormFieldsDao>().setForms([], null);
-                  await getDataBase<AnswerHolderDao>().deleteAnswerHolderAll();
-                  Phoenix.rebirth(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ),
-                  );
-                },
-                title: Text(
-                  "Déconnexion".tr(),
-                  style: TextStyle(fontWeight: FontWeight.normal),
+                Divider(),
+                ListTile(
+                  onTap: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    await prefs.clear();
+                    await getDataBase<LocalUserDao>().removeUser();
+                    await getDataBase<FormFieldsDao>().setForms([], null);
+                    await getDataBase<AnswerHolderDao>().deleteAnswerHolderAll();
+                    Phoenix.rebirth(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  },
+                  title: Text(
+                    "Déconnexion".tr(),
+                    style: TextStyle(fontWeight: FontWeight.normal),
+                  ),
+                  trailing: Icon(Icons.logout),
                 ),
-                trailing: Icon(Icons.logout),
-              ),
-              /*ListTile(
+                /*ListTile(
               title: Text(
                 "Contact us".tr(),
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               trailing: Icon(Icons.mail),
             ),*/
-            ],
+              ],
+            ),
           ),
         ),
       ),

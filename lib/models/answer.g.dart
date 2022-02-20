@@ -25,13 +25,13 @@ class AnswerAdapter extends TypeAdapter<Answer> {
       fields[7] as String?,
       fields[4] as String?,
       fields[3] as int?,
-    );
+    )..fileKey = fields[8] as int?;
   }
 
   @override
   void write(BinaryWriter writer, Answer obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +47,9 @@ class AnswerAdapter extends TypeAdapter<Answer> {
       ..writeByte(6)
       ..write(obj.valueExtra)
       ..writeByte(7)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(8)
+      ..write(obj.fileKey);
   }
 
   @override
@@ -76,6 +78,7 @@ Answer _$AnswerFromJson(Map<String, dynamic> json) {
     json['resourcetype'] as String?,
     json['answerHolderId'] as int?,
   )
+    ..fileKey = json['fileKey'] as int?
     ..choices =
         (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList()
     ..multiSelectAnswer = (json['multiSelectAnswer'] as List<dynamic>?)
@@ -92,6 +95,7 @@ Map<String, dynamic> _$AnswerToJson(Answer instance) => <String, dynamic>{
       'value': instance.answerValue,
       'valueExtra': instance.valueExtra,
       'createdAt': instance.createdAt,
+      'fileKey': instance.fileKey,
       'choices': instance.choices,
       'multiSelectAnswer': instance.multiSelectAnswer,
     };

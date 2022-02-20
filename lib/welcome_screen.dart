@@ -112,29 +112,6 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: AdaptiveTextSize().getadaptiveTextSize(context, 10)),
-                  /*Container(
-                    child: Text(
-                      'En vous cliquant sur "Commencez" vous acceptez'.tr(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 10), fontWeight: FontWeight.normal, color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(height: AdaptiveTextSize().getadaptiveTextSize(context, 5)),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CguScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "les conditions générales d'utilisation".tr(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 10), fontWeight: FontWeight.bold, color: Colors.blue),
-                    ),
-                  ),*/
                 ],
               ),
             ),

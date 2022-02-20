@@ -33,9 +33,9 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
   _DateWidgetState(this.question, this.answerHolder, this.onSelectedValue);
 
   DateTime _currentDateTime = DateTime.now();
-  DateTime? _selectedDateTime;
+  DateTime? _selectedDateTime = DateTime.now();
 
-  bool _hasDate = false;
+  //bool _hasDate = false;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
           for (var answer in answerHolder!.answers!) {
             if (answer.qustionId == question!.id) {
               if (isDate(answer.answerValue!)) {
-                _hasDate = true;
+                //_hasDate = true;
                 _currentDateTime = DateTime.parse(answer.answerValue!);
                 _selectedDateTime = _currentDateTime;
               }
@@ -54,6 +54,10 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
         }
       }
     }
+    onSelectedValue!(
+      Answer.fill(
+          question!.id, question!.fieldSet, Jiffy(_currentDateTime).format("yyyy-MM-dd"), null, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+    );
     super.initState();
   }
 
@@ -88,12 +92,13 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
                 if (!widget.viewOnly)
                   Container(
                     height: MediaQuery.of(context).size.height / 4,
-                    decoration: (!_hasDate
+                    margin: EdgeInsets.only(left: 30, right: 30),
+                    /*decoration: (!_hasDate
                         ? BoxDecoration(
                             border: Border.all(color: Colors.red),
                             borderRadius: BorderRadius.circular(8),
                           )
-                        : null),
+                        : null),*/
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.date,
                       minimumDate: minDate,
@@ -101,7 +106,7 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
                       initialDateTime: _currentDateTime,
                       onDateTimeChanged: (DateTime dateTime) {
                         print("dateTime: " + Jiffy(dateTime).format("yyyy-MM-dd"));
-                        _hasDate = true;
+                        //_hasDate = true;
                         _selectedDateTime = dateTime;
                         onSelectedValue!(
                           Answer.fill(question!.id, question!.fieldSet, Jiffy(dateTime).format("yyyy-MM-dd"), null, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),

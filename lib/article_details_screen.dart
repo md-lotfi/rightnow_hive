@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/actualite.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -43,44 +44,42 @@ class ArticleDetailsPage extends StatelessWidget {
               icon: Icon(Icons.settings_outlined)),
         ],
       ),
-      body: ListView(
-        padding: EdgeInsets.only(top: 0),
-        children: [
-          //articleHeader(context, actualite),
-          Image.network(
-            actualite.thumbnail ?? "",
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height / 2,
-            fit: BoxFit.fill,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset('assets/welcome.png', width: double.infinity, height: MediaQuery.of(context).size.height / 2, fit: BoxFit.fill);
-            },
-          ),
-          articlaHeaderColumn(context, actualite),
-          Container(
-            padding: EdgeInsets.all(25),
-            child: Html(
-              data: actualite.getContent(context.locale.languageCode),
-              style: {
-                "p": Style(
-                  //color: Colors.black,
-                  //fontSize: FontSize(15),
-                  fontFamily: "PoppinsMedium",
-                  textAlign: TextAlign.justify,
-                ),
-              },
-              onLinkTap: (url, _, __, ___) async {
-                print("Opening $url...");
-                bool b = await canLaunch(url ?? "");
-                if (b) launch(url ?? "");
+      body: ScrollTouchWidget(
+        listChild: ListView(
+          padding: EdgeInsets.only(top: 0),
+          children: [
+            //articleHeader(context, actualite),
+            Image.network(
+              actualite.thumbnail ?? "",
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 2,
+              fit: BoxFit.fill,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset('assets/welcome.png', width: double.infinity, height: MediaQuery.of(context).size.height / 2, fit: BoxFit.fill);
               },
             ),
-            /*Text(
-              actualite.getContent(context.locale.languageCode),
-              style: TextStyle(fontSize: 18),
-            ),*/
-          )
-        ],
+            articlaHeaderColumn(context, actualite),
+            Container(
+              padding: EdgeInsets.all(25),
+              child: Html(
+                data: actualite.getContent(context.locale.languageCode),
+                style: {
+                  "p": Style(
+                    //color: Colors.black,
+                    //fontSize: FontSize(15),
+                    fontFamily: "PoppinsMedium",
+                    textAlign: TextAlign.justify,
+                  ),
+                },
+                onLinkTap: (url, _, __, ___) async {
+                  print("Opening $url...");
+                  bool b = await canLaunch(url ?? "");
+                  if (b) launch(url ?? "");
+                },
+              ),
+            )
+          ],
+        ),
       ),
     ));
   }
