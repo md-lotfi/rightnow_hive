@@ -36,7 +36,7 @@ class _HashPageState extends State<HashPage> {
       await api.getOrganisation();
       await api.fetchFormState();
       await api.getDiseases();
-      await api.getBloodGroup();
+      //await api.getBloodGroup();
       await api.getProvinces();
       String? hash = await api.fetchHashMain();
       if (hash == null) {
@@ -236,20 +236,5 @@ class _HashPageState extends State<HashPage> {
         builder: (context) => HomePage(),
       ),
     );
-    /*if (p?.updatedMobile == true) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HealthProfilePage(),
-        ),
-      );
-    }*/
   }
 }

@@ -76,7 +76,12 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
       maxDate = null;
     }
     print(context.locale.countryCode);
-    //context.setLocale(Locale('ar', 'DZ'));
+
+    _selectedDateTime = _currentDateTime;
+    onSelectedValue!(
+      Answer.fill(
+          question!.id, question!.fieldSet, Jiffy(_currentDateTime).format("yyyy-MM-dd"), null, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+    );
 
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 15, bottom: 10, right: 15),

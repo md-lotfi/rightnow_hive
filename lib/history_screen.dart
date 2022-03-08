@@ -9,12 +9,14 @@ import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/components/tabs_header.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
+import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/events/ReclamationsEvent.dart';
 import 'package:rightnow/fieldsets.dart';
 import 'package:rightnow/fieldsets_answered.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FieldSet.dart';
+import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/reclamations.dart';
@@ -298,8 +300,11 @@ class _HistoryPageState extends State<HistoryPage> {
         ListTile(
           dense: true,
           contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-          onTap: () {
-            if (data.uploaded == true) {
+          onTap: () async {
+            //FormFields? f = await getDataBase<FormFieldsDao>().loadFormFieldSets(data.formId ?? -1, HOLDER_COMPLETED);
+            //print("decision response is ${widget.answerHolder.decisionResponse}");
+            showResponseDialog(context, data.decisionResponse, () {});
+            /*if (data.uploaded == true) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -315,7 +320,7 @@ class _HistoryPageState extends State<HistoryPage> {
                   builder: (context) => FieldsSetPage(formId: data.formId!),
                 ),
               );
-            }
+            }*/
           },
           title: Text(
             data.formFields?.getName(context.locale.languageCode) ?? "",

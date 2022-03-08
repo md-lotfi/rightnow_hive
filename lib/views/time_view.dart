@@ -29,8 +29,8 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
-  DateTime? _currentDateTime;
-  DateTime? _selectedDateTime;
+  DateTime _currentDateTime = DateTime.now();
+  DateTime? _selectedDateTime = DateTime.now();
 
   bool _hasDate = false;
 
@@ -68,6 +68,12 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
     DateFormat df = DateFormat('HH:mm:ss');
     DateTime? minTime = df.parse(question?.minValue ?? "00:00:00");
     DateTime? maxTime = df.parse(question?.maxValue ?? "00:00:00");
+    String t = Jiffy(_currentDateTime).format("HH:mm");
+    _selectedDateTime = _currentDateTime;
+    print("selected time: $t");
+    onSelectedValue!(
+      Answer.fill(question!.id, question!.fieldSet, t, null, t, transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+    );
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 15, bottom: 10, right: 15),
       child: Container(

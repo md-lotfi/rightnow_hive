@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -44,6 +45,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   int imageState = 0;
 
   Answer? _currentAnswer;
+  int? _fileKey;
 
   @override
   void initState() {
@@ -55,8 +57,11 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
               //fieldDataController.text = answer.answerValue;
               //if (answer.answerValue == null) break;
               setState(() {
-                imageState = (answer.answerValue?.isNotEmpty ?? false) ? 1 : 0;
-                if (answer.valueExtra != null) if (answer.valueExtra?.isNotEmpty ?? false) _currentAnswer = answer;
+                if (answer.valueExtra != null) if (answer.valueExtra?.isNotEmpty ?? false) {
+                  _currentAnswer = answer;
+                  _fileKey = _currentAnswer?.fileKey;
+                  imageState = 1;
+                }
                 /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
                     _image = await FileSaver.getImageByAnswerHolder(answer.answerHolderId!);
                   });*/
@@ -100,27 +105,33 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
         }
       }
 
-      setState(() {
-        //imageState = 2;
-        imageState = 1;
-      });
       FileSaver? f = await FileSaver.getLastItem();
-      if (f != null)
+      if (f != null) {
+        _fileKey = f.key;
         onSelectedValue!(
           Answer.fill(question!.id, question!.fieldSet, "", fPath, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder?.id, null, fileKey: f.key),
         );
+      }
+      setState(() {
+        //imageState = 2;
+        _image = _image;
+        imageState = 1;
+      });
     }
   }
 
   Future getImage(FormFieldState<int> state) async {
     progress = 0;
+    log("getting image ....");
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     if (pickedFile != null) {
-      Uint8List f = await pickedFile.readAsBytes();
-      String n = _getPictureFilename();
-      await FileSaver.set(FileSaver(name: n, path: "", file: f, questionId: question!.id!, answerHolderId: answerHolder!.id!));
-      await _save(n, state);
-      /*if (!kIsWeb) {
+      log("picked file is ....");
+      _image = await pickedFile.readAsBytes();
+      if (_image != null) {
+        String n = _getPictureFilename();
+        await FileSaver.set(FileSaver(name: n, path: "", file: _image!, questionId: question!.id!, answerHolderId: answerHolder!.id!));
+        await _save(n, state);
+        /*if (!kIsWeb) {
         _image = File(pickedFile.path);
         if (_image != null) {
           String? fPath = await saveFile(_image!, _getPictureFilename());
@@ -131,6 +142,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
         await FileSaver.set(FileSaver(name: _getPictureFilename(), file: f));
         await _save(_getPictureFilename(), state);
       }*/
+      }
     }
     state.didChange(imageState);
   }
@@ -138,7 +150,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<FileSaver?>(
-      future: FileSaver.getBykey(_currentAnswer?.fileKey),
+      future: FileSaver.getBykey(_fileKey),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           _image = snapshot.data?.file;

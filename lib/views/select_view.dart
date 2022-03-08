@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/my_dropdown_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
@@ -32,13 +33,15 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
   final AnswerHolder? answerHolder;
   _SelectWidgetState(this.answerHolder, this.onSelectedValue);
   Choice? _currentChoice;
-  List<DropdownMenuItem<Choice>>? _choicesDropdownList;
+  //List<DropdownMenuItem<Choice>>? _choicesDropdownList;
+
+  //List<PopupMenuItem<Choice>>? _choicesDropdownList;
 
   @override
   void initState() {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {
-        _choicesDropdownList = _dropdownItems();
+        //_choicesDropdownList = _dropdownItems();
         if (answerHolder != null) {
           if (answerHolder!.answers != null) {
             if (answerHolder!.answers!.length > 0) {
@@ -46,8 +49,12 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                 if (answer.qustionId == widget.question.id) {
                   if (answer.multiSelectAnswer != null) {
                     if (answer.multiSelectAnswer!.length > 0) {
-                      for (var choice in _choicesDropdownList!) {
-                        if (choice.value != null) {
+                      for (var choice in widget.question.choices!) {
+                        if (choice.id == answer.multiSelectAnswer![0].selectedId) {
+                          _currentChoice = choice;
+                          break;
+                        }
+                        /*if (choice.value != null) {
                           if (choice.value!.id == answer.multiSelectAnswer![0].selectedId) {
                             setState(() {
                               _currentChoice = choice.value;
@@ -55,7 +62,7 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                             });
                             break;
                           }
-                        }
+                        }*/
                       }
                     }
                   }
@@ -123,7 +130,11 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                               width: 0.80,
                               color: (answerHolder?.answers?.length ?? 0) == 0 ? Colors.grey.shade300 : (_currentChoice == null ? Colors.red : Colors.grey.shade300)),
                         ),
-                        child: DropdownButton(
+                        child: MyDropDownWidget<Choice>(
+                          label: _currentChoice?.getName(context.locale.languageCode) ?? "",
+                          choicesDropdownList: _dropdownItems(state),
+                        ),
+                        /*DropdownButton(
                           icon: Icon(Icons.arrow_drop_down),
                           iconSize: 42,
                           underline: SizedBox(),
@@ -133,7 +144,7 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                           onChanged: (value) {
                             changedDropDownItem(value as Choice, state);
                           },
-                        ),
+                        ),*/
                       ),
                       state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
                     ],
@@ -161,7 +172,44 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
     });
   }
 
-  List<DropdownMenuItem<Choice>> _dropdownItems() {
+  List<PopupMenuItem<Choice>> _dropdownItems(FormFieldState<Choice> state) {
+    List<PopupMenuItem<Choice>> l = [];
+    if (widget.question.choices != null) {
+      if (widget.question.choices!.length > 0) {
+        for (var i = 0; i < (widget.question.choices?.length ?? 0); i++) {
+          Choice choice = widget.question.choices![i];
+          l.add(PopupMenuItem(
+            onTap: () {
+              changedDropDownItem(choice, state);
+            },
+            value: choice,
+            child: PopUpMenuTile(
+              isActive: true,
+              showDivider: i < widget.question.choices!.length - 1,
+              icon: Icons.fiber_manual_record,
+              title: choice.getName(context.locale.languageCode),
+            ), //Text(choice.getName(context.locale.languageCode)),
+          ));
+        }
+        /*for (var choice in widget.question.choices!) {
+          l.add(PopupMenuItem(
+            onTap: () {
+              changedDropDownItem(choice, state);
+            },
+            value: choice,
+            child: PopUpMenuTile(
+              isActive: true,
+              icon: Icons.fiber_manual_record,
+              title: choice.getName(context.locale.languageCode),
+            ), //Text(choice.getName(context.locale.languageCode)),
+          ));
+        }*/
+      }
+    }
+    return l;
+  }
+
+  /*List<DropdownMenuItem<Choice>> _dropdownItems() {
     List<DropdownMenuItem<Choice>> l = [];
     if (widget.question.choices != null) {
       if (widget.question.choices!.length > 0) {
@@ -174,7 +222,7 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
       }
     }
     return l;
-  }
+  }*/
 
   @override
   bool get wantKeepAlive => true;

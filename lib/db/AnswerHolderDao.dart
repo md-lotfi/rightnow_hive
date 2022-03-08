@@ -277,9 +277,10 @@ class AnswerHolderDao extends AnswersDao {
     int completed, {
     bool any = false,
     bool withFormFields = false,
+    AnswerHolder? answerHolder,
   }) async {
-    AnswerHolder? ah;
-    if (any)
+    AnswerHolder? ah = answerHolder;
+    if (answerHolder == null) if (any)
       ah = await fetchAnswerHolderAny(formId, completed);
     else
       ah = await fetchAnswerHolderOne(formId, completed);

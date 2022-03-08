@@ -110,11 +110,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
         });
       } else {
         print("we already have an answer holder ${value.id}, ${value.answers?.length}, ${widget.fieldSet.id}");
-
-        //setState(() {
         _newAnswer = false;
         _answerHolder = value;
-        //});
         BlocProvider.of<QuestionsBloc>(context).add(QuestionsEvent.loadQuestions(widget.fieldSet.id!));
       }
       //_refreshProgress.value = _refreshProgress.value++;
