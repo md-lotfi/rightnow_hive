@@ -6,11 +6,13 @@ import 'package:rightnow/inherits/field_controller.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class FreeTextWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
 
   const FreeTextWidget({
@@ -18,6 +20,7 @@ class FreeTextWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
   @override
@@ -54,6 +57,8 @@ class _FreeTextWidgetState extends State<FreeTextWidget> with AutomaticKeepAlive
           }
         }
       }
+    } else if (widget.responseSet != null) {
+      fieldDataController.text = widget.responseSet?.value ?? "";
     }
     super.initState();
   }
@@ -61,7 +66,7 @@ class _FreeTextWidgetState extends State<FreeTextWidget> with AutomaticKeepAlive
   _dataChanged() {
     print("decimal text changed " + fieldDataController.text);
     onSelectedValue!(
-      Answer.fill(question!.id, question!.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
     );
   }
 
@@ -73,7 +78,7 @@ class _FreeTextWidgetState extends State<FreeTextWidget> with AutomaticKeepAlive
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question!, context.locale.languageCode),
+            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,

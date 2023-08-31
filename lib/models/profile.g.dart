@@ -38,13 +38,15 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       fields[18] as bool?,
       fields[17] as int?,
       fields[3] as bool?,
-    );
+    )
+      ..provinceData = fields[22] as Province?
+      ..province = fields[23] as String?;
   }
 
   @override
   void write(BinaryWriter writer, Profile obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -57,6 +59,10 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       ..write(obj.fname)
       ..writeByte(5)
       ..write(obj.email)
+      ..writeByte(22)
+      ..write(obj.provinceData)
+      ..writeByte(23)
+      ..write(obj.province)
       ..writeByte(6)
       ..write(obj.gender)
       ..writeByte(7)
@@ -127,9 +133,11 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
     json['is_smoker'] as bool?,
     json['vaccin_dose'] as int?,
     json['updated_mobile'] as bool?,
-  )..province = json['province'] == null
-      ? null
-      : Province.fromJson(json['province'] as Map<String, dynamic>);
+  )
+    ..provinceData = json['province_data'] == null
+        ? null
+        : Province.fromJson(json['province_data'] as Map<String, dynamic>)
+    ..province = json['province'] as String?;
 }
 
 Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
@@ -139,6 +147,7 @@ Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
       'updated_mobile': instance.updatedMobile,
       'firstname': instance.fname,
       'email': instance.email,
+      'province_data': instance.provinceData,
       'province': instance.province,
       'gender': instance.gender,
       'birth_date': instance.birthDate,

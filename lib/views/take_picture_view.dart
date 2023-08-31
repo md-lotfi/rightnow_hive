@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:path/path.dart';
 
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -16,12 +15,13 @@ import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/file_saver.dart';
-import 'package:rightnow/rest/ApiRepository.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class TakePictureWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool imageOnly;
 
   const TakePictureWidget({
@@ -29,6 +29,7 @@ class TakePictureWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.imageOnly,
   }) : super(key: key);
   @override
@@ -123,13 +124,13 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   Future getImage(FormFieldState<int> state) async {
     progress = 0;
     log("getting image ....");
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.camera, maxWidth: 1080, imageQuality: 75);
     if (pickedFile != null) {
       log("picked file is ....");
       _image = await pickedFile.readAsBytes();
       if (_image != null) {
         String n = _getPictureFilename();
-        await FileSaver.set(FileSaver(name: n, path: "", file: _image!, questionId: question!.id!, answerHolderId: answerHolder!.id!));
+        await FileSaver.set(FileSaver(name: n, path: "", extension: "jpeg", file: _image!, questionId: question!.id!, answerHolderId: answerHolder!.id!));
         await _save(n, state);
         /*if (!kIsWeb) {
         _image = File(pickedFile.path);
@@ -167,21 +168,32 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widgetQuestionTitle(question!, context.locale.languageCode),
-          Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(bottom: 10, top: 10),
-            child: showWidget(
-                _image != null
-                    ? Image.memory(
-                        _image!,
-                        width: 200,
-                        height: 180,
-                      )
-                    : Container(),
-                Container(),
-                _image != null),
-          ),
+          widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+          if (widget.imageOnly && widget.responseSet != null)
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: 10, top: 10),
+              child: Image.network(
+                (widget.responseSet?.url ?? ""), //resoiurce humain, demande de fond
+                width: 200,
+                height: 180,
+              ),
+            ),
+          if (!widget.imageOnly || (widget.imageOnly && widget.answerHolder != null && widget.responseSet == null))
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: 10, top: 10),
+              child: showWidget(
+                  _image != null
+                      ? Image.memory(
+                          _image!,
+                          width: 200,
+                          height: 180,
+                        )
+                      : Container(),
+                  Container(),
+                  _image != null),
+            ),
           if (!widget.imageOnly)
             FormField<int>(
               autovalidateMode: AutovalidateMode.always,
@@ -198,30 +210,12 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
                         child: TextButton.icon(
                           icon: showWidget(Icon(Icons.add_a_photo), imageState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green), imageState == 0),
                           label: Text(_image != null ? (imageState != -1 ? "Prendre une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prendre une Photo".tr()),
-                          /*Flexible(
-                            child: Text(_image != null ? (imageState != -1 ? "Prendre une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prendre une Photo".tr()),
-                          ),*/
                           onPressed: () {
                             getImage(state);
                           },
                         ),
                       ),
                     if (imageState != 0 && imageState != 1 && imageState != -1) _setProgressBar(),
-                    /*showWidget(
-                        SizedBox(
-                          width: double.infinity,
-                          child: TextButton.icon(
-                            icon: showWidget(Icon(Icons.add_a_photo), imageState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green), imageState == 0),
-                            label: Flexible(
-                              child: Text(_image != null ? (imageState != -1 ? "Prendre une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prendre une Photo".tr()),
-                            ),
-                            onPressed: () {
-                              getImage(state);
-                            },
-                          ),
-                        ),
-                        _setProgressBar(),
-                        (imageState == 0 || imageState == 1 || imageState == -1)),*/
                     state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
                   ],
                 );

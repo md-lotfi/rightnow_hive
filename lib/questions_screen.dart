@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -244,7 +245,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
               if (widget.anonymous) Image.asset("assets/anonymous.png", width: 25),
             ],
           ),
-          bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
+          bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
           body: Column(
             children: [
               ValueListenableBuilder<int>(
@@ -356,9 +357,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
     /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       if (viewState[question.id]!) _refreshProgress.value = _refreshProgress.value++;
     });*/
-    //print("replace question is " + question.toJson().toString());
+    print("replace question is " + (question.toJson().toString()));
     ConditionDisplay.branchedConditions(question, answer.answerValue!, answer.multiSelectAnswer, (q, v) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) {
         setState(() {
           print("conditional branched recieved state " + q.toString() + ", " + v.toString());
           viewState[q] = v;
@@ -373,11 +374,11 @@ class _QuestionsPageState extends State<QuestionsPage> {
         return;
       }
       for (var i = 0; i < _answerHolder!.answers!.length; i++) {
-        print("replace: answers are not null trying to find .... " + answer.qustionId.toString() + ", " + _answerHolder!.answers![i].qustionId.toString());
+        print("replace: answers are not null trying to find ....${_answerHolder!.answers} " + answer.qustionId.toString() + ", " + _answerHolder!.answers![i].qustionId.toString());
         if (answer.qustionId == _answerHolder!.answers![i].qustionId) {
           //_answerHolder.answers.removeAt(i);
           _answerHolder!.answers![i] = answer;
-          print("replace: answer found replacing current " + i.toString());
+          print("replace: answer found replacing current ${_answerHolder!.answers?[i].answerValue} " + i.toString());
           return;
         }
       }
@@ -571,6 +572,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 viewOnly: false,
                 answerHolder: _answerHolder,
                 onSelectedValue: (Answer answer) {
+                  log("date widget answer value is ${answer.answerValue}");
                   _replaceAnswerIfExists(q, answer);
                 },
                 question: q,

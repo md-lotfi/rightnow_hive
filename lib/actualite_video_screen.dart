@@ -149,7 +149,7 @@ class _ActualiteVideoPageState extends State<ActualiteVideoPage> {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: HomeNavBarComp(NavState.NAV_HOME_INDEX),
+                child: HomeNavBarComp(NavState.NAV_HOME),
               ),
             ],
           );

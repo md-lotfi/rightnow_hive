@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
-import 'package:rightnow/inherits/field_controller.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class ScannerWidget extends StatefulWidget {
   final Question? question;
+  final ResponseSet? responseSet;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
   final bool viewOnly;
@@ -19,6 +20,7 @@ class ScannerWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
   @override
@@ -58,12 +60,22 @@ class _ScannerWidgetState extends State<ScannerWidget> with AutomaticKeepAliveCl
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question!, context.locale.languageCode),
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
             if (selectedBarCode != null)
               Container(
                 margin: EdgeInsets.only(top: 5, bottom: 10),
                 alignment: Alignment.center,
                 child: Text(selectedBarCode ?? "",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    )),
+              ),
+            if (widget.viewOnly && widget.responseSet != null)
+              Container(
+                margin: EdgeInsets.only(top: 5, bottom: 10),
+                alignment: Alignment.center,
+                child: Text(widget.responseSet!.value ?? "",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.green,

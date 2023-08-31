@@ -68,29 +68,14 @@ class FieldSet extends HiveObject {
   factory FieldSet.fromJson(Map<String, dynamic> json) => _$FieldSetFromJson(json);
 
   Map<String, dynamic> toJson() => _$FieldSetToJson(this);
-  /*FieldSet.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    form = json['form'];
-    questionsCount = json['questions_count'];
-    if (json['questions'] != null) {
-      questions = new List<Question>();
-      for (var v in json['questions']) {
-        questions.add(Question.fromJson(v));
-      }
-    }
+
+  static Future<Box<FieldSet>> getFieldSetDb() async {
+    return await Hive.openBox<FieldSet>('FieldSet');
   }
 
-  Map toJson() {
-    return {
-      'id': id,
-      'form': form,
-      'questions_count': questionsCount,
-      'q_counts': qCounts,
-      'title': title,
-      'qAnswered': qAnswered,
-      'flag': flag,
-      'questions': questions
-    };
-  }*/
+  //@Query("select * from FieldSet where form = :formId")
+  static Future<List<FieldSet>> fetchFields(int formId) async {
+    var f = await getFieldSetDb();
+    return f.values.where((element) => element.form == formId).toList();
+  }
 }

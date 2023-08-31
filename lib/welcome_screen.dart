@@ -6,6 +6,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/language_widget.dart';
+import 'package:rightnow/data_privacy_page.dart';
 import 'package:rightnow/preventive1.dart';
 import 'package:rightnow/user_consent_screen.dart';
 
@@ -88,10 +89,16 @@ class WelcomePage extends StatelessWidget {
                     child: TextButton(
                       onPressed: () async {
                         redirectUser(() {
-                          Navigator.push(
+                          /*Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => Preventive1(),
+                            ),
+                          );*/
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DataPrivacyPage(),
                             ),
                           );
                         }, () {

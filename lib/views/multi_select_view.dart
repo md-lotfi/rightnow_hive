@@ -9,13 +9,15 @@ import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/choice.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class MultiSelectView extends StatefulWidget {
-  final Question question;
+  final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
-  const MultiSelectView({Key? key, required this.question, this.onSelectedValue, this.answerHolder, required this.viewOnly}) : super(key: key);
+  const MultiSelectView({Key? key, this.question, this.onSelectedValue, this.responseSet, this.answerHolder, required this.viewOnly}) : super(key: key);
 
   @override
   _MultiSelectViewState createState() => _MultiSelectViewState();
@@ -28,21 +30,23 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
   @override
   void initState() {
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      setState(() {
-        _choicesDropdownList = _dropdownItems();
-        if (widget.answerHolder != null) {
-          if (widget.answerHolder!.answers != null) {
-            if (widget.answerHolder!.answers!.length > 0) {
-              for (var answer in widget.answerHolder!.answers!) {
-                if (answer.qustionId == widget.question.id) {
-                  if (answer.multiSelectAnswer != null) {
-                    if (answer.multiSelectAnswer!.length > 0) {
-                      for (MultiSelectAnswer a in answer.multiSelectAnswer ?? []) {
-                        for (Choice choice in widget.question.choices ?? []) {
-                          if (choice.id == a.selectedId) {
-                            if (_currentChoices == null) _currentChoices = [];
-                            _currentChoices?.add(choice);
-                            print("setting current choice ${choice.toJson()}");
+      if (widget.question != null) {
+        setState(() {
+          _choicesDropdownList = _dropdownItems();
+          if (widget.answerHolder != null) {
+            if (widget.answerHolder!.answers != null) {
+              if (widget.answerHolder!.answers!.length > 0) {
+                for (var answer in widget.answerHolder!.answers!) {
+                  if (answer.qustionId == widget.question!.id) {
+                    if (answer.multiSelectAnswer != null) {
+                      if (answer.multiSelectAnswer!.length > 0) {
+                        for (MultiSelectAnswer a in answer.multiSelectAnswer ?? []) {
+                          for (Choice choice in widget.question!.choices ?? []) {
+                            if (choice.id == a.selectedId) {
+                              if (_currentChoices == null) _currentChoices = [];
+                              _currentChoices?.add(choice);
+                              print("setting current choice ${choice.toJson()}");
+                            }
                           }
                         }
                       }
@@ -52,8 +56,8 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
               }
             }
           }
-        }
-      });
+        });
+      }
     });
     super.initState();
   }
@@ -70,7 +74,7 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode),
+            widgetQuestionTitle(widget.question!, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               /*Expanded(
                 child: */
@@ -153,8 +157,9 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
                 },
               ),
             //),
-            if (widget.viewOnly) Text("multiselect view"),
-            if (widget.viewOnly) fieldDataMultiLine(_currentChoices?.map((e) => e.getName(context.locale.languageCode)).toList()),
+            //if (widget.viewOnly) Text("multiselect view"),
+            //if (widget.viewOnly) fieldDataMultiLine(_currentChoices?.map((e) => e.getName(context.locale.languageCode)).toList()),
+            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
             Divider(),
           ],
         ),
@@ -165,7 +170,7 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
   Widget _showSelect(FormFieldState<List<Choice>> state, Widget Function() builder) {
     return SearchableDropdown<Choice>(
       defaultValues: _currentChoices,
-      items: widget.question.choices ?? [],
+      items: widget.question!.choices ?? [],
       dialogTitle: "Choisir une ou plusieurs options".tr(),
       builder: () {
         return builder();
@@ -191,12 +196,12 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
         print("on selected result 2 $selectedValue");
         widget.onSelectedValue!(
           Answer.fill(
-            widget.question.id,
-            widget.question.fieldSet,
+            widget.question!.id,
+            widget.question!.fieldSet,
             "",
             null,
             DateTime.now().toString(),
-            transtypeResourceType(widget.question.resourcetype!),
+            transtypeResourceType(widget.question!.resourcetype!),
             widget.answerHolder?.id,
             m,
           ),
@@ -208,9 +213,9 @@ class _MultiSelectViewState extends State<MultiSelectView> with AutomaticKeepAli
 
   List<DropdownMenuItem<Choice>> _dropdownItems() {
     List<DropdownMenuItem<Choice>> l = [];
-    if (widget.question.choices != null) {
-      if (widget.question.choices!.length > 0) {
-        for (var choice in widget.question.choices!) {
+    if (widget.question!.choices != null) {
+      if (widget.question!.choices!.length > 0) {
+        for (var choice in widget.question!.choices!) {
           l.add(DropdownMenuItem(
             value: choice,
             child: Text(choice.getName(context.locale.languageCode)),

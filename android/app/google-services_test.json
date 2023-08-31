@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "984672160240",
+    "project_id": "rightnow-test",
+    "storage_bucket": "rightnow-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984672160240:android:6e240857d69bda5f8c3535",
+        "android_client_info": {
+          "package_name": "com.brenco.rightnow.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984672160240-aate3qlmpjd0vetjj9si3ujuqjss6muv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.brenco.rightnow.test",
+            "certificate_hash": "523014590dc638eef17a1c60dd46121fdc7a2dc2"
+          }
+        },
+        {
+          "client_id": "984672160240-4r4papag7nip4brcme4839k6pnsirqu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCotNfqCfU-vqR1CdaEvkTJubd8f6qIBvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984672160240-4r4papag7nip4brcme4839k6pnsirqu5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

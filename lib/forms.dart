@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart' as kIsWeb;
 import 'package:flutter/scheduler.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/FormsDescription.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
+import 'package:rightnow/components/category_display_widget.dart';
 import 'package:rightnow/components/common_widgets.dart';
+import 'package:rightnow/components/forms_display_widget.dart';
 import 'package:rightnow/components/header_bar.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/components/search_text_widget.dart';
@@ -12,6 +16,8 @@ import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/HashDao.dart';
+import 'package:rightnow/db/category_dao.dart';
+import 'package:rightnow/db/sub_category_dao.dart';
 import 'package:rightnow/fieldsets.dart';
 import 'package:rightnow/history_screen.dart';
 import 'package:rightnow/models/FieldSet.dart';
@@ -19,14 +25,18 @@ import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/category.dart';
 import 'package:rightnow/models/hash.dart';
+import 'package:rightnow/models/sub_category.dart';
+import 'package:rightnow/models/super_category.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/screen_viewer.dart';
 
 class FormsPage extends StatefulWidget {
-  final Category category;
-  const FormsPage({Key? key, required this.category}) : super(key: key);
+  final Category? category;
+  final SubCategory? subCategory;
+  final SuperCategory? superCategory;
+  const FormsPage({Key? key, this.superCategory, this.category, this.subCategory}) : super(key: key);
 
   @override
   _FormsState createState() => _FormsState();
@@ -51,23 +61,31 @@ class _FormsState extends State<FormsPage> {
         page: WillPopScope(
             child: Scaffold(
               bottomNavigationBar: HomeNavBarComp(
-                NavState.NAV_FORMS_INDEX,
+                NavState.NAV_HOME,
               ),
               backgroundColor: Colors.grey.shade50,
-              body: FutureBuilder<List<Category>>(
-                future: getDataBase<FormFieldsDao>().fetchCategories(),
+              body: _body(
+                  []), /*FutureBuilder<List<Category>>(
+                future: getDataBase<CategoryDao>().fetchCategories(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return _body(snapshot.data ?? []);
                   }
                   return Center(child: CircularProgressIndicator());
                 },
-              ),
+              )*/
+
               //_checkLoad(),
             ),
             onWillPop: () async {
               return true;
             })); //showExitPopup
+  }
+
+  String _getCatName() {
+    return widget.superCategory != null
+        ? widget.superCategory!.title(context.locale.languageCode)
+        : (widget.category != null ? widget.category!.getName(context.locale.languageCode) : (widget.subCategory!.getName(context.locale.languageCode)));
   }
 
   Widget _body(List<Category> categories) {
@@ -90,7 +108,7 @@ class _FormsState extends State<FormsPage> {
                         child: SearchTextWidget(
                           staticWidget: Text(
                             //"Check-up center".tr(),
-                            widget.category.getName(context.locale.languageCode),
+                            _getCatName(),
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 20), color: COLOR_PRIMARY),
@@ -138,6 +156,7 @@ class _FormsState extends State<FormsPage> {
     if (_checkServer) {
       ApiRepository api = ApiRepository();
       _checkServer = false;
+      //return Container();
       return FutureBuilder<Hashes?>(
         future: api.fetchHashRaw(type: HASH_TYPE_CATEGORIES),
         builder: (context, snapshot) {
@@ -179,6 +198,7 @@ class _FormsState extends State<FormsPage> {
         }
       }
     }
+    //return Container();
     return startCategoriesPage(newForms, data.hash!);
   }
 
@@ -196,8 +216,11 @@ class _FormsState extends State<FormsPage> {
   }
 
   Widget _bloc() {
+    dynamic cat = widget.category ?? widget.superCategory ?? widget.subCategory;
+    assert(cat != null);
     return FutureBuilder<List<FormFields>>(
-      future: getDataBase<FormFieldsDao>().loadFormsCategoryId(context, widget.category.id, HOLDER_NOT_COMPLETED, searchFormTitle: _searchText),
+      future: getDataBase<FormFieldsDao>()
+          .fetchFormsAnyCategory(cat, context), //getDataBase<FormFieldsDao>().loadFormsCategoryId(context, widget.category.id, HOLDER_NOT_COMPLETED, searchFormTitle: _searchText),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
@@ -214,7 +237,7 @@ class _FormsState extends State<FormsPage> {
         child: RefreshIndicator(
       child: Container(
         //color: Colors.red,
-        child: _builder(data),
+        child: _builder(context, data),
         margin: EdgeInsets.only(left: 20, right: 20, top: kIsWeb.kIsWeb ? 20 : 0),
       ),
       onRefresh: () async {
@@ -228,7 +251,52 @@ class _FormsState extends State<FormsPage> {
     ));
   }
 
-  Widget _builder(List<FormFields> data) {
+  Widget _builder(BuildContext context, List<FormFields> forms) {
+    return ScrollTouchWidget(
+      listChild: ListView.separated(
+        separatorBuilder: (context, index) {
+          return Container(
+            height: 20,
+          );
+        },
+        //shrinkWrap: true,
+        itemCount: forms.length,
+        itemBuilder: (context, index) {
+          return FormsDisplayWidget(
+              onTap: () {
+                if (forms[index].getDescription(context.locale.languageCode).isNotEmpty) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FormsDescription(
+                        form: forms[index],
+                      ),
+                    ),
+                  ).then((value) {
+                    setState(() {
+                      _checkData();
+                    });
+                  });
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FieldsSetPage(
+                        formId: forms[index].id!,
+                      ),
+                    ),
+                  ).then((value) {
+                    setState(() {});
+                  });
+                }
+              },
+              formsFields: forms[index]);
+        },
+      ),
+    );
+  }
+
+  /*Widget _builder(List<FormFields> data) {
     return ScrollTouchWidget(
       listChild: ListView.separated(
         separatorBuilder: (context, index) {
@@ -387,77 +455,7 @@ class _FormsState extends State<FormsPage> {
         },
       ),
     );
-    /*return GridView.builder(
-      itemCount: data.length,
-      itemBuilder: (BuildContext context, int index) {
-        return InkWell(
-          onTap: () async {
-            SchedulerBinding.instance!.addPostFrameCallback((_) {
-              if (data[index].getDescription(context.locale.languageCode).isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FormsDescription(
-                      form: data[index],
-                    ),
-                  ),
-                ).then((value) {
-                  setState(() {
-                    _checkData();
-                  });
-                });
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FieldsSetPage(
-                      formFields: data[index],
-                    ),
-                  ),
-                );
-              }
-            });
-          },
-          child: Container(
-            margin: EdgeInsets.only(top: 15),
-            color: Colors.white,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(color: COLOR_PRIMARY, borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 0, bottom: 0),
-                        child: loadImage(
-                          data[index].icon,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Text(
-                    data[index].getName(context.locale.languageCode),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: COLOR_PRIMARY, fontSize: 15),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-      padding: const EdgeInsets.all(10),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 10, mainAxisSpacing: 10),
-    );*/
-  }
+  }*/
 
   Future<bool> showExitPopup() async {
     return await showDialog(

@@ -48,7 +48,7 @@ class _FieldSetState extends State<FieldsSetPage> {
     return ScreenViewerWidget(
         page: Scaffold(
       floatingActionButton: showWidget(_addFloatingButton(), Container(), (activeAnswerHolder != null || waitingUploadAnswerHolder.length > 0)),
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_FORMS_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       backgroundColor: Colors.grey.shade50,
       body: FutureBuilder<FormFields?>(
         future: getDataBase<FormFieldsDao>().loadFormFieldSets(widget.formId, HOLDER_NOT_COMPLETED),
@@ -127,7 +127,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                           style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 20), color: COLOR_PRIMARY),
                         ),
                       ),
-                      Container(),
+                      const SizedBox(),
                       if (form.isAnonymous == true) Image.asset("assets/anonymous.png", width: 25),
                     ],
                   ),
@@ -140,7 +140,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                         listChild: ListView.separated(
                           shrinkWrap: true,
                           separatorBuilder: (context, index) {
-                            return Container(
+                            return const SizedBox(
                               width: 10,
                             );
                           },
@@ -153,7 +153,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ),
             );

@@ -22,7 +22,7 @@ class ActualiteDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_PROFILE_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       appBar: AppBar(
         title: Text("Rightnow"),
       ),

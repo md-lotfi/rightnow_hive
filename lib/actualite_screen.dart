@@ -24,7 +24,7 @@ class ActualitePage extends StatelessWidget {
     return ScreenViewerWidget(
         page: Scaffold(
       extendBodyBehindAppBar: true,
-      //bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       appBar: AppBar(
         title: Text(""),
         foregroundColor: COLOR_PRIMARY,

@@ -8,8 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 const _defaultConnectTimeout = Duration.millisecondsPerMinute;
 const _defaultReceiveTimeout = Duration.millisecondsPerMinute;
 
-const BASE_URL = "https://app.rightnow-by-brenco.com/"; //"https://197.140.16.96/apoc/"; //"https://apoce-vi.herokuapp.com/apoc/"; //"https://197.140.16.54/apoc/";//'https://197.140.16.96/apoc/'; //
-const IMG_BASE_URL = "https://app.rightnow-by-brenco.com";
+const BASE_URL = "https://apptest.rightnow-by-brenco.com/";
+/*"https://apptest.rightnow-by-brenco.com/";*/ /*"https://197.140.16.96/apoc/"; //"https://apoce-vi.herokuapp.com/apoc/"; //"https://197.140.16.54/apoc/";//'https://197.140.16.96/apoc/';*/
+const IMG_BASE_URL = "https://apptest.rightnow-by-brenco.com"; /*"https://apptest.rightnow-by-brenco.com";*/
 
 class ApiClient {
   Dio? _dio;

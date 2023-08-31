@@ -24,12 +24,16 @@ class FileSaver extends HiveObject {
   @HiveField(4)
   Uint8List file;
 
+  @HiveField(5)
+  String? extension;
+
   FileSaver({
     required this.questionId,
     required this.answerHolderId,
     required this.name,
     required this.file,
     required this.path,
+    this.extension,
   });
 
   static Future<Box<FileSaver>> _getFileSaverDb() async {

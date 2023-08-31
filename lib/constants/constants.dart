@@ -26,6 +26,7 @@ import 'package:rightnow/db/category_dao.dart';
 import 'package:rightnow/db/decision_response_dao.dart';
 import 'package:rightnow/db/dependent_cond_Dao.dart';
 import 'package:rightnow/db/disease_dao.dart';
+import 'package:rightnow/db/sub_category_dao.dart';
 import 'package:rightnow/db/super_category_dao.dart';
 import 'package:rightnow/main.dart';
 import 'package:flutter/rendering.dart';
@@ -99,7 +100,7 @@ const String BRANCH_CONDITION_NOT_EQUAL_TO = "not equal to";
 const String BRANCH_CONDITION_GREATER_THAN = "greater than";
 const String BRANCH_CONDITION_LESS_THAN = "less than";
 
-String transtypeResourceType(String questionResource) {
+String transtypeResourceType(String? questionResource) {
   switch (questionResource) {
     case SCANNER_QUESTION:
       return SCANNER_RESPONSE;
@@ -224,6 +225,8 @@ T getDataBase<T>() {
       return new ReclamationsDao() as T;
     case TagsDao:
       return new TagsDao() as T;
+    case SubCategoryDao:
+      return new SubCategoryDao() as T;
     default:
       throw new Exception("Method not found");
   }

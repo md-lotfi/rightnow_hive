@@ -6,9 +6,11 @@ import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FieldSetsDao.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FormFields.dart';
+import 'package:rightnow/models/category.dart';
 import 'package:rightnow/models/hash.dart';
 import 'package:collection/collection.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:rightnow/models/super_category.dart';
 
 class FormFieldsDao extends FieldSetsDao {
   Future<Box<FormFields>> getFormFieldsDb() async {
@@ -38,12 +40,28 @@ class FormFieldsDao extends FieldSetsDao {
         .toList();
   }
 
-  //@Query("select * from FormFields")
-  Future<List<FormFields>> fetchFormsAny(BuildContext? context, {String? searchFormText}) async {
+  //int subCategoryId
+  Future<List<FormFields>> fetchFormsAnyCategory(dynamic category, BuildContext? context, {String? searchFormText}) async {
     var f = await getFormFieldsDb();
     return f.values
+        .where((element) => ((category is SuperCategory)
+            ? element.superCategoryId == category.id
+            : (category is Category)
+                ? element.categoryId == category.id
+                : element.subCategoryId == category.id))
         .where(
             (element) => (searchFormText?.isEmpty ?? true) ? true : (context != null ? element.getName(context.locale.languageCode).toLowerCase().contains(searchFormText?.toLowerCase() ?? "") : true))
+        .sorted((a, b) => b.createdAtTimeStamp?.compareTo(a.createdAtTimeStamp ?? 0) ?? 0)
+        .toList();
+  }
+
+  //@Query("select * from FormFields")
+  Future<List<FormFields>> fetchFormsAny(BuildContext? context, {String? searchFormText, int? completed}) async {
+    var f = await getFormFieldsDb();
+    return f.values
+        .where((element) {
+          return (searchFormText?.isEmpty ?? true) ? true : (context != null ? element.getName(context.locale.languageCode).toLowerCase().contains(searchFormText?.toLowerCase() ?? "") : true);
+        })
         .sorted((a, b) => a.createdAtTimeStamp?.compareTo(b.createdAtTimeStamp ?? 0) ?? 0)
         .toList();
   }
@@ -70,13 +88,17 @@ class FormFieldsDao extends FieldSetsDao {
     for (var form in forms) {
       var d = await fetchFields(form.id!);
       form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(form.id!, completed);
-      form.reclamations = await fetchReclamations(form.id ?? -1); //fetchReclamations(form.id!);
-      form.category = await getCategory(form.categoryId ?? -1);
-      form.fieldSets = [];
-      for (var field in d) {
-        form.fieldSets!.add(field);
+      if (((form.answerHolder?.completed ?? false) && completed == HOLDER_COMPLETED) ||
+          (!(form.answerHolder?.completed ?? false) && completed == HOLDER_NOT_COMPLETED) ||
+          completed == HOLDER_ANY_COMPLETED) {
+        form.reclamations = await fetchReclamations(form.id ?? -1); //fetchReclamations(form.id!);
+        form.category = await getCategory(form.categoryId ?? -1);
+        form.fieldSets = [];
+        for (var field in d) {
+          form.fieldSets!.add(field);
+        }
+        tmp.add(form);
       }
-      tmp.add(form);
     }
     return List.from(tmp);
   }
@@ -118,6 +140,7 @@ class FormFieldsDao extends FieldSetsDao {
   Future<void> setForms(List<FormFields> formFields, Hashes? hash) async {
     await removeAllSuperCategories();
     await removeAllCategories();
+    await removeAllSubCategories();
     await removeAllFormsFields();
     await removeAllFieldSets();
     await removeAllQuestions();
@@ -132,9 +155,17 @@ class FormFieldsDao extends FieldSetsDao {
     for (var form in formFields) {
       form.createdAtTimeStamp = Jiffy(form.createdAt).unix();
       f.add(form);
+      if (form.superCategory != null) {
+        await insertSuperCategory(form.superCategory!);
+        form.superCategoryId = form.superCategory!.id;
+      }
       if (form.category != null) {
         await insertCategory(form.category!);
         form.categoryId = form.category!.id;
+      }
+      if (form.subCategory != null) {
+        await insertSubCategory(form.subCategory!);
+        form.subCategoryId = form.subCategory!.id;
       }
       if (form.fieldSets != null) await setFields(form.fieldSets!, form.id!);
     }

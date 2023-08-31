@@ -10,12 +10,14 @@ import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
+import 'package:rightnow/models/response_set.dart';
 import 'package:rightnow/views/google_maps_screen.dart';
 
 class GeoWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
 
   const GeoWidget({
@@ -23,6 +25,7 @@ class GeoWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
   @override
@@ -110,7 +113,7 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widgetQuestionTitle(question!, context.locale.languageCode),
+          widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
           if (!widget.viewOnly)
             FutureBuilder<FileSaver?>(
               future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getMapFilename()),
@@ -168,7 +171,7 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
                 return null;
               },
             ),
-          if (widget.viewOnly)
+          if (widget.viewOnly && widget.responseSet != null)
             FutureBuilder<FileSaver?>(
               future: FileSaver.getBykey(_fileKey),
               builder: (context, snapshot) {
@@ -179,8 +182,8 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
                     padding: EdgeInsets.only(bottom: 10, top: 10),
                     child: showWidget(
                         _image != null
-                            ? Image.memory(
-                                _image!,
+                            ? Image.network(
+                                widget.responseSet!.value ?? "",
                                 width: 200,
                                 height: 180,
                               )

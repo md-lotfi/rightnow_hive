@@ -35,7 +35,7 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
         centerTitle: true,
         elevation: 1,
       ),
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       backgroundColor: Colors.white,
       body: Container(
         child: FutureBuilder<List<UserNotification>>(

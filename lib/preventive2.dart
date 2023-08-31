@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rightnow/blocs/hash_bloc.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -73,3 +73,4 @@ class Preventive2 extends StatelessWidget {
     ));
   }
 }
+*/

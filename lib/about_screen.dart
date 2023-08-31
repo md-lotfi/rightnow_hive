@@ -59,7 +59,7 @@ class AboutPage extends StatelessWidget {
     return ScreenViewerWidget(
         page: Scaffold(
       bottomNavigationBar: HomeNavBarComp(
-        NavState.NAV_FORMS_INDEX,
+        NavState.NAV_HOME,
       ),
       appBar: AppBar(
         //backgroundColor: Colors.grey.shade50,

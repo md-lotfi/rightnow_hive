@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
@@ -29,13 +30,16 @@ import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/disease.dart';
 import 'package:rightnow/models/fcm_notification.dart';
 import 'package:rightnow/models/file_saver.dart';
+import 'package:rightnow/models/form_entry.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/hash.dart';
+import 'package:rightnow/models/link.dart';
 import 'package:rightnow/models/local_user.dart';
 import 'package:rightnow/models/organisation.dart';
 import 'package:rightnow/models/profile.dart';
 import 'package:rightnow/models/province.dart';
 import 'package:rightnow/models/reclamations.dart';
+import 'package:rightnow/models/response_form.dart';
 import 'package:rightnow/models/social_links.dart';
 import 'package:rightnow/models/user_notification.dart';
 import 'package:rightnow/rest/ApiClient.dart';
@@ -63,7 +67,7 @@ class ApiRepository {
     }
   }
 
-  Future<Map<String, dynamic>> uploadProfilePicture(File file, Function(int received, int total) progress) async {
+  Future<Map<String, dynamic>?> uploadProfilePicture(File file, Function(int received, int total) progress) async {
     try {
       LocalUser? u = await getDataBase<LocalUserDao>().fetchUser();
       if (u != null) {
@@ -72,6 +76,7 @@ class ApiRepository {
 
         final response = await apiClient.post("api/accounts/profiles/change_picture/", data: formData, onSendProgress: progress);
         print("response received " + response.toString());
+        if (response is String) return null;
         return response;
       }
       return {};
@@ -102,6 +107,16 @@ class ApiRepository {
     } catch (e) {
       print("error when processing data response " + e.toString());
       return null;
+    }
+  }
+
+  Future<List<Link>> getLiensUtils() async {
+    try {
+      List<dynamic> r = await apiClient.get("api/generic/link/");
+      return r.map((e) => Link.fromJson(e)).cast<Link>().toList();
+    } catch (e) {
+      print("error when processing data response " + e.toString());
+      return [];
     }
   }
 
@@ -149,16 +164,18 @@ class ApiRepository {
   }
 
   Future<List<UserNotification>> notificationHistory() async {
-    List<FCMNotification> newFCM = await getDataBase<FCMNotificationsDao>().fetchFCMNotification();
+    bool isConnected = await hasInternetConnection();
+    //List<FCMNotification> newFCM = await getDataBase<FCMNotificationsDao>().fetchFCMNotification();
     List<UserNotification> n = await getDataBase<UserNotificationsDao>().fetchUserNotification();
-    if (newFCM.length <= 0 && n.length <= 0) {
+    if (isConnected) {
+      //newFCM.length > 0 || n.length <= 0
       try {
         final response = await apiClient.get("api/notifications/message/"); //, queryParameters: {"api_key": _apiKey}
         List<UserNotification> u = NotificationList.fromJson(response).fields.cast<UserNotification>();
         //await getDataBase<UserNotificationsDao>().removeAllUserNotification();
 
-        await getDataBase<UserNotificationsDao>().insertUserNotificationsIfNotPresent(u);
-        return await getDataBase<UserNotificationsDao>().fetchUserNotification();
+        //await getDataBase<UserNotificationsDao>().fetchUserNotification();
+        return await getDataBase<UserNotificationsDao>().insertUserNotificationsIfNotPresent(u);
       } catch (e) {
         print("error when processing data response " + e.toString());
         return [];
@@ -196,12 +213,70 @@ class ApiRepository {
     }
   }
 
-  Future<List<Reclamations>?> fetchReclamationsRaw() async {
+  Future<DecisionResponse?> fetchAlgoResponse(String deviceId) async {
     try {
-      var response = await apiClient.get("api/reclamations/?current");
+      var response = await apiClient.get("/api/forms/algorithms/get_by_device_response/$deviceId/"); //, queryParameters: {"api_key": _apiKey}
+      if (response != null) {
+        if (response.length > 0) return DecisionResponse.fromJson(response[0]);
+      }
+      return null;
+      //return ApiResult.success(data: response.map((e) => Reclamations.fromJson(e)).toList());
+      //List<Reclamations> reclamations = ReclamationsList.fromJson(response).fields.cast<Reclamations>();
+      //await getDataBase<ReclamationsDao>().setReclamations(reclamations);
+      //return ApiResult.success(data: reclamations);
+    } catch (e) {
+      print("error when processing data response " + e.toString());
+      return null;
+      //print("error when processing data response " + e.toString());
+      //List<Reclamations> r = await getDataBase<ReclamationsDao>().fetchReclamationsAll();
+      //return ApiResult.success(data: r);
+      //return ApiResult.failure(error: NetworkExceptions.getDioException(e));
+    }
+  }
+
+  Future<List<Reclamations>?> fetchReclamationsRaw(int type) async {
+    try {
+      log('reclamation of states $type');
+      var response;
+      if (type < 0 && type != -3)
+        response = await apiClient.get("api/reclamations/?current");
+      else if (type == -3) {
+        response = [];
+      } else {
+        response = await apiClient.get("api/reclamations/?state=$type");
+      }
+      log("response is $response");
       List<Reclamations> reclamations = ReclamationsList.fromJson(response).fields.cast<Reclamations>();
       await getDataBase<ReclamationsDao>().setReclamations(reclamations);
-      return reclamations;
+
+      List<AnswerHolder> h = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildrenAll(type, HOLDER_ANY_COMPLETED, null);
+
+      Map<String, Reclamations> l = {};
+
+      for (var holder in h) {
+        if (holder.deviceId == null) continue;
+        l[holder.deviceId!] = Reclamations(
+            createdAt: holder.createdAt,
+            deviceId: holder.deviceId,
+            form: holder.formFields?.name,
+            formAr: holder.formFields?.nameAr,
+            formDescription: holder.formFields?.description,
+            formDescriptionAr: holder.formFields?.descriptionAr,
+            localAnswerHolder: holder,
+            formId: holder.formId,
+            formEntry: FormEntry(
+              deviceId: holder.deviceId,
+              form: holder.formId,
+              completedAt: holder.completedAt,
+            ));
+      }
+
+      for (var rec in reclamations) {
+        if (rec.formEntry?.deviceId == null) continue;
+        l[rec.formEntry!.deviceId!] = rec;
+      }
+
+      return l.values.map((e) => e).toList();
     } catch (e) {
       print("error when processing data response " + e.toString());
       return await getDataBase<ReclamationsDao>().fetchReclamationsAll();
@@ -400,6 +475,7 @@ class ApiRepository {
       print("response received " + response.toString());
       return Profile.fromJson(response);
     } catch (e) {
+      log("error on profile $e");
       return null;
     }
   }
@@ -413,6 +489,18 @@ class ApiRepository {
       return diseases;
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<ResponseForm?> getResponses(String deviceId) async {
+    try {
+      List<dynamic> response = await apiClient.get("api/forms/form_entries/get_by_device_response/$deviceId/");
+      print("response received " + response.toString());
+      //await getDataBase<DiseaseDao>().setDiseases(diseases);
+      if (response.length > 0) return ResponseForm.fromJson(response[0]);
+    } catch (e) {
+      log("get responses error $e");
+      return null;
     }
   }
 
@@ -465,9 +553,9 @@ class ApiRepository {
     }
   }
 
-  Future<Map<String, dynamic>> uploadFile(int questionId, Uint8List file, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
+  Future<Map<String, dynamic>> uploadFile(int questionId, Uint8List file, String? ext, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
     try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString() + (ext != null ? ".$ext" : "");
       //late List<int> l;
       print("data 1 ******************");
       /*if (!asByte)
@@ -613,7 +701,7 @@ class AnswerPostObject {
     FileSaver? f = await FileSaver.getBykey(answer.fileKey);
     if (f != null) {
       ApiRepository apiRepository = ApiRepository();
-      Map<String, dynamic> result = await apiRepository.uploadFile(answer.qustionId!, f.file, (r, t) {
+      Map<String, dynamic> result = await apiRepository.uploadFile(answer.qustionId!, f.file, f.extension, (r, t) {
         print("total sending $r | $t ");
       });
       if (result['id'] != null) {

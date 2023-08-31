@@ -69,13 +69,12 @@
   <!-- Firebase Configuration -->
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyD1lc_ObwNCSX3TLEG4--Uy-io9wj6VmNA",
-      authDomain: "rightnow-318113.firebaseapp.com",
-      projectId: "rightnow-318113",
-      storageBucket: "rightnow-318113.appspot.com",
-      messagingSenderId: "200927658646",
-      appId: "1:200927658646:web:e78a73ab3707fe2677b8b7",
-      measurementId: "G-EVFEGD5Y68"
+      apiKey: "AIzaSyA3SYeFvenaYqXAsxBJGe5WyiwlhIax4fU",
+      authDomain: "rightnow-test.firebaseapp.com",
+      projectId: "rightnow-test",
+      storageBucket: "rightnow-test.appspot.com",
+      messagingSenderId: "984672160240",
+      appId: "1:984672160240:web:7a4055f6e25cea9b8c3535"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -93,8 +92,8 @@
       scriptTag.type = 'application/javascript';
       document.body.append(scriptTag);
     }
-
-    if ('serviceWorker' in navigator) {
+    loadMainDartJs();
+    /*if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
         navigator.serviceWorker.register(serviceWorkerUrl)
@@ -129,7 +128,7 @@
       });
     } else {
       loadMainDartJs();
-    }
+    }*/
   </script>
 </body>
 

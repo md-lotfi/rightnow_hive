@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:rightnow/answers_uploader_screen.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/questions_history_local_screen.dart';
 import 'package:rightnow/questions_history_screen.dart';
 import 'package:rightnow/screen_viewer.dart';
 
@@ -43,7 +46,7 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
     return ScreenViewerWidget(
         page: Scaffold(
       floatingActionButton: showWidget(_addFloatingButton(), Container(), (activeAnswerHolder != null || waitingUploadAnswerHolder.length > 0)),
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_FORMS_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       backgroundColor: Colors.grey.shade50,
       body: FutureBuilder<FormFields?>(
         future: getDataBase<FormFieldsDao>().loadFormFieldSets(widget.answerHolder.formId ?? -1, HOLDER_COMPLETED),
@@ -226,12 +229,13 @@ class _FieldsSetAnsweredState extends State<FieldsSetAnsweredPage> {
               children: [
                 ListTile(
                   onTap: () async {
-                    AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, HOLDER_COMPLETED, any: true);
+                    log("I am in fieldsets_answsred");
+                    AnswerHolder? answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(data[index].form!, HOLDER_COMPLETED, any: true, fieldSetId: data[index].id);
                     if (answerHolder != null)
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => QuestionsHistoryPage(
+                          builder: (context) => QuestionsHistoryLocalPage(
                             fieldSet: data[index],
                             answerHolder: answerHolder,
                           ),

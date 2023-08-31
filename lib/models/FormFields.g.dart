@@ -33,13 +33,15 @@ class FormFieldsAdapter extends TypeAdapter<FormFields> {
       categoryId: fields[2] as int?,
       formInactivePageTitle: fields[13] as String?,
       formInactivePageBody: fields[14] as String?,
-    );
+    )
+      ..subCategoryId = fields[16] as int?
+      ..superCategoryId = fields[17] as int?;
   }
 
   @override
   void write(BinaryWriter writer, FormFields obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -71,7 +73,11 @@ class FormFieldsAdapter extends TypeAdapter<FormFields> {
       ..writeByte(13)
       ..write(obj.formInactivePageTitle)
       ..writeByte(14)
-      ..write(obj.formInactivePageBody);
+      ..write(obj.formInactivePageBody)
+      ..writeByte(16)
+      ..write(obj.subCategoryId)
+      ..writeByte(17)
+      ..write(obj.superCategoryId);
   }
 
   @override
@@ -111,7 +117,14 @@ FormFields _$FormFieldsFromJson(Map<String, dynamic> json) {
         .toList()
     ..category = json['category'] == null
         ? null
-        : Category.fromJson(json['category'] as Map<String, dynamic>);
+        : Category.fromJson(json['category'] as Map<String, dynamic>)
+    ..subCategory = json['sub_category'] == null
+        ? null
+        : SubCategory.fromJson(json['sub_category'] as Map<String, dynamic>)
+    ..superCategory = json['super_category'] == null
+        ? null
+        : SuperCategory.fromJson(
+            json['super_category'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$FormFieldsToJson(FormFields instance) =>
@@ -120,6 +133,8 @@ Map<String, dynamic> _$FormFieldsToJson(FormFields instance) =>
       'icon': instance.icon,
       'field_sets': instance.fieldSets,
       'category': instance.category,
+      'sub_category': instance.subCategory,
+      'super_category': instance.superCategory,
       'name': instance.name,
       'name_ar': instance.nameAr,
       'description': instance.description,

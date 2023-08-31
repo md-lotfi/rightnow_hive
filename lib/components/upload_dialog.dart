@@ -19,7 +19,8 @@ const int FILE_UPLOADING = 2;
 const int FILE_UPLOADED = 3;
 const int FILE_CROPPED = 4;
 
-class UploadDialogWidget extends StatelessWidget {
+// ignore: must_be_immutable
+class UploadDialogWidget extends StatefulWidget {
   final Widget renderer;
   final bool? disableTap;
   final Function(File image)? onImageSaved;
@@ -31,131 +32,144 @@ class UploadDialogWidget extends StatelessWidget {
     this.onImageSaved,
   }) : super(key: key);
 
+  @override
+  State<UploadDialogWidget> createState() => _UploadDialogWidgetState();
+}
+
+class _UploadDialogWidgetState extends State<UploadDialogWidget> {
   double _progress = 0;
+
   int _imageState = FILE_EMPTY;
-  String _errorMessage = "";
+
   File? _image;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (disableTap != null) if (disableTap == true) return;
+        if (widget.disableTap != null) if (widget.disableTap == true) return;
         Alert(
           context: context,
           title: "Choose image / take picture".tr(),
           style: AlertStyle(
             titleStyle: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 15)),
           ),
-          content: StatefulBuilder(
-            builder: (context, setState) {
-              return Container(
-                child: Column(
+          content: Container(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: UploadAvatarWidget(
-                            key: UniqueKey(),
-                            imageSource: ImageSource.gallery,
-                            title: "Upload Avatar".tr(),
-                            mainIcon: Icon(Icons.image, color: COLOR_PRIMARY),
-                            onFile: (File image) {
-                              setState(() {
-                                _imageState = FILE_ADDED;
-                                _image = image;
-                              });
-                              _cropFile(setState);
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: UploadAvatarWidget(
-                            key: UniqueKey(),
-                            imageSource: ImageSource.camera,
-                            title: "Take Picture".tr(),
-                            mainIcon: Icon(MdiIcons.camera, color: COLOR_PRIMARY),
-                            onFile: (File image) {
-                              setState(() {
-                                _imageState = FILE_ADDED;
-                                _image = image;
-                              });
-                              _cropFile(setState);
-                            },
-                          ),
-                        ),
-                        Container(),
-                      ],
-                    ),
-                    showWidget(
-                      Column(
-                        children: [
-                          _image == null
-                              ? Container(
-                                  child: Text("Select an image to upload".tr()),
-                                )
-                              : showWidget(_setProgressBar(setState), Image.file(_image!), _imageState == FILE_UPLOADING),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: kIsWeb ? MainAxisAlignment.center : MainAxisAlignment.spaceAround,
-                            children: [
-                              if (!kIsWeb)
-                                IconButton(
-                                  onPressed: () {
-                                    _cropFile(setState);
-                                  },
-                                  icon: Icon(
-                                    MdiIcons.crop,
-                                    size: 35,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                              IconButton(
-                                onPressed: () {
-                                  _upload(context, setState);
-                                },
-                                icon: Icon(
-                                  MdiIcons.upload,
-                                  size: 35,
-                                  color: COLOR_PRIMARY,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                    Expanded(
+                      child: UploadAvatarWidget(
+                        key: UniqueKey(),
+                        imageSource: ImageSource.gallery,
+                        title: "Upload Avatar".tr(),
+                        mainIcon: Icon(Icons.image, color: COLOR_PRIMARY),
+                        onFile: (File image) {
+                          setState(() {
+                            _imageState = FILE_ADDED;
+                            _image = image;
+                          });
+                          _cropFile();
+                        },
                       ),
-                      Container(),
-                      _imageState == FILE_ADDED || _imageState == FILE_UPLOADED || _imageState == FILE_CROPPED || _imageState == FILE_UPLOADING,
                     ),
+                    Expanded(
+                      child: UploadAvatarWidget(
+                        key: UniqueKey(),
+                        imageSource: ImageSource.camera,
+                        title: "Take Picture".tr(),
+                        mainIcon: Icon(MdiIcons.camera, color: COLOR_PRIMARY),
+                        onFile: (File image) {
+                          setState(() {
+                            _imageState = FILE_ADDED;
+                            _image = image;
+                          });
+                          _cropFile();
+                        },
+                      ),
+                    ),
+                    Container(),
                   ],
                 ),
-              );
-            },
+                showWidget(
+                  Column(
+                    children: [
+                      _image == null
+                          ? Container(
+                              child: Text("Select an image to upload".tr()),
+                            )
+                          : showWidget(_setProgressBar(setState), Image.file(_image!), _imageState == FILE_UPLOADING),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: kIsWeb ? MainAxisAlignment.center : MainAxisAlignment.spaceAround,
+                        children: [
+                          if (!kIsWeb)
+                            IconButton(
+                              onPressed: () {
+                                _cropFile();
+                              },
+                              icon: Icon(
+                                MdiIcons.crop,
+                                size: 35,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(
+                              MdiIcons.close,
+                              size: 35,
+                              color: COLOR_PRIMARY,
+                            ),
+                          ),
+                          /*IconButton(
+                            onPressed: () {
+                              _upload(context);
+                            },
+                            icon: Icon(
+                              MdiIcons.upload,
+                              size: 35,
+                              color: COLOR_PRIMARY,
+                            ),
+                          ),*/
+                        ],
+                      ),
+                    ],
+                  ),
+                  Container(),
+                  _imageState == FILE_ADDED || _imageState == FILE_UPLOADED || _imageState == FILE_CROPPED || _imageState == FILE_UPLOADING,
+                ),
+              ],
+            ),
           ),
           buttons: [
             DialogButton(
-                child: Text("Cancel".tr(), style: TextStyle(color: Colors.white)),
+                child: Text("Enregistrer".tr(), style: TextStyle(color: Colors.white)),
                 color: COLOR_PRIMARY,
                 onPressed: () {
-                  Navigator.pop(context);
+                  _upload(context);
                 }),
           ],
         ).show();
       },
-      child: renderer,
+      child: widget.renderer,
     );
   }
 
-  _upload(BuildContext context, StateSetter setState) async {
+  _upload(BuildContext context) async {
     ApiRepository apiRepository = ApiRepository();
     setState(() {
       _imageState = FILE_UPLOADING;
     });
-    Map<String, dynamic> result = await apiRepository.uploadProfilePicture(_image!, (r, t) {
+    //Map<String, dynamic> result =
+    await apiRepository.uploadProfilePicture(_image!, (r, t) {
       setState(() {
         _progress = r / t;
       });
@@ -163,13 +177,13 @@ class UploadDialogWidget extends StatelessWidget {
     setState(() {
       _imageState = FILE_UPLOADED;
     });
-    if (onImageSaved != null && _image != null) {
-      onImageSaved!(_image!);
+    if (widget.onImageSaved != null && _image != null) {
+      widget.onImageSaved!(_image!);
     }
     Navigator.pop(context);
   }
 
-  _cropFile(StateSetter setState) async {
+  _cropFile() async {
     if (_image != null) {
       if (!kIsWeb) {
         var imageCropped = await ImageCropper.cropImage(

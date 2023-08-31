@@ -18,19 +18,23 @@ class ReclamationsAdapter extends TypeAdapter<Reclamations> {
     };
     return Reclamations(
       id: fields[0] as int?,
-      state: fields[1] as int?,
+      state: fields[1] as ReclamationState?,
       formEntry: fields[5] as FormEntry?,
       deviceId: fields[3] as String?,
       user: fields[4] as int?,
       createdAt: fields[6] as String?,
+      formId: fields[2] as int?,
       form: fields[7] as String?,
-    )..formId = fields[2] as int?;
+      formAr: fields[8] as String?,
+      formDescription: fields[9] as String?,
+      formDescriptionAr: fields[10] as String?,
+    );
   }
 
   @override
   void write(BinaryWriter writer, Reclamations obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -46,7 +50,13 @@ class ReclamationsAdapter extends TypeAdapter<Reclamations> {
       ..writeByte(6)
       ..write(obj.createdAt)
       ..writeByte(7)
-      ..write(obj.form);
+      ..write(obj.form)
+      ..writeByte(8)
+      ..write(obj.formAr)
+      ..writeByte(9)
+      ..write(obj.formDescription)
+      ..writeByte(10)
+      ..write(obj.formDescriptionAr);
   }
 
   @override
@@ -67,13 +77,18 @@ class ReclamationsAdapter extends TypeAdapter<Reclamations> {
 Reclamations _$ReclamationsFromJson(Map<String, dynamic> json) {
   return Reclamations(
     id: json['id'] as int?,
-    state: json['state'] as int?,
+    state: json['state'] == null
+        ? null
+        : ReclamationState.fromJson(json['state'] as Map<String, dynamic>),
     formEntry: json['form_entry'] == null
         ? null
         : FormEntry.fromJson(json['form_entry'] as Map<String, dynamic>),
     user: json['user'] as int?,
     createdAt: json['created_at'] as String?,
     form: json['form'] as String?,
+    formAr: json['form_ar'] as String?,
+    formDescription: json['form_description'] as String?,
+    formDescriptionAr: json['form_description_ar'] as String?,
   );
 }
 
@@ -85,4 +100,7 @@ Map<String, dynamic> _$ReclamationsToJson(Reclamations instance) =>
       'form_entry': instance.formEntry,
       'created_at': instance.createdAt,
       'form': instance.form,
+      'form_ar': instance.formAr,
+      'form_description': instance.formDescription,
+      'form_description_ar': instance.formDescriptionAr,
     };

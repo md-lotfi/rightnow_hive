@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,11 +9,13 @@ import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class TimeWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
 
   const TimeWidget({
@@ -19,6 +23,7 @@ class TimeWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
   @override
@@ -60,19 +65,22 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
           }
         }
       }
+    } else if (widget.responseSet != null) {
+      log("response time is ${widget.responseSet?.value}");
+      _currentDateTime = Jiffy(widget.responseSet?.value, 'HH:mm:ss').dateTime; //DateTime.parse(widget.responseSet?.value);
     }
     super.initState();
   }
 
   Widget load() {
     DateFormat df = DateFormat('HH:mm:ss');
-    DateTime? minTime = df.parse(question?.minValue ?? "00:00:00");
-    DateTime? maxTime = df.parse(question?.maxValue ?? "00:00:00");
+    //DateTime? minTime = df.parse(question?.minValue ?? "00:00:00");
+    //DateTime? maxTime = df.parse(question?.maxValue ?? "00:00:00");
     String t = Jiffy(_currentDateTime).format("HH:mm");
     _selectedDateTime = _currentDateTime;
     print("selected time: $t");
     onSelectedValue!(
-      Answer.fill(question!.id, question!.fieldSet, t, null, t, transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+      Answer.fill(question?.id, question?.fieldSet, t, null, t, transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
     );
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 15, bottom: 10, right: 15),
@@ -81,7 +89,7 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question!, context.locale.languageCode),
+            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               FormField<DateTime>(
                 autovalidateMode: AutovalidateMode.always,

@@ -57,7 +57,9 @@ import 'package:rightnow/models/multiselect_answer.dart';
 import 'package:rightnow/models/organisation.dart';
 import 'package:rightnow/models/profile.dart';
 import 'package:rightnow/models/province.dart';
+import 'package:rightnow/models/reclamation_state.dart';
 import 'package:rightnow/models/reclamations.dart';
+import 'package:rightnow/models/sub_category.dart';
 import 'package:rightnow/models/super_category.dart';
 import 'package:rightnow/models/tag.dart';
 import 'package:rightnow/models/user_notification.dart';
@@ -178,10 +180,12 @@ Future<void> main() async {
   Hive.registerAdapter(MultiSelectAnswerAdapter());
   Hive.registerAdapter(OrganisationAdapter());
   Hive.registerAdapter(FileSaverAdapter());
+  Hive.registerAdapter(SubCategoryAdapter());
+  Hive.registerAdapter(ReclamationStateAdapter());
   /** End Hive */
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    print('Got a message whilst in the foreground! Saving data to database');
+    print('Got a message whilst in the background! Saving data to database');
     print('Message data: ${message.data}');
 
     if (message.notification != null) {

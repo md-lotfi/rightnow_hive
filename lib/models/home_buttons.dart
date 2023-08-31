@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
 
+part 'home_buttons.g.dart';
+
 @HiveType(typeId: 26)
 class HomeButtons {
   @HiveField(0)

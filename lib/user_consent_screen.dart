@@ -7,6 +7,7 @@ import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
 
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/data_privacy_page.dart';
 import 'package:rightnow/preventive1.dart';
 import 'package:rightnow/screen_viewer.dart';
 
@@ -179,10 +180,16 @@ class _UserConsentScreenState extends State<UserConsentScreen> {
                     child: TextButton(
                         onPressed: () {
                           if (_acceptCGU) {
-                            Navigator.push(
+                            /*Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => Preventive1(),
+                              ),
+                            );*/
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DataPrivacyPage(),
                               ),
                             );
                           } else {

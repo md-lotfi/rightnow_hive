@@ -9,13 +9,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/profile.dart';
 import 'package:rightnow/settings_screen.dart';
 
-const int NAV_HOME_INDEX = 0;
-const int NAV_FORMS_INDEX = 1;
-const int NAV_SEARCH_INDEX = 2;
-const int NAV_HISTORY_INDEX = 3;
-const int NAV_PROFILE_INDEX = 4;
+const int NAV_HOME = 0;
+const int NAV_HISTORY = 1;
+const int NAV_PROFILE = 2;
+const int NAV_SETTINGS = 3;
 
-enum NavState { NAV_HOME_INDEX, NAV_FORMS_INDEX, NAV_HISTORY_INDEX, NAV_PROFILE_INDEX }
+enum NavState { NAV_HOME, NAV_HISTORY, NAV_PROFILE, NAV_SETTINGS }
 
 class HomeNavBarComp extends StatelessWidget {
   final NavState currentIndex;
@@ -32,7 +31,7 @@ class HomeNavBarComp extends StatelessWidget {
       currentIndex: currentIndex.index,
       onTap: (int index) {
         switch (index) {
-          case 0:
+          case NAV_HOME:
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -40,7 +39,7 @@ class HomeNavBarComp extends StatelessWidget {
               ),
             );
             break;
-          case 1:
+          case NAV_HISTORY:
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -48,7 +47,7 @@ class HomeNavBarComp extends StatelessWidget {
               ),
             );
             break;
-          case 2:
+          case NAV_PROFILE:
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -56,7 +55,7 @@ class HomeNavBarComp extends StatelessWidget {
               ),
             );
             break;
-          case 3:
+          case NAV_SETTINGS:
             Navigator.push(
               context,
               MaterialPageRoute(

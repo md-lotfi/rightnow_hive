@@ -31,7 +31,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return ScreenViewerWidget(
         page: Scaffold(
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_PROFILE_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text("Mot de passe".tr()),

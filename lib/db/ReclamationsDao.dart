@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hive/hive.dart';
 import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -34,10 +36,17 @@ class ReclamationsDao extends FormStateDao {
   //@Query("update AnswerHolder set state = :state where deviceId = :deviceId")
   Future<AnswerHolder?> setAnswerHolderState(int state, String deviceId) async {
     var ans = await getAnswerHolderDb();
-    var a = ans.values.firstWhereOrNull((element) => element.deviceId == deviceId);
+    var a = ans.values.firstWhereOrNull((element) {
+      //log('reclamation saving state in answer holder xxx device id ${element.deviceId}, ${element.state}, $deviceId');
+      return element.deviceId == deviceId;
+    });
+    //log('reclamation saving state in answer holder xxx');
     if (a != null) {
       a.state = state;
+      //log('reclamation saving state in answer holder xxx a not null ${a.state}');
       await a.save();
+    } else {
+      //log('reclamation saving state in answer holder xxx is null $deviceId');
     }
   }
 
@@ -49,7 +58,7 @@ class ReclamationsDao extends FormStateDao {
   Future<Reclamations?> getReclamations(int formId) async {
     Reclamations? r = await fetchReclamations(formId);
     if (r != null) {
-      r.formState = await fetchFormState(r.state ?? -1);
+      r.formState = await fetchFormState(r.state?.id ?? -1);
     }
     return r;
   }
@@ -60,7 +69,8 @@ class ReclamationsDao extends FormStateDao {
     for (var item in recs) {
       item.formId = item.formEntry?.id ?? -1;
       item.deviceId = item.formEntry?.deviceId ?? "";
-      await setAnswerHolderState(item.state!, item.deviceId!);
+      //log('reclamation saving state in answer holder ${item.state}');
+      await setAnswerHolderState(item.state!.id!, item.deviceId!);
       r.add(item);
     }
     return await insertReclamations(r);

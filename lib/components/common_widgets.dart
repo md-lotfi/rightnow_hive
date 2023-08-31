@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -28,6 +29,7 @@ import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/local_user.dart';
 import 'package:rightnow/models/profile.dart';
+import 'package:rightnow/models/response_set.dart';
 import 'package:rightnow/recommandation.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/rest/network_exceptions.dart';
@@ -67,7 +69,8 @@ InlineSpan showInlineSpan(InlineSpan widgets, InlineSpan elseWidgets, bool show)
   }
 }
 
-bool isDate(String str) {
+bool isDate(String? str) {
+  if (str == null) return false;
   try {
     DateTime.parse(str);
     return true;
@@ -76,7 +79,7 @@ bool isDate(String str) {
   }
 }
 
-Widget widgetQuestionTitle(Question question, String lang) {
+Widget widgetQuestionTitle(Question? question, String lang, ResponseSet? responseSet) {
   return Padding(
     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10, right: 10),
     child: RichText(
@@ -87,7 +90,7 @@ Widget widgetQuestionTitle(Question question, String lang) {
           fontWeight: FontWeight.bold,
         ),
         children: [
-          TextSpan(text: question.getName(lang)), // + " " + question.id.toString()
+          TextSpan(text: question != null ? question.getName(lang) : (responseSet != null ? responseSet.questionHist?.getName(lang) ?? "" : "")),
           showInlineSpan(
             WidgetSpan(
               child: Container(
@@ -108,13 +111,6 @@ Widget widgetQuestionTitle(Question question, String lang) {
       ),
     ),
   );
-  /*TextSpan(
-              text: '*',
-              style: new TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            )*/
 }
 
 bool isRequired(Question? q) {
@@ -794,10 +790,13 @@ Future<Profile?> getProfile(BuildContext context) async {
   if (user != null) {
     ApiRepository api = ApiRepository();
     Profile? wp = await api.getProfile(user.user!);
+    log("getting profile web $wp");
     if (wp != null) {
+      log("getting profile saving");
       await getDataBase<ProfileDao>().setProfile(wp);
       return wp;
     } else {
+      log("getting profile local");
       return await getDataBase<ProfileDao>().fetchUserProfile();
     }
   } else {
@@ -1135,7 +1134,7 @@ Future<void> postWaitingForms(BuildContext context) async {
   List<FormFields> forms = await getDataBase<FormFieldsDao>().fetchFormsAny(context);
 
   for (var form in forms) {
-    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_COMPLETED);
+    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_COMPLETED, null);
     if (waitingUploadAnswerHolder != null) {
       if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
         LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
@@ -1217,14 +1216,16 @@ AnswersCount countAnswersHolder(AnswerHolder holder) {
   return a;
 }
 
-Future<void> checkSend(BuildContext context, FormFields form, Function() onFinish, {bool showResult = true}) async {
+Future<void> checkSend(BuildContext context, FormFields form, Function() onFinish, {bool showResult = true, bool checkInternet = true}) async {
   ApiRepository api = ApiRepository();
-  bool connected = await api.hasInternetConnection();
-  if (!connected) {
-    noInternetDialog(context);
-    return;
+  if (checkInternet) {
+    bool connected = await api.hasInternetConnection();
+    if (!connected) {
+      noInternetDialog(context);
+      return;
+    }
   }
-  AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_NOT_COMPLETED);
+  AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_NOT_COMPLETED, null);
   if (waitingUploadAnswerHolder != null) {
     if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
       LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();

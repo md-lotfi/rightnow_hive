@@ -1,8 +1,11 @@
 import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/form_entry.dart';
 import 'package:rightnow/models/form_state.dart';
+import 'package:rightnow/models/reclamation_state.dart';
+import 'package:rightnow/views/language_switch.dart';
 
 part 'reclamations.g.dart';
 
@@ -14,7 +17,7 @@ class Reclamations {
 
   @HiveField(1)
   @JsonKey(name: "state")
-  int? state;
+  ReclamationState? state;
 
   @JsonKey(ignore: true)
   FormFieldsState? formState;
@@ -43,7 +46,44 @@ class Reclamations {
   @JsonKey(name: "form")
   String? form;
 
-  Reclamations({this.id, this.state, this.formEntry, this.deviceId, this.user, this.createdAt, this.form});
+  @HiveField(8)
+  @JsonKey(name: "form_ar")
+  String? formAr;
+
+  @HiveField(9)
+  @JsonKey(name: "form_description")
+  String? formDescription;
+
+  @HiveField(10)
+  @JsonKey(name: "form_description_ar")
+  String? formDescriptionAr;
+
+  @JsonKey(ignore: true)
+  AnswerHolder? localAnswerHolder;
+
+  String getName(String? lang) {
+    return (lang == LANGUAGE_FR ? form : formAr) ?? "";
+  }
+
+  String getDescription(String? lang) {
+    var r = (lang == LANGUAGE_FR ? formDescription : (lang == null ? formDescription : formDescriptionAr)) ?? "";
+    return r;
+  }
+
+  Reclamations({
+    this.id,
+    this.state,
+    this.formEntry,
+    this.deviceId,
+    this.user,
+    this.createdAt,
+    this.formId,
+    this.form,
+    this.formAr,
+    this.formDescription,
+    this.formDescriptionAr,
+    this.localAnswerHolder,
+  });
 
   factory Reclamations.fromJson(Map<String, dynamic> json) => _$ReclamationsFromJson(json);
 

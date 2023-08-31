@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/models/user_notification.dart';
+import 'package:collection/collection.dart';
 
 class UserNotificationsDao {
   Future<Box<UserNotification>> getUserNotificationDb() async {
@@ -26,7 +28,11 @@ class UserNotificationsDao {
 
   Future<List<UserNotification>> fetchUserNotification() async {
     var r = await getUserNotificationDb();
-    return r.values.toList();
+    List<UserNotification> n = r.values.toList();
+    n.sort((a, b) {
+      return Jiffy(b.createdAt).dateTime.compareTo(Jiffy(a.createdAt).dateTime);
+    });
+    return n;
   }
 
   Future<void> setUserNotificationViewed(int notifId) async {
@@ -39,7 +45,7 @@ class UserNotificationsDao {
     }
   }
 
-  Future<void> insertUserNotificationsIfNotPresent(List<UserNotification> userNotifications) async {
+  Future<List<UserNotification>> insertUserNotificationsIfNotPresent(List<UserNotification> userNotifications) async {
     var r = await getUserNotificationDb();
     List<int?> ids = r.values.map((e) => e.id).toList();
     for (var item in userNotifications) {
@@ -55,6 +61,11 @@ class UserNotificationsDao {
         await r.add(item);
       }
     }
+    List<UserNotification> n = r.values.toList();
+    n.sort((a, b) {
+      return Jiffy(b.createdAt).dateTime.compareTo(Jiffy(a.createdAt).dateTime);
+    });
+    return n;
     /*if (ids.length > 0) {
       for (var item in userNotifications) {
         if (!ids.contains(item.id)) {

@@ -41,7 +41,7 @@ class LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
 
   Future<int> _loginUser(LocalUser user) async {
-    showLoaderDialog(context, title: "Authentification en cours ...");
+    showLoaderDialog(context, title: "Authentification en cours ...".tr());
     ApiRepository api = ApiRepository();
     dynamic auth = await api.loginUserRaw(user);
     if (auth is String) {

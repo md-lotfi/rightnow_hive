@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/data_privacy_page.dart';
@@ -59,3 +59,4 @@ class Preventive1 extends StatelessWidget {
     ));
   }
 }
+*/

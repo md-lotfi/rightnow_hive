@@ -13,17 +13,20 @@ import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/file_saver.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class SoundWebView extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
   final bool viewOnly;
+  final ResponseSet? responseSet;
   const SoundWebView({
     Key? key,
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
 
@@ -176,7 +179,7 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question!, context.locale.languageCode),
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly && _answer == null)
               FormField<bool>(
                 autovalidateMode: AutovalidateMode.always,

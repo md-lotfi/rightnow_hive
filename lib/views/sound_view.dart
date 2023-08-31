@@ -13,17 +13,20 @@ import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class SoundView extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
   const SoundView({
     Key? key,
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
 
@@ -68,11 +71,13 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
         _mPlayerIsInited = true;
       });
     });
-    _myRecorder?.openAudioSession().then((value) {
-      setState(() {
-        _mRecorderIsInited = true;
+    if (!widget.viewOnly)
+      _myRecorder?.openAudioSession().then((value) {
+        setState(() {
+          _mRecorderIsInited = true;
+        });
       });
-    });
+    if (widget.viewOnly && widget.responseSet != null) recordPath = widget.responseSet?.url ?? "";
     super.initState();
   }
 
@@ -96,7 +101,11 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
   }
 
   Future<void> _record(FormFieldState<bool>? state) async {
+    log("start recording 3 ${widget.viewOnly}");
+    if (widget.viewOnly) return;
+    log("start recording 4");
     if (_mRecorderIsInited) {
+      log("start recording 5");
       Map<Permission, PermissionStatus> statuses = await [
         Permission.microphone,
         Permission.storage,
@@ -200,7 +209,8 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question!, context.locale.languageCode),
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            if (widget.viewOnly && widget.responseSet != null) _playerMode(),
             if (!widget.viewOnly && _answer == null)
               FormField<bool>(
                 autovalidateMode: AutovalidateMode.always,
@@ -217,7 +227,9 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
                           icon: _isRecording() ? Icon(Icons.stop) : Icon(Icons.mic),
                           label: _isRecording() ? Text("Stop recording".tr()) : Text("Enregistrer un audio".tr()),
                           onPressed: () async {
+                            log("start recording 1");
                             if (!_isRecording()) {
+                              log("start recording 2");
                               await _record(state);
                               state.didChange(hasRecord);
                             } else
@@ -247,7 +259,7 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
       children: [
         _playButton(),
         _stopButton(),
-        _recordButton(),
+        if (!widget.viewOnly && widget.responseSet == null) _recordButton(),
       ],
     );
   }

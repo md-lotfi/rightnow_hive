@@ -1,25 +1,18 @@
 import 'dart:developer';
 
 import 'package:jiffy/jiffy.dart';
-import 'package:rightnow/blocs/reclamations_bloc.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/components/tabs_header.dart';
 import 'package:rightnow/constants/constants.dart';
-import 'package:rightnow/db/AnswerHolderDao.dart';
-import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/FormStateDao.dart';
-import 'package:rightnow/events/ReclamationsEvent.dart';
 import 'package:rightnow/fieldsets.dart';
 import 'package:rightnow/fieldsets_answered.dart';
-import 'package:rightnow/models/AnswersHolder.dart';
-import 'package:rightnow/models/FieldSet.dart';
-import 'package:rightnow/models/FormFields.dart';
-import 'package:rightnow/models/answers_count.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/reclamations.dart';
+import 'package:rightnow/questions_history_screen.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -51,7 +44,7 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return ScreenViewerWidget(
         page: Scaffold(
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HISTORY_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HISTORY),
       backgroundColor: Colors.grey.shade50,
       body: _body(),
     ));
@@ -109,22 +102,14 @@ class _HistoryPageState extends State<HistoryPage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
                   return FutureBuilder<List<Reclamations>?>(
-                    future: api.fetchReclamationsRaw(),
+                    future: api.fetchReclamationsRaw(_selectedId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
                         log("reclamations data is ${snapshot.data?.length}");
-                        return FutureBuilder<List<AnswerHolder>>(
-                          future: getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildrenAll(_selectedId, HOLDER_ANY_COMPLETED),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.done) {
-                              log("loading data widtget $_selectedId, $HOLDER_ANY_COMPLETED,  ${snapshot.data?.length}");
-                              return _dataWidget(snapshot.data);
-                            }
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        );
+                        if (snapshot.data != null) {
+                          return _dataWidget(snapshot.data);
+                        }
+                        return Container();
                       }
                       return Center(
                         child: CircularProgressIndicator(),
@@ -144,7 +129,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget _dataWidget(List<AnswerHolder>? data) {
+  Widget _dataWidget(List<Reclamations>? data) {
     return Center(
         child: RefreshIndicator(
       child: RawScrollbar(
@@ -181,7 +166,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget _builder(List<AnswerHolder>? data) {
+  Widget _builder(List<Reclamations>? data) {
     if (data == null) return Container();
     return ScrollTouchWidget(
       listChild: ListView.separated(
@@ -190,7 +175,7 @@ class _HistoryPageState extends State<HistoryPage> {
           if (data.length == 0) return Container();
           if ((index + 1) == (data.length + 1)) return Container();
           if (index == 0) return Container();
-          return _listDivider(Jiffy(data[index].completedAt).format("dd MMMM yyyy"));
+          return _listDivider(Jiffy(data[index].formEntry?.completedAt).format("dd MMMM yyyy"));
         },
         itemCount: data.length + 2,
         itemBuilder: (BuildContext context, int index) {
@@ -198,10 +183,10 @@ class _HistoryPageState extends State<HistoryPage> {
           String f = "";
           if ((index + 1) == (data.length + 2)) return Container();
           if (index == 0) {
-            return _listDivider(Jiffy(data[index].completedAt).format("dd MMMM yyyy"));
+            return _listDivider(Jiffy(data[index].formEntry?.completedAt).format("dd MMMM yyyy"));
           }
-          if (data[index - 1].completedAt != null) {
-            DateTime d = DateTime.parse(data[index - 1].completedAt ?? "");
+          if (data[index - 1].formEntry?.completedAt != null) {
+            DateTime d = DateTime.parse(data[index - 1].formEntry?.completedAt ?? "");
             f = DateFormat('dd/MM/yyyy').format(d);
             print('date is ' + f);
           }
@@ -219,7 +204,42 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
               ],
             ),
-            child: _tile(data[index - 1], f),
+            child: InkWell(
+                onTap: () async {
+                  //FormFields? f = await getDataBase<FormFieldsDao>().loadFormFieldSets(data.formId ?? -1, HOLDER_COMPLETED);
+                  //print("decision response is ${widget.answerHolder.decisionResponse}");
+                  //showResponseDialog(context, data.decisionResponse, () {});
+                  if (data[index - 1].localAnswerHolder != null) {
+                    log("uploaded ${data[index - 1].localAnswerHolder}");
+                    if (data[index - 1].localAnswerHolder?.uploaded == true) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FieldsSetAnsweredPage(
+                            answerHolder: data[index - 1].localAnswerHolder!,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FieldsSetPage(formId: data[index - 1].formId!),
+                        ),
+                      );
+                    }
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuestionsHistoryPage(
+                          reclamations: data[index - 1],
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: _tile(data[index - 1], f)),
             //child: Card(child: _tile(data[index], f)),
           );
         },
@@ -227,9 +247,10 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget _setTileHeader(AnswerHolder data) {
+  Widget _setTileHeader(Reclamations data) {
     return Row(
       children: [
+        //if (data.localAnswerHolder != null)
         showWidget(
             Container(
               padding: EdgeInsets.all(5),
@@ -247,10 +268,19 @@ class _HistoryPageState extends State<HistoryPage> {
                 style: TextStyle(color: Colors.white, backgroundColor: Colors.green, fontSize: 10),
               ),
             ),
-            data.uploaded == false),
+            data.localAnswerHolder?.uploaded == false),
         if (data.state != null)
-          FutureBuilder<FormFieldsState?>(
-            future: getDataBase<FormStateDao>().fetchFormState(data.state!),
+          Container(
+            padding: EdgeInsets.all(5),
+            margin: isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(5)),
+            child: Text(
+              data.state!.getTitle(context.locale.languageCode),
+              style: TextStyle(color: Colors.white, backgroundColor: Colors.blue, fontSize: 10),
+            ),
+          ),
+        /*FutureBuilder<FormFieldsState?>(
+            future: getDataBase<FormStateDao>().fetchFormState(data.state!.id!),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.data != null) {
@@ -267,8 +297,8 @@ class _HistoryPageState extends State<HistoryPage> {
               }
               return Center(child: CircularProgressIndicator());
             },
-          ),
-        if (data.formFields?.isAnonymous == true)
+          ),*/
+        /*if (data.formFields?.isAnonymous == true)
           Container(
             padding: EdgeInsets.all(5),
             margin: isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8),
@@ -277,21 +307,22 @@ class _HistoryPageState extends State<HistoryPage> {
               "Anonyme".tr(),
               style: TextStyle(color: Colors.white, backgroundColor: Colors.black, fontSize: 10),
             ),
-          ),
+          ),*/
       ],
     );
   }
 
-  Widget _tile(AnswerHolder data, String f) {
+  Widget _tile(Reclamations data, String f) {
     /*int totalQuestions = 0;
     for (FieldSet item in data.formFields?.fieldSets ?? []) {
       totalQuestions += item.questionsCount ?? 0;
     }
     double progress = (data.answers?.length.toDouble() ?? 0);
     print("progress $progress, $totalQuestions, ${data.answers?.length}");*/
-    AnswersCount answersCount = countAnswersHolder(data);
-    print("Answers count is ${answersCount.realTotalQuestions}, ${answersCount.totalQuestions}, ${answersCount.progress}");
-    log("and=swer holder ${data.formFields?.getName(context.locale.languageCode)}");
+    //AnswersCount answersCount = countAnswersHolder(data);
+    //print("Answers count is ${answersCount.realTotalQuestions}, ${answersCount.totalQuestions}, ${answersCount.progress}");
+    //log("and=swer holder ${data.form}"); //data.getName(context.locale.languageCode)
+    log("upload state is ${data.localAnswerHolder?.uploaded}");
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,87 +331,48 @@ class _HistoryPageState extends State<HistoryPage> {
         ListTile(
           dense: true,
           contentPadding: EdgeInsets.only(left: 0.0, right: 0.0),
-          onTap: () async {
-            //FormFields? f = await getDataBase<FormFieldsDao>().loadFormFieldSets(data.formId ?? -1, HOLDER_COMPLETED);
-            //print("decision response is ${widget.answerHolder.decisionResponse}");
-            showResponseDialog(context, data.decisionResponse, () {});
-            /*if (data.uploaded == true) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FieldsSetAnsweredPage(
-                    answerHolder: data,
-                  ),
-                ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FieldsSetPage(formId: data.formId!),
-                ),
-              );
-            }*/
-          },
+          /*onTap: () async {
+            
+          },*/
           title: Text(
-            data.formFields?.getName(context.locale.languageCode) ?? "",
+            data.getName(context.locale.languageCode), //data.formFields?.getName(context.locale.languageCode)
             style: TextStyle(color: COLOR_PRIMARY, fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Text("N° réclamation ".tr()),
               Text(
-                data.formFields?.category?.getName(context.locale.languageCode) ?? "",
+                data.id?.toString() ?? "", //data.formFields?.category?.getName(context.locale.languageCode) ?? "",
                 style: TextStyle(color: Colors.blue),
               )
             ],
           ),
+          /*subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data.form ?? "", //data.formFields?.category?.getName(context.locale.languageCode) ?? "",
+                style: TextStyle(color: Colors.blue),
+              )
+            ],
+          ),*/
           trailing: Stack(
             alignment: Alignment.center,
             children: [
               Text(
-                answersCount.realTotalQuestions.toString(),
+                "", //answersCount.realTotalQuestions.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
-              CircularProgressIndicator(
+              (data.localAnswerHolder?.uploaded == false) ? const Icon(Icons.close, color: Colors.red) : const Icon(Icons.check_circle, color: Colors.green),
+              /*CircularProgressIndicator(
                 backgroundColor: Colors.grey,
-                color: answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
-                value: answersCount.totalQuestions == 0 ? 0 : (answersCount.progress),
-              ),
+                color: Colors.green, //answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
+                value: 1, //answersCount.totalQuestions == 0 ? 0 : (answersCount.progress),
+              ),*/
             ],
           ),
-          /*trailing: FutureBuilder<int>(
-            future: countAnswers(data.formId, any: true),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                int totalQuestions = 0;
-                for (FieldSet item in data.formFields?.fieldSets ?? []) {
-                  totalQuestions += item.questionsCount ?? 0;
-                }
-                double progress = (data.answers?.length.toDouble() ?? 0);
-                print("progress $progress, $totalQuestions, ${data.answers?.length}");
-                return Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Text(
-                      progress.floor().toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                      color: totalQuestions == 0 ? Colors.grey : ((progress / totalQuestions) != 1 ? Colors.red : Colors.green),
-                      value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
-                    ),
-                  ],
-                );
-                //return Icon(Icons.alarm);
-              }
-              //return Icon(Icons.local_dining);
-              return CircularProgressIndicator();
-            },
-          ),*/
         ),
         Container(
           child: Row(
@@ -388,7 +380,7 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               Expanded(
                 child: Text(
-                  Jiffy(data.completedAt).Hm,
+                  Jiffy(data.formEntry?.completedAt).Hm,
                   style: TextStyle(color: Colors.grey),
                 ),
               ),

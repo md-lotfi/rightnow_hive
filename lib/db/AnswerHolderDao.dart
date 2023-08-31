@@ -72,7 +72,13 @@ class AnswerHolderDao extends AnswersDao {
   Future<List<AnswerHolder>?> fetchAnswerHolderState(int state) async {
     var r = await getAnswerHolderDb();
     //return r.values.where((element) => element.state == state).sorted((a, b) => a.id!.compareTo(b.id!));
-    return r.values.where((element) => element.state == state).sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp())).toList();
+    return r.values
+        .where((element) {
+          //log('reclamation is elemnt ${element.state}, $state, ${element.state == state}');
+          return element.state == state;
+        })
+        .sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
+        .toList();
   }
 
   //@Query("update AnswerHolder set uploaded = 1 where id = :id")
@@ -163,7 +169,7 @@ class AnswerHolderDao extends AnswersDao {
           ah.formFields = await loadForm(ah.formId!);
           ah.decisionResponse = await fetchDecisionResponse(ah.id!);
           ah.answers = [];
-          List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
+          List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, null);
           if (answers != null) {
             print("transact answers not uploaded size " + answers.length.toString());
             if (answers.length > 0) {
@@ -222,7 +228,7 @@ class AnswerHolderDao extends AnswersDao {
           ah.formFields = await loadForm(ah.formId!);
           ah.decisionResponse = await fetchDecisionResponse(ah.id!);
           ah.answers = [];
-          List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
+          List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, null);
           if (answers != null) {
             print("transact answers not uploaded size " + answers.length.toString());
             if (answers.length > 0) {
@@ -247,13 +253,13 @@ class AnswerHolderDao extends AnswersDao {
     return List.from(ahsTmp);
   }
 
-  Future<AnswerHolder?> fetchAnswerHolderNotClosedWithChildren(int formId, int completed) async {
+  Future<AnswerHolder?> fetchAnswerHolderNotClosedWithChildren(int formId, int completed, int? fieldSetId) async {
     AnswerHolder? ah = await fetchAnswerHolderOne(formId, completed); //fetchAnswerHolderNotClosed
 
     if (ah != null) {
       ah.formFields = await loadFormFieldSets(formId, completed);
       ah.decisionResponse = await fetchDecisionResponse(ah.id!);
-      List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
+      List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
       if (answers != null) {
         if (answers.length > 0) {
           ah.answers = [];
@@ -278,12 +284,15 @@ class AnswerHolderDao extends AnswersDao {
     bool any = false,
     bool withFormFields = false,
     AnswerHolder? answerHolder,
+    int? fieldSetId,
   }) async {
     AnswerHolder? ah = answerHolder;
-    if (answerHolder == null) if (any)
-      ah = await fetchAnswerHolderAny(formId, completed);
-    else
-      ah = await fetchAnswerHolderOne(formId, completed);
+    if (answerHolder == null) {
+      if (any)
+        ah = await fetchAnswerHolderAny(formId, completed);
+      else
+        ah = await fetchAnswerHolderOne(formId, completed);
+    }
     //print("formId and fieldsetId ara $ah");
     if (ah != null) {
       //print("formId and fieldsetId not null ara ${ah.id}");
@@ -291,7 +300,7 @@ class AnswerHolderDao extends AnswersDao {
       //print("formId and fieldsetId form fiilds");
       ah.decisionResponse = await fetchDecisionResponse(ah.id!);
       //print("formId and fieldsetId desicision response");
-      List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
+      List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
       //print("formId and fieldsetId answers");
       if (answers != null) {
         //print("formId and fieldsetId answers are not null ${answers.length}");
@@ -314,12 +323,13 @@ class AnswerHolderDao extends AnswersDao {
     return ah;
   }
 
-  Future<List<AnswerHolder>> fetchAnswerHolderWithChildrenAll(int uploadedState, int completed) async {
+  Future<List<AnswerHolder>> fetchAnswerHolderWithChildrenAll(int uploadedState, int completed, int? fieldSetId) async {
     List<AnswerHolder>? answerHolders;
     if (uploadedState == -1) answerHolders = await fetchAllAnswerHolder();
     if (uploadedState == -2) answerHolders = await fetchAnswerHoldersUploaded();
     if (uploadedState == -3) answerHolders = await fetchAnswerHoldersNotUploaded();
 
+    //log('reclamation of states uplodaed $uploadedState');
     if (uploadedState > 0) answerHolders = await fetchAnswerHolderState(uploadedState);
 
     List<AnswerHolder> holders = [];
@@ -328,7 +338,7 @@ class AnswerHolderDao extends AnswersDao {
         ah.formFields = await loadFormFieldSets(ah.formId!, completed);
         ah.decisionResponse = await fetchDecisionResponse(ah.id!);
         //print("decision response loading ${ah.decisionResponse}, ${ah.id}");
-        List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!);
+        List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
         if (answers != null) {
           if (answers.length > 0) {
             ah.answers = [];

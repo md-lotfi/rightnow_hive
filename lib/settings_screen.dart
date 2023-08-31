@@ -7,8 +7,10 @@ import 'package:rightnow/components/language_widget.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
+import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
+import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/login_page.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return ScreenViewerWidget(
       page: Scaffold(
-        bottomNavigationBar: HomeNavBarComp(NavState.NAV_PROFILE_INDEX),
+        bottomNavigationBar: HomeNavBarComp(NavState.NAV_SETTINGS),
         appBar: AppBar(
           backgroundColor: Colors.grey.shade50,
           title: Text("Paramètres".tr()),
@@ -94,6 +96,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     await getDataBase<LocalUserDao>().removeUser();
                     await getDataBase<FormFieldsDao>().setForms([], null);
                     await getDataBase<AnswerHolderDao>().deleteAnswerHolderAll();
+                    await getDataBase<FCMNotificationsDao>().removeAllFCMNotification();
+                    await getDataBase<UserNotificationsDao>().removeAllUserNotification();
                     Phoenix.rebirth(context);
                     Navigator.pushReplacement(
                       context,

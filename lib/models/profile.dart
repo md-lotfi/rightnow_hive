@@ -30,8 +30,15 @@ class Profile {
   @HiveField(5)
   String? email;
 
+  @JsonKey(name: "province_data")
+  @HiveField(22)
+  Province? provinceData;
+
+  @HiveField(23)
+  String? province;
+
   //@JsonKey(ignore: true)
-  Province? province;
+  //Province? province;
 
   @HiveField(6)
   int? gender;

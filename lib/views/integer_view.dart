@@ -6,11 +6,13 @@ import 'package:rightnow/inherits/field_controller.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class IntegerWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
 
   const IntegerWidget({
@@ -18,6 +20,7 @@ class IntegerWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
   @override
@@ -48,6 +51,8 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
           }
         }
       }
+    } else if (widget.responseSet != null) {
+      fieldDataController.text = widget.responseSet?.value.toString() ?? "";
     }
     super.initState();
   }
@@ -55,7 +60,7 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
   _dataChanged() {
     print("integer text changed " + fieldDataController.text);
     onSelectedValue!(
-      Answer.fill(question!.id, question!.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
     );
   }
 
@@ -67,7 +72,7 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question!, context.locale.languageCode),
+            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,

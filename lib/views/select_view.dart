@@ -9,18 +9,21 @@ import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/choice.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class SelectWidget extends StatefulWidget {
-  final Question question;
+  final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
 
   const SelectWidget({
     Key? key,
-    required this.question,
+    this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
 
@@ -42,14 +45,14 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {
         //_choicesDropdownList = _dropdownItems();
-        if (answerHolder != null) {
+        if (answerHolder != null && widget.question != null) {
           if (answerHolder!.answers != null) {
             if (answerHolder!.answers!.length > 0) {
               for (var answer in answerHolder!.answers!) {
-                if (answer.qustionId == widget.question.id) {
+                if (answer.qustionId == widget.question!.id) {
                   if (answer.multiSelectAnswer != null) {
                     if (answer.multiSelectAnswer!.length > 0) {
-                      for (var choice in widget.question.choices!) {
+                      for (var choice in widget.question!.choices!) {
                         if (choice.id == answer.multiSelectAnswer![0].selectedId) {
                           _currentChoice = choice;
                           break;
@@ -84,16 +87,17 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
   }
 
   _setOnSeletedValue() {
+    if (widget.question == null) return;
     List<MultiSelectAnswer> m = [];
-    m.add(MultiSelectAnswer.fill(answerHolder?.id, _currentChoice!.id, _currentChoice!.label));
+    m.add(MultiSelectAnswer.fill(answerHolder?.id, _currentChoice?.id, _currentChoice?.label));
     onSelectedValue!(
       Answer.fill(
-        widget.question.id,
-        widget.question.fieldSet,
+        widget.question!.id,
+        widget.question!.fieldSet,
         _currentChoice!.label,
         _currentChoice!.id.toString(),
         DateTime.now().toString(),
-        transtypeResourceType(widget.question.resourcetype!),
+        transtypeResourceType(widget.question!.resourcetype!),
         answerHolder?.id,
         m,
       ),
@@ -112,7 +116,7 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode),
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               FormField<Choice>(
                 autovalidateMode: AutovalidateMode.always,
@@ -155,8 +159,9 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                   return null;
                 },
               ),
-            if (widget.viewOnly) Text("select view"),
-            if (widget.viewOnly) fieldData(_currentChoice?.getName(context.locale.languageCode) ?? ""),
+            //if (widget.viewOnly) Text("select view"),
+            //if (widget.viewOnly) fieldData(_currentChoice?.getName(context.locale.languageCode) ?? ""),
+            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
             Divider(),
           ],
         ),
@@ -173,11 +178,12 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
   }
 
   List<PopupMenuItem<Choice>> _dropdownItems(FormFieldState<Choice> state) {
+    if (widget.question == null) return [];
     List<PopupMenuItem<Choice>> l = [];
-    if (widget.question.choices != null) {
-      if (widget.question.choices!.length > 0) {
-        for (var i = 0; i < (widget.question.choices?.length ?? 0); i++) {
-          Choice choice = widget.question.choices![i];
+    if (widget.question!.choices != null) {
+      if (widget.question!.choices!.length > 0) {
+        for (var i = 0; i < (widget.question!.choices?.length ?? 0); i++) {
+          Choice choice = widget.question!.choices![i];
           l.add(PopupMenuItem(
             onTap: () {
               changedDropDownItem(choice, state);
@@ -185,7 +191,7 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
             value: choice,
             child: PopUpMenuTile(
               isActive: true,
-              showDivider: i < widget.question.choices!.length - 1,
+              showDivider: i < widget.question!.choices!.length - 1,
               icon: Icons.fiber_manual_record,
               title: choice.getName(context.locale.languageCode),
             ), //Text(choice.getName(context.locale.languageCode)),

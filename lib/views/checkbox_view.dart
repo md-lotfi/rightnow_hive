@@ -11,9 +11,11 @@ import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/choice.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
 import 'package:collection/collection.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class CheckboxWidget extends StatefulWidget {
   final Question? question;
+  final ResponseSet? responseSet;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
   final bool viewOnly;
@@ -23,6 +25,7 @@ class CheckboxWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
 
@@ -51,8 +54,10 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < widget.question!.choices!.length; i++) {
-      _values[widget.question!.choices![i].id!] = false;
+    if (widget.question != null) {
+      for (var i = 0; i < widget.question!.choices!.length; i++) {
+        _values[widget.question!.choices![i].id!] = false;
+      }
     }
     if (widget.answerHolder != null) {
       if (widget.answerHolder!.answers != null) {
@@ -111,7 +116,7 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question!, context.locale.languageCode),
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               FormField<Map<int, bool>>(
                 autovalidateMode: AutovalidateMode.always,
@@ -133,8 +138,9 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
                   }
                 },
               ),
-            if (widget.viewOnly) Text("ceheck box view"),
-            if (widget.viewOnly) fieldData(_selectedAnswer?.getName(context.locale.languageCode)),
+            //if (widget.viewOnly) Text("ceheck box view"),
+            //if (widget.viewOnly) fieldData(_selectedAnswer?.getName(context.locale.languageCode)),
+            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
             Divider(),
           ],
         ),
@@ -147,13 +153,13 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
     List<MultiSelectAnswer> m = [];
     for (var v in widget.question!.choices!) {
       if (_values[v.id] != null) {
-        if (_values[v.id] == true) m.add(MultiSelectAnswer.fill(widget.answerHolder!.id, v.id, v.label));
+        if (_values[v.id] == true) m.add(MultiSelectAnswer.fill(widget.answerHolder?.id, v.id, v.label));
       }
     }
     if (widget.onSelectedValue != null) {
       print("multiselect length result ${m.length}");
       widget.onSelectedValue!(
-        Answer.fill(widget.question!.id, widget.question!.fieldSet, "", null, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!), widget.answerHolder!.id, m),
+        Answer.fill(widget.question?.id, widget.question?.fieldSet, "", null, DateTime.now().toString(), transtypeResourceType(widget.question?.resourcetype), widget.answerHolder?.id, m),
       );
     }
   }

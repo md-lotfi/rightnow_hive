@@ -9,11 +9,13 @@ import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/multiselect_answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class RadioboxWidget extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
 
   const RadioboxWidget({
@@ -21,6 +23,7 @@ class RadioboxWidget extends StatefulWidget {
     this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
 
@@ -76,7 +79,7 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
   }
 
   String _getChoiceLabel() {
-    for (var item in question!.choices!) {
+    for (var item in question?.choices ?? []) {
       if (item.id == _checkValue) return item.label!;
     }
     return "";
@@ -84,8 +87,8 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
 
   _setOnSeletedValue() {
     List<MultiSelectAnswer> m = [];
-    m.add(MultiSelectAnswer.fill(answerHolder!.id, _checkValue, _getChoiceLabel()));
-    onSelectedValue!(Answer.fill(question!.id, question!.fieldSet, _checkValue.toString(), null, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder!.id, m));
+    m.add(MultiSelectAnswer.fill(answerHolder?.id, _checkValue, _getChoiceLabel()));
+    onSelectedValue!(Answer.fill(question?.id, question?.fieldSet, _checkValue.toString(), null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, m));
   }
 
   @override
@@ -105,7 +108,7 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question!, context.locale.languageCode),
+            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               FormField(
                 autovalidateMode: AutovalidateMode.always,
@@ -126,8 +129,9 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
                   return null;
                 },
               ),
-            if (widget.viewOnly) Text("radio box view"),
-            if (widget.viewOnly) fieldData(_selectedAnswer),
+            //if (widget.viewOnly) Text("radio box view"),
+            //if (widget.viewOnly) fieldData(_selectedAnswer),
+            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
             Divider(),
           ],
         ),

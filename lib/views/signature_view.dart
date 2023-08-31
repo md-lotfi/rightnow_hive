@@ -11,16 +11,19 @@ import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/models/file_saver.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class SignatureView extends StatefulWidget {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
+  final ResponseSet? responseSet;
   final bool viewOnly;
   const SignatureView({
     Key? key,
     this.question,
     this.onSelectedValue,
+    this.responseSet,
     this.answerHolder,
     required this.viewOnly,
   }) : super(key: key);
@@ -73,37 +76,47 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question!, context.locale.languageCode),
-            //if (!widget.viewOnly)
-            FutureBuilder<FileSaver?>(
-              future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getSignatureFilename()),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  log("checking image exists ?? $imageState");
-                  if (imageState == 1) {
-                    _image = snapshot.data?.file; //snapshot.data;
-                  }
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            if (widget.viewOnly && widget.responseSet != null)
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: 10, top: 10),
+                child: Image.network(
+                  widget.responseSet?.url ?? "",
+                  width: 200,
+                  height: 180,
+                ),
+              ),
+            if (!widget.viewOnly || (widget.viewOnly && widget.answerHolder != null && widget.responseSet == null))
+              FutureBuilder<FileSaver?>(
+                future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getSignatureFilename()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    log("checking image exists ?? $imageState");
+                    if (imageState == 1) {
+                      _image = snapshot.data?.file; //snapshot.data;
+                    }
 
-                  return Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(bottom: 10, top: 10),
-                    child: showWidget(
-                        _image != null
-                            ? Image.memory(
-                                _image!,
-                                width: 200,
-                                height: 180,
-                              )
-                            : Container(),
-                        Container(),
-                        _image != null),
+                    return Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(bottom: 10, top: 10),
+                      child: showWidget(
+                          _image != null
+                              ? Image.memory(
+                                  _image!,
+                                  width: 200,
+                                  height: 180,
+                                )
+                              : Container(),
+                          Container(),
+                          _image != null),
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                }
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+                },
+              ),
             if (!widget.viewOnly)
               FormField<int>(
                 autovalidateMode: AutovalidateMode.always,

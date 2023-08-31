@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:rightnow/classes/local_db_update.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/HashDao.dart';
-import 'package:rightnow/health_profile_page.dart';
 import 'package:rightnow/home_screen.dart';
 import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/hash.dart';
@@ -32,7 +32,7 @@ class _HashPageState extends State<HashPage> {
 
   @override
   void initState() {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+    /*SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
       await api.getOrganisation();
       await api.fetchFormState();
       await api.getDiseases();
@@ -60,6 +60,36 @@ class _HashPageState extends State<HashPage> {
         }
       }
       startCategoriesPage(newForms, hash);
+    });*/
+    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) async {
+      await LocalDBUpdate(
+        context: context,
+        loadFinished: () async {
+          Profile? p = await getProfile(context); //getDataBase().profileDao.fetchUserProfile();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(),
+            ),
+          );
+        },
+        noInternet: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WelcomePage(),
+            ),
+          );
+        },
+        dbEmptyRestart: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => WelcomePage(),
+            ),
+          );
+        },
+      ).load();
     });
     super.initState();
   }
@@ -111,7 +141,7 @@ class _HashPageState extends State<HashPage> {
     //return hashView(context);
   }
 
-  void saveAndStatCategoriesPage(Hashes data) {
+  /*void saveAndStatCategoriesPage(Hashes data) {
     bool newForms = true;
     getDataBase<HashDao>().fetchHashesByType(HASH_TYPE_CATEGORIES).then((result) {
       if (result != null) {
@@ -236,5 +266,5 @@ class _HashPageState extends State<HashPage> {
         builder: (context) => HomePage(),
       ),
     );
-  }
+  }*/
 }

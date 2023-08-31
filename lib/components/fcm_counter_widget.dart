@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/models/fcm_notification.dart';
@@ -38,6 +39,12 @@ class _FCMCounterWidgetState extends State<FCMCounterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    /*return Container(
+      child: ValueListenableBuilder(
+        valueListenable: Hive.box<FCMNotification>('FCMNotification').listenable(),
+        builder: (context, value, child) {},
+      ),
+    );*/
     return Container(
       child: FutureBuilder<List<FCMNotification>>(
         future: getDataBase<FCMNotificationsDao>().fetchFCMNotification(),
@@ -57,7 +64,7 @@ class _FCMCounterWidgetState extends State<FCMCounterWidget> {
               ),
             );
           }
-          return Container();
+          return const SizedBox();
         },
       ),
     );

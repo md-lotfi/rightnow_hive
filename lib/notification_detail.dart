@@ -30,7 +30,7 @@ class NotificationDetail extends StatelessWidget {
         centerTitle: true,
         elevation: 1,
       ),
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
+      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       backgroundColor: Colors.white,
       body: Container(
         margin: EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),

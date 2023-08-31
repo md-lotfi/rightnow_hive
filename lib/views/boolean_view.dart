@@ -5,18 +5,21 @@ import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/response_set.dart';
 
 class BooleanWidget extends StatefulWidget {
-  final Question question;
+  final Question? question;
+  final ResponseSet? responseSet;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
   final bool viewOnly;
 
   const BooleanWidget({
     Key? key,
-    required this.question,
+    this.question,
     this.onSelectedValue,
     this.answerHolder,
+    this.responseSet,
     required this.viewOnly,
   }) : super(key: key);
 
@@ -35,28 +38,29 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
 
   @override
   void initState() {
-    print("we already have an answerHolder check in boolean $answerHolder ***************");
-    if (answerHolder == null) return;
-    print("answerHolder is not null ***************");
-    if (answerHolder!.answers != null) {
-      print("answerHolder answers are not null ***************");
-      if (answerHolder!.answers!.length > 0) {
-        print("answerHolder answers > 0 *******************");
-        for (var answer in answerHolder!.answers!) {
-          print("answer is ${answer.qustionId}, ${widget.question.id} *********************");
-          if (answer.qustionId == widget.question.id) {
-            _radioValue = answer.answerValue;
-            print("boolean is $_radioValue *********************");
-            break;
+    if (answerHolder != null) {
+      if (answerHolder!.answers != null) {
+        if (answerHolder!.answers!.length > 0) {
+          for (var answer in answerHolder!.answers!) {
+            //print("answer is ${answer.qustionId}, ${widget.question.id} *********************");
+            if (widget.question != null) {
+              if (answer.qustionId == widget.question!.id) {
+                _radioValue = answer.answerValue;
+                print("boolean is $_radioValue *********************");
+                break;
+              }
+            }
           }
         }
       }
+      setState(() {
+        if (_radioValue == null) _radioValue = "false";
+        _hasData = true;
+        _setSelected();
+      });
+    } else if (widget.responseSet != null) {
+      _radioValue = widget.responseSet?.value.toString() ?? "";
     }
-    setState(() {
-      if (_radioValue == null) _radioValue = "false";
-      _hasData = true;
-      _setSelected();
-    });
     super.initState();
   }
 
@@ -74,9 +78,9 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
   //RadioboxWidget(this.question);
 
   _setSelected() {
-    if (onSelectedValue != null) {
+    if (onSelectedValue != null && widget.question != null) {
       onSelectedValue!(
-        Answer.fill(widget.question.id, widget.question.fieldSet, _radioValue, null, DateTime.now().toString(), transtypeResourceType(widget.question.resourcetype!), answerHolder?.id, null),
+        Answer.fill(widget.question?.id, widget.question?.fieldSet, _radioValue, null, DateTime.now().toString(), transtypeResourceType(widget.question?.resourcetype), answerHolder?.id, null),
       );
     }
   }
@@ -88,7 +92,7 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode),
+            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

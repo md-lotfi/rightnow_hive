@@ -22,13 +22,14 @@ class FileSaverAdapter extends TypeAdapter<FileSaver> {
       name: fields[2] as String,
       file: fields[4] as Uint8List,
       path: fields[3] as String,
+      extension: fields[5] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, FileSaver obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.questionId)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class FileSaverAdapter extends TypeAdapter<FileSaver> {
       ..writeByte(3)
       ..write(obj.path)
       ..writeByte(4)
-      ..write(obj.file);
+      ..write(obj.file)
+      ..writeByte(5)
+      ..write(obj.extension);
   }
 
   @override

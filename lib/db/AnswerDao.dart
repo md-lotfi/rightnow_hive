@@ -24,12 +24,18 @@ class AnswersDao extends MultiSelectAnswersDao {
   }
 
   //@Query("select * from Answer where answerHolderId = :answerHolderId")
-  Future<List<Answer>?> fetchAnswersOfAnswerHolder(int answerHolderId) async {
+  Future<List<Answer>?> fetchAnswersOfAnswerHolder(int answerHolderId, int? fieldSetId) async {
     var r = await getAnswerDb();
-    /*for (Answer item in r.values) {
-      log("answers in raw ${item.toJson()}");
-    }*/
-    return r.values.where((element) => element.answerHolderId == answerHolderId).toList();
+    List<Answer> answers = [];
+    for (Answer item in r.values) {
+      log("fetching answers ${item.answerHolderId}, $answerHolderId, ${item.fieldSetId}, $fieldSetId");
+      if (item.answerHolderId == answerHolderId && (item.fieldSetId == fieldSetId || fieldSetId == null)) {
+        log("fetching answers equlas ${item.answerHolderId}, $answerHolderId");
+        answers.add(item);
+      }
+    }
+    return answers;
+    //return r.values.where((element) => element.answerHolderId == answerHolderId).toList();
   }
 
   //@Query("delete from Answer where answerHolderId = :answerHolderId")

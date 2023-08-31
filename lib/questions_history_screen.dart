@@ -12,6 +12,12 @@ import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FieldSet.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
+import 'package:rightnow/models/decision_response.dart';
+import 'package:rightnow/models/reclamations.dart';
+import 'package:rightnow/models/response_entry.dart';
+import 'package:rightnow/models/response_form.dart';
+import 'package:rightnow/models/response_set.dart';
+import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/rest/network_exceptions.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/states/result_state.dart';
@@ -38,13 +44,14 @@ import 'package:uuid/uuid.dart';
 
 class QuestionsHistoryPage extends StatefulWidget {
   //final List<Answer> answers;
-  final FieldSet fieldSet;
-  final AnswerHolder answerHolder;
+  //final FieldSet fieldSet;
+  //final AnswerHolder answerHolder;
+  //final String deviceId;
+  final Reclamations reclamations;
 
   const QuestionsHistoryPage({
     Key? key,
-    required this.fieldSet,
-    required this.answerHolder,
+    required this.reclamations,
   }) : super(key: key);
 
   @override
@@ -56,330 +63,216 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
 
   Map<int, bool> viewState = {};
 
+  ApiRepository api = ApiRepository();
+
   @override
   void initState() {
-    BlocProvider.of<QuestionsBloc>(context).add(QuestionsEvent.loadQuestions(widget.fieldSet.id ?? -1));
+    //BlocProvider.of<QuestionsBloc>(context).add(QuestionsEvent.loadQuestions(widget.fieldSet.id ?? -1));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return ScreenViewerWidget(
-        page: Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text(widget.fieldSet.getName(context.locale.languageCode)),
-      ),
-      bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME_INDEX),
-      body: _addBuilder(),
-    ));
-  }
-
-  Widget _addBuilder() {
-    return BlocBuilder<QuestionsBloc, ResultState<List<Question>>>(
-      builder: (BuildContext context, ResultState<List<Question>> state) {
-        return state.when(
-          loading: () {
+      page: Scaffold(
+        backgroundColor: Colors.grey.shade100,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Text(widget.reclamations.getName(context.locale.languageCode), style: TextStyle(color: COLOR_PRIMARY)), //widget.fieldSet.getName(context.locale.languageCode)
+        ),
+        bottomNavigationBar: HomeNavBarComp(NavState.NAV_HISTORY),
+        body: FutureBuilder<ResponseForm?>(
+          future: api.getResponses(widget.reclamations.formEntry?.deviceId ?? ""),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data != null) return _addBuilder(snapshot.data!);
+              return Center(child: Text("An error has occured".tr()));
+            }
             return Center(child: CircularProgressIndicator());
           },
-          idle: () {
-            return Container();
-          },
-          data: (List<Question>? data) {
-            print("received data questions ${data?.length}");
-            if (data != null) {
-              questions = data;
-              return Stack(
-                children: [
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 80,
-                    child: RawScrollbar(
-                      isAlwaysShown: true,
-                      thumbColor: COLOR_PRIMARY,
-                      child: ScrollTouchWidget(listChild: dataWidget(data)),
-                    ),
-                  ),
-                  Positioned(
-                    left: 20,
-                    right: 20,
-                    bottom: 20,
-                    child: TextButton(
-                      onPressed: () async {
-                        print("decision response is ${widget.answerHolder.decisionResponse}");
-                        showResponseDialog(context, widget.answerHolder.decisionResponse, () {});
-                      },
-                      child: Text("Afficher le résultat".tr()),
-                    ),
-                  ),
-                ],
-              );
-            }
-            return Container();
-            /*for (var item in data) {
-                print("questions data received " + item.resourcetype);
-              }*/
-          },
-          error: (NetworkExceptions? error) {
-            return Text(NetworkExceptions.getErrorMessage(error!));
-          },
-        );
-      },
+        ),
+      ),
     );
   }
 
-  bool _initViewVisibility(Question q) {
-    //if (widget.errorQuestions?.contains(q.id) == true) return true;
-    print("checking question visibility " + q.id.toString() + ", " + ((q.depandantConditions != null).toString()));
-    if (q.depandantConditions != null) if (q.depandantConditions!.length > 0) {
-      print("question has depandant questions " + q.depandantConditions!.length.toString());
-      return false;
-    }
-    return true;
+  Widget _addBuilder(ResponseForm responseform) {
+    return Stack(
+      children: [
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 80,
+          child: RawScrollbar(
+            isAlwaysShown: true,
+            thumbColor: COLOR_PRIMARY,
+            child: ScrollTouchWidget(listChild: dataWidget(responseform.entries ?? [])),
+          ),
+        ),
+        Positioned(
+          left: 20,
+          right: 20,
+          bottom: 20,
+          child: TextButton(
+            onPressed: () async {
+              if (widget.reclamations.deviceId != null) {
+                DecisionResponse? r = await api.fetchAlgoResponse(widget.reclamations.deviceId!);
+                //print("decision response is ${widget.answerHolder.decisionResponse}");
+                showResponseDialog(context, r, () {});
+              }
+            },
+            child: Text("Afficher le résultat".tr()),
+          ),
+        ),
+      ],
+    );
   }
 
-  Widget dataWidget(List<Question> questions) {
+  Widget dataWidget(List<ResponseEntry> responseEntries) {
+    List<ResponseSet> responseSets = [];
+    for (ResponseEntry res in responseEntries) {
+      for (ResponseSet item in res.responseSet ?? []) {
+        responseSets.add(item);
+      }
+    }
     return ListView.builder(
       addAutomaticKeepAlives: true,
-      itemCount: questions.length,
+      itemCount: responseSets.length,
       itemBuilder: (BuildContext context, int index) {
-        Question q = questions[index];
-        print("setting question view " + q.id.toString());
-        if (viewState[q.id] == null) {
-          print("setting question visisbility first time " + q.id.toString());
-          viewState[q.id!] = _initViewVisibility(q);
-        } else
-          print("setting question view state is " + viewState[q.id].toString() + ", " + q.id.toString());
-        switch (q.resourcetype) {
-          case SCANNER_QUESTION:
-            return Visibility(
-              child: ScannerWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+        ResponseSet rs = responseSets[index];
+        switch (rs.resourcetype) {
+          case SCANNER_RESPONSE:
+            return ScannerWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case SOUND_QUESTION:
-            return Visibility(
-              child: SoundView(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case SOUND_RESPONSE:
+            return SoundView(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case SIGNATURE_QUESTION:
-            return Visibility(
-              child: SignatureView(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case SIGNATURE_RESPONSE:
+            return SignatureView(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case SHORT_TEXT_QUESTION:
-            return Visibility(
-              child: ShortTextWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case SHORT_TEXT_RESPONSE:
+            return ShortTextWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case BOOLEAN_QUESTION:
-            return Visibility(
-              child: BooleanWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case BOOLEAN_RESPONSE:
+            return BooleanWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case EMAIL_QUESTION:
-            return Visibility(
-              child: EmailWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case EMAIL_RESPONSE:
+            return EmailWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case FREE_TEXT_QUESTION:
-            return Visibility(
-              child: FreeTextWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case FREE_TEXT_RESPONSE:
+            return FreeTextWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case FLOAT_QUESTION:
-            return Visibility(
-              child: DecimalWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case FLOAT_RESPONSE:
+            return DecimalWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case INTEGER_QUESTION:
-            return Visibility(
-              child: IntegerWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case INTEGER_RESPONSE:
+            return IntegerWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case DATE_QUESTION:
-            return Visibility(
-              child: DateWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case DATE_RESPONSE:
+            return DateWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case FILE_QUESTION:
+          case FILE_RESPONSE:
             //print("question view state is in file " + viewState[q.id].toString() + ", " + q.id.toString());
-            if (q.type == '1') {
-              return Visibility(
-                visible: viewState[questions[index].id]!,
-                child: FileWidget(
-                  key: Key('__RIKEY__' + q.id!.toString()),
-                  viewOnly: true,
-                  answerHolder: widget.answerHolder,
-                  onSelectedValue: (Answer answer) {},
-                  question: q,
-                ),
+            if (rs.type == '1') {
+              return FileWidget(
+                viewOnly: true,
+                onSelectedValue: (Answer answer) {},
+                responseSet: rs,
               );
             } else {
-              return Visibility(
-                visible: viewState[q.id]!,
-                child: TakePictureWidget(
-                  key: Key('__RIKEY__' + q.id!.toString()),
-                  answerHolder: widget.answerHolder,
-                  imageOnly: true,
-                  onSelectedValue: (Answer answer) {},
-                  question: q,
-                ),
+              return TakePictureWidget(
+                imageOnly: true,
+                onSelectedValue: (Answer answer) {},
+                responseSet: rs,
               );
             }
-          case SELECT_QUESTION:
-            switch (q.type) {
+          case SELECT_RESPONSE:
+            switch (rs.type) {
               case CHECKBOX_MULTIPLE_CHOICE:
-                return Visibility(
-                  child: CheckboxWidget(
-                    key: Key('__RIKEY__' + q.id!.toString()),
-                    viewOnly: true,
-                    answerHolder: widget.answerHolder,
-                    onSelectedValue: (Answer answer) {},
-                    question: q,
-                  ),
-                  visible: viewState[q.id]!,
+                return CheckboxWidget(
+                  viewOnly: true,
+                  onSelectedValue: (Answer answer) {},
+                  responseSet: rs,
                 );
               case CHECKBOX_UNIQUE_CHOICE:
-                return Visibility(
-                  child: RadioboxWidget(
-                    key: Key('__RIKEY__' + q.id!.toString()),
-                    viewOnly: true,
-                    answerHolder: widget.answerHolder,
-                    onSelectedValue: (Answer answer) {},
-                    question: q,
-                  ),
-                  visible: viewState[q.id]!,
+                return RadioboxWidget(
+                  viewOnly: true,
+                  onSelectedValue: (Answer answer) {},
+                  responseSet: rs,
                 );
               case DROPDOWN_UNIQUE_CHOICE:
-                print("select widget " + viewState[questions[index].id].toString());
-                return Visibility(
-                  child: SelectWidget(
-                    key: Key('__RIKEY__' + q.id!.toString()),
-                    viewOnly: true,
-                    answerHolder: widget.answerHolder,
-                    onSelectedValue: (Answer answer) {},
-                    question: q,
-                  ),
-                  visible: viewState[q.id]!,
+                return SelectWidget(
+                  viewOnly: true,
+                  onSelectedValue: (Answer answer) {},
+                  responseSet: rs,
                 );
               case DROPDOWN_MULTIPLE_CHOICE:
-                print("select widget " + viewState[questions[index].id].toString());
-                return Visibility(
-                  child: MultiSelectView(
-                    key: Key('__RIKEY__' + q.id!.toString()),
-                    viewOnly: true,
-                    answerHolder: widget.answerHolder,
-                    onSelectedValue: (Answer answer) {},
-                    question: q,
-                  ),
-                  visible: viewState[q.id]!,
+                return MultiSelectView(
+                  viewOnly: true,
+                  onSelectedValue: (Answer answer) {},
+                  responseSet: rs,
                 );
               default:
                 return Container(
-                  child: Text("Select Not implemented: " + q.getName(context.locale.languageCode)),
+                  child: Text("Select Not implemented: ${rs.toJson()}, " + (rs.questionHist?.getName(context.locale.languageCode) ?? "")),
                 );
             }
-          case GEO_QUESTION:
-            return Visibility(
-              child: GeoWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case GEO_RESPONSE:
+            return GeoWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case PHONE_QUESTION:
-            return Visibility(
-              child: PhoneWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case PHONE_RESPONSE:
+            return PhoneWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
-          case TIME_QUESTION:
-            return Visibility(
-              child: TimeWidget(
-                key: Key('__RIKEY__' + q.id!.toString()),
-                viewOnly: true,
-                answerHolder: widget.answerHolder,
-                onSelectedValue: (Answer answer) {},
-                question: q,
-              ),
-              visible: viewState[q.id]!,
+          case TIME_RESPONSE:
+            return TimeWidget(
+              viewOnly: true,
+              onSelectedValue: (Answer answer) {},
+              responseSet: rs,
             );
           default:
+            Container(
+              child: Text(rs.questionHist?.getName(context.locale.languageCode) ?? ""),
+            );
         }
         return Container(
-          child: Text(q.getName(context.locale.languageCode)),
+          child: Text(rs.questionHist?.getName(context.locale.languageCode) ?? ""),
         );
       },
     );
