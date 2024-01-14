@@ -13,6 +13,7 @@ import 'package:rightnow/events/HashEvent.dart';
 import 'package:rightnow/forgot_password_screen.dart';
 import 'package:rightnow/hash_page.dart';
 import 'package:rightnow/models/local_user.dart';
+import 'package:rightnow/models/login_error.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/themes/unglow_listview.dart';
@@ -36,11 +37,11 @@ class LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  bool unauthorized = false;
+  LoginError? loginError;
 
   bool _obscureText = true;
 
-  Future<int> _loginUser(LocalUser user) async {
+  Future<void> _loginUser(LocalUser user) async {
     showLoaderDialog(context, title: "Authentification en cours ...".tr());
     ApiRepository api = ApiRepository();
     dynamic auth = await api.loginUserRaw(user);
@@ -62,19 +63,15 @@ class LoginPageState extends State<LoginPage> {
         }
         Navigator.pop(context);
         Navigator.push(context, MaterialPageRoute(builder: (context) => HashPage()));
-        return 0;
+        //return LoginError(status: 1, message: 'ok', error: null);
       }
-    } else if (auth is int) {
+    } else if (auth is LoginError) {
       Navigator.pop(context);
-      //if (auth == 403) {
       setState(() {
-        unauthorized = true;
+        loginError = auth;
       });
-      //}
-      return auth;
-    }
-    Navigator.pop(context);
-    return -1;
+    } else
+      Navigator.pop(context);
   }
 
   @override
@@ -180,9 +177,11 @@ class LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 14)),
                   ),
                   SizedBox(height: 10),
-                  if (unauthorized)
-                    errorMessage(context, "Nom d'utilisateur, mot de passe, ou clé organisation incorrect".tr(), () {
-                      unauthorized = false;
+                  if (loginError != null)
+                    errorMessage(context, loginError?.message ?? "Nom d'utilisateur, mot de passe, ou clé organisation incorrect".tr(), () {
+                      setState(() {
+                        loginError = null;
+                      });
                     }),
                   SizedBox(height: 10),
                   Form(

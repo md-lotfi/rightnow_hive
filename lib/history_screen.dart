@@ -341,7 +341,8 @@ class _HistoryPageState extends State<HistoryPage> {
           subtitle: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("N° réclamation ".tr()),
+              Text("N° réclamation".tr()),
+              const SizedBox(width: 10),
               Text(
                 data.id?.toString() ?? "", //data.formFields?.category?.getName(context.locale.languageCode) ?? "",
                 style: TextStyle(color: Colors.blue),

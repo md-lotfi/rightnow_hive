@@ -1,23 +1,21 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/rendering.dart';
-import 'package:rightnow/components/common_widgets.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
-import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/db/FormStateDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/db/OrganisationDao.dart';
-import 'package:rightnow/db/ProvinceDao.dart';
 import 'package:rightnow/db/ProvincesDao.dart';
 import 'package:rightnow/db/ReclamationsDao.dart';
 import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/db/blood_group_dao.dart';
 import 'package:rightnow/db/disease_dao.dart';
-import 'package:rightnow/health_profile_widget.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/Question.dart';
@@ -28,13 +26,13 @@ import 'package:rightnow/models/blood_group.dart';
 import 'package:rightnow/models/category_forms.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/disease.dart';
-import 'package:rightnow/models/fcm_notification.dart';
 import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/form_entry.dart';
 import 'package:rightnow/models/form_state.dart';
 import 'package:rightnow/models/hash.dart';
 import 'package:rightnow/models/link.dart';
 import 'package:rightnow/models/local_user.dart';
+import 'package:rightnow/models/login_error.dart';
 import 'package:rightnow/models/organisation.dart';
 import 'package:rightnow/models/profile.dart';
 import 'package:rightnow/models/province.dart';
@@ -47,6 +45,9 @@ import 'package:rightnow/rest/ApiResult.dart';
 import 'package:rightnow/rest/network_exceptions.dart';
 import 'package:rightnow/rest_response/categories_response.dart';
 import 'package:dio/dio.dart';
+import 'package:path/path.dart' as p;
+import 'package:uuid/uuid.dart';
+import 'package:mime/mime.dart';
 
 class ApiRepository {
   late ApiClient apiClient;
@@ -66,6 +67,52 @@ class ApiRepository {
       return false;
     }
   }
+
+  Future<File?> download(String url, Function(int count, int total) progress) async {
+    try {
+      var tempDir = await getExternalStorageDirectory();
+      if (tempDir == null) return null;
+      Uuid uid = Uuid();
+      final fullPath = tempDir.path + '/' + p.basename(url); //uid.v1() + p.extension(url);
+
+      //"/storage/emulated/0/Documents/"
+      log('full path $fullPath, from url $url');
+      await Dio().download(
+        url, //'https://app.rightnow-by-brenco.com/media/Qst1_Scope3.xlsx',
+        fullPath,
+        onReceiveProgress: (count, total) {
+          progress(count, total);
+          log("progress $count / $total");
+        },
+      );
+      return File(fullPath);
+    } catch (e) {
+      log("error is $e");
+      return null;
+    }
+  }
+
+  /*Future<File?> download(String url, Function(int count, int total) progress) async {
+    try {
+      var tempDir = await getExternalStorageDirectory();
+      if (tempDir == null) return null;
+      Uuid uid = Uuid();
+      String fullPath = tempDir.path + uid.v1() + p.extension(url); //"/storage/emulated/0/Documents/"
+      log('full path $fullPath, from url $url');
+      await Dio().download(
+        url, //'https://app.rightnow-by-brenco.com/media/Qst1_Scope3.xlsx',
+        fullPath,
+        onReceiveProgress: (count, total) {
+          progress(count, total);
+          log("progress $count / $total");
+        },
+      );
+      return File(fullPath);
+    } catch (e) {
+      log("error is $e");
+      return null;
+    }
+  }*/
 
   Future<Map<String, dynamic>?> uploadProfilePicture(File file, Function(int received, int total) progress) async {
     try {
@@ -538,8 +585,8 @@ class ApiRepository {
           .post("login/", data: {"username": localUser.username, "password": localUser.password, "organization": localUser.organization}); //organization, queryParameters: {"api_key": _apiKey}
       return response['token'] as String;
     } on DioError catch (e) {
-      print("error when processing data response " + e.toString());
-      return e.response?.statusCode ?? 403;
+      print("error when processing data response ${e.response?.data}");
+      return LoginError.fromJson(e.response?.data ?? {}); //e.response?.statusCode ?? 403;
     }
   }
 
@@ -700,6 +747,12 @@ class AnswerPostObject {
   Future<int> uploadFile(Answer answer) async {
     FileSaver? f = await FileSaver.getBykey(answer.fileKey);
     if (f != null) {
+      /*if (f.forceUploadThis == true) {
+        File file = File(f.path);
+        f.file = await file.readAsBytes();
+        f.extension = p.extension(file.path);
+        log('forcing local file upload from ${file.path}, with extension ${f.extension}');
+      }*/
       ApiRepository apiRepository = ApiRepository();
       Map<String, dynamic> result = await apiRepository.uploadFile(answer.qustionId!, f.file, f.extension, (r, t) {
         print("total sending $r | $t ");

@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -17,6 +16,9 @@ import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/response_set.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/rest/ApiResult.dart';
+import 'package:open_file/open_file.dart';
+//import 'package:open_app_file/open_app_file.dart';
+import 'package:path/path.dart' as p;
 
 class FileWidget extends StatefulWidget {
   final Question? question;
@@ -43,8 +45,6 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
   final AnswerHolder? answerHolder;
 
   String? _file;
-
-  File? _attachment;
 
   int _fileState = 0;
 
@@ -155,24 +155,6 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ))),
-                      if (widget.question?.file != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 20),
-                          child: ListTile(
-                            onTap: () async {
-                              await downloadOrOpenAttahment();
-                            },
-                            title: _attachment == null
-                                ? Text(
-                                    'Tap here to download attachment'.tr(),
-                                    style: TextStyle(color: Colors.blue),
-                                  )
-                                : Text(
-                                    'Open the attachment'.tr(),
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                          ),
-                        ),
                       /*if (!widget.viewOnly  && widget.question?.file != null)
                         ListTile(
                           onTap: () async {
@@ -188,59 +170,106 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                               child: TextButton.icon(
                                 icon: showWidget(Icon(Icons.file_upload), _fileState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green),
                                     _fileState == 0), //Icon(Icons.file_upload),
-                                label: _fileState == 0 ? Text("Charger un fichier".tr()) : Text("Charger un nouveau fichier".tr()),
+                                label: widget.question?.file != null
+                                    ? (_fileState == 0 ? Text("Download the file".tr()) : Text("Open the file".tr()))
+                                    : _fileState == 0
+                                        ? Text("Charger un fichier".tr())
+                                        : Text("Charger un nouveau fichier".tr()),
                                 onPressed: () async {
-                                  selectFile().then((result) async {
-                                    log("file question $result");
-                                    if (result != null) {
-                                      setState(() {
-                                        _fileState = 0;
-                                        progress = 0;
-                                      });
-                                      log("file question 1");
-                                      //File file = File(result.files.single.path ?? "");
-                                      Uint8List? file = result.files.first.bytes;
-                                      if (file != null) {
-                                        double fileSize = (file.lengthInBytes) / 1024;
-                                        if (question?.maxSizeKb != null) {
-                                          if (fileSize > question!.maxSizeKb!) {
-                                            state.didChange(3);
-                                            return;
+                                  if (widget.question?.file != null) {
+                                    if ((_file?.isNotEmpty ?? false)) {
+                                      await OpenFile.open(_file);
+                                    } else {
+                                      ApiRepository api = ApiRepository();
+                                      if (await Permission.manageExternalStorage.request().isGranted) {
+                                        api.download(widget.question!.file!, (count, progress) {}).then((fi) {
+                                          if (fi != null) {
+                                            log("openeing file ${fi.path}, answerHolder ${answerHolder?.toJson()}");
+                                            setState(() {
+                                              _fileState = 1;
+                                            });
+                                            OpenFile.open(fi.path).then((result) async {
+                                              log("file open result opened");
+                                              //if (result.type == ResultType.done) {
+                                              _file = fi.path;
+                                              await FileSaver.set(FileSaver(
+                                                  //forceUploadThis: true,
+                                                  questionId: question!.id!,
+                                                  answerHolderId: answerHolder!.id!,
+                                                  name: p.basename(_file!),
+                                                  path: _file!,
+                                                  file: await fi.readAsBytes()));
+                                              FileSaver? f = await FileSaver.getLastItem();
+                                              if (f != null) {
+                                                log("file question f is not null");
+                                                onSelectedValue!(
+                                                  Answer.fill(question!.id, question!.fieldSet, _file, fi.path, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
+                                                      answerHolder!.id, null,
+                                                      fileKey: f.key),
+                                                );
+                                              }
+                                              state.didChange(_fileState);
+                                              //}
+                                            });
+                                            setState(() {});
                                           }
-                                        }
-                                        if (question?.minSizeKb != null) {
-                                          if (fileSize < question!.minSizeKb!) {
-                                            state.didChange(4);
-                                            return;
-                                          }
-                                        }
-
-                                        log("file question $_fileState");
-                                        setState(() {
-                                          //_fileState = 2;
-                                          _fileState = 1;
                                         });
-                                        _file = result.files.single.name;
-                                        log("file question $_file");
-                                        if (_file != null) {
-                                          print("saving file path in answer ${file.lengthInBytes}");
-                                          await FileSaver.set(FileSaver(questionId: question!.id!, answerHolderId: answerHolder!.id!, name: _file!, path: result.files.single.path ?? "", file: file));
-                                          FileSaver? f = await FileSaver.getLastItem();
-                                          if (f != null) {
-                                            log("file question f is njot null");
-                                            onSelectedValue!(
-                                              Answer.fill(question!.id, question!.fieldSet, _file, result.files.single.path, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
-                                                  answerHolder!.id, null,
-                                                  fileKey: f.key),
-                                            );
-                                          }
-
-                                          state.didChange(_fileState);
-                                        }
                                       }
                                     }
-                                  });
-                                  setState(() {});
+                                  } else {
+                                    selectFile().then((result) async {
+                                      log("file question $result");
+                                      if (result != null) {
+                                        setState(() {
+                                          _fileState = 0;
+                                          progress = 0;
+                                        });
+                                        log("file question 1");
+                                        //File file = File(result.files.single.path ?? "");
+                                        Uint8List? file = result.files.first.bytes;
+                                        if (file != null) {
+                                          double fileSize = (file.lengthInBytes) / 1024;
+                                          if (question?.maxSizeKb != null) {
+                                            if (fileSize > question!.maxSizeKb!) {
+                                              state.didChange(3);
+                                              return;
+                                            }
+                                          }
+                                          if (question?.minSizeKb != null) {
+                                            if (fileSize < question!.minSizeKb!) {
+                                              state.didChange(4);
+                                              return;
+                                            }
+                                          }
+
+                                          log("file question $_fileState");
+                                          setState(() {
+                                            //_fileState = 2;
+                                            _fileState = 1;
+                                          });
+                                          _file = result.files.single.name;
+                                          log("file question $_file");
+                                          if (_file != null) {
+                                            print("saving file path in answer ${file.lengthInBytes}");
+                                            await FileSaver.set(
+                                                FileSaver(questionId: question!.id!, answerHolderId: answerHolder!.id!, name: _file!, path: result.files.single.path ?? "", file: file));
+                                            FileSaver? f = await FileSaver.getLastItem();
+                                            if (f != null) {
+                                              log("file question f is njot null");
+                                              onSelectedValue!(
+                                                Answer.fill(question!.id, question!.fieldSet, _file, result.files.single.path, DateTime.now().toString(),
+                                                    transtypeResourceType(question!.resourcetype!), answerHolder!.id, null,
+                                                    fileKey: f.key),
+                                              );
+                                            }
+
+                                            state.didChange(_fileState);
+                                          }
+                                        }
+                                      }
+                                    });
+                                    setState(() {});
+                                  }
                                 },
                               ),
                             ),
@@ -276,30 +305,6 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
         ),
       ),
     );
-  }
-
-  Future<void> downloadOrOpenAttahment() async {
-    ApiRepository api = ApiRepository();
-    if (_attachment != null) {
-      await OpenFile.open(_attachment!.path);
-    } else {
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        api.download(widget.question!.file!, (count, progress) {}).then((file) {
-          _attachment = file;
-          if (_attachment != null) {
-            log("openeing file ${_attachment!.path}, answerHolder ${answerHolder?.toJson()}");
-            /*setState(() {
-            _fileState = 1;
-          });*/
-            OpenFile.open(_attachment!.path).then((result) async {
-              log("file open result opened");
-            });
-            setState(() {});
-          }
-        });
-      }
-    }
-    return;
   }
 
   Future<FilePickerResult?> selectFile() async {

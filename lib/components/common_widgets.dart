@@ -911,6 +911,10 @@ Widget errorMessage(BuildContext context, String msg, Function() onClose) {
     ),
     child: ListTile(
       //tileColor: Colors.redAccent,
+      dense: true,
+      horizontalTitleGap: 0,
+      minLeadingWidth: 5,
+      //contentPadding: const EdgeInsets.only(left: 0, right: 0),
       title: Text(
         msg,
         style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 12)),

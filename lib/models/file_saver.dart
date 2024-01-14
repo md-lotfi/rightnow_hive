@@ -27,6 +27,9 @@ class FileSaver extends HiveObject {
   @HiveField(5)
   String? extension;
 
+  //@HiveField(6)
+  //bool? forceUploadThis;
+
   FileSaver({
     required this.questionId,
     required this.answerHolderId,
@@ -34,6 +37,7 @@ class FileSaver extends HiveObject {
     required this.file,
     required this.path,
     this.extension,
+    //this.forceUploadThis,
   });
 
   static Future<Box<FileSaver>> _getFileSaverDb() async {

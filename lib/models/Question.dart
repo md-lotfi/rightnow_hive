@@ -101,12 +101,15 @@ class Question {
   @JsonKey(name: 'min_size_kb')
   double? minSizeKb;
 
+  @HiveField(19)
+  String? file;
+
   String getName(String? lang) {
     return (lang == LANGUAGE_FR ? label : labelAr) ?? "";
   }
 
   Question(this.id, this.label, this.labelAr, this.isActive, this.activeAlways, this.createdAt, this.updated, this.maxLength, this.minValue, this.maxValue, this.polymorphicCtype, this.fieldSet,
-      this.formId, this.resourcetype, this.type, this.customIdentifiers, this.isRequired, this.maxSizeKb, this.minSizeKb);
+      this.formId, this.file, this.resourcetype, this.type, this.customIdentifiers, this.isRequired, this.maxSizeKb, this.minSizeKb);
 
   factory Question.fromJson(Map<String, dynamic> json) => _$QuestionFromJson(json);
 

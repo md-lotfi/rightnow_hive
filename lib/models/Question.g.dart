@@ -30,6 +30,7 @@ class QuestionAdapter extends TypeAdapter<Question> {
       fields[10] as int?,
       fields[11] as int?,
       fields[12] as int?,
+      fields[19] as String?,
       fields[13] as String?,
       fields[14] as String?,
       fields[15] as bool?,
@@ -42,7 +43,7 @@ class QuestionAdapter extends TypeAdapter<Question> {
   @override
   void write(BinaryWriter writer, Question obj) {
     writer
-      ..writeByte(19)
+      ..writeByte(20)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -80,7 +81,9 @@ class QuestionAdapter extends TypeAdapter<Question> {
       ..writeByte(17)
       ..write(obj.maxSizeKb)
       ..writeByte(18)
-      ..write(obj.minSizeKb);
+      ..write(obj.minSizeKb)
+      ..writeByte(19)
+      ..write(obj.file);
   }
 
   @override
@@ -113,6 +116,7 @@ Question _$QuestionFromJson(Map<String, dynamic> json) {
     json['polymorphic_ctype'] as int?,
     json['fieldSet'] as int?,
     json['formId'] as int?,
+    json['file'] as String?,
     json['resourcetype'] as String?,
     Question._dynToString(json['type']),
     json['custom_identifiers'] as bool?,
@@ -162,4 +166,5 @@ Map<String, dynamic> _$QuestionToJson(Question instance) => <String, dynamic>{
       'is_required': instance.isRequired,
       'max_size_kb': instance.maxSizeKb,
       'min_size_kb': instance.minSizeKb,
+      'file': instance.file,
     };

@@ -425,7 +425,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
       itemCount: questions.length,
       itemBuilder: (BuildContext context, int index) {
         Question q = questions[index];
-        print("setting question view " + q.id.toString());
+        print("setting question view " + q.id.toString() + ", " + (q.resourcetype ?? ""));
         if (viewState[q.id] == null) {
           //print("setting question visisbility first time " + q.id.toString());
           viewState[q.id!] = _initViewVisibility(q);
