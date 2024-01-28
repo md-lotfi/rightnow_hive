@@ -501,11 +501,11 @@ Widget addBlocHandlerSpinner<T extends BlocBase<S>, S extends ResultState<dynami
         },
         idle: () {
           if (onIdle != null) return onIdle();
-          return Container();
+          return const SizedBox();
         },
         data: (dynamic data) {
           if (onFinish != null) return onFinish(data);
-          return Container();
+          return const SizedBox();
         },
         error: (NetworkExceptions? error) {
           /*if (onUnAuthorized != null && error != null) {
@@ -519,7 +519,7 @@ Widget addBlocHandlerSpinner<T extends BlocBase<S>, S extends ResultState<dynami
             );
           }*/
           if (onError != null) return onError(error);
-          return Container();
+          return const SizedBox();
         },
       );
     },

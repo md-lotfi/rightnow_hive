@@ -1,4 +1,4 @@
-import 'dart:developer';
+/*import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -16,7 +16,7 @@ import 'package:rightnow/models/file_saver.dart';
 import 'package:rightnow/models/response_set.dart';
 import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/rest/ApiResult.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart';
 //import 'package:open_app_file/open_app_file.dart';
 import 'package:path/path.dart' as p;
 
@@ -323,3 +323,4 @@ class AlwaysDisabledFocusNode extends FocusNode {
   @override
   bool get hasFocus => false;
 }
+*/

@@ -56,7 +56,7 @@ class WelcomePage extends StatelessWidget {
               right: MediaQuery.of(context).size.width > 800 ? 20 : 30,
               child: Column(
                 children: [
-                  Text(
+                  /*Text(
                     "Industrial grade mobile data collection".tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -75,7 +75,7 @@ class WelcomePage extends StatelessWidget {
                         ],
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
-                  ),
+                  ),*/
                   Text(
                     "retrieve accurate data, flag critical issues, reduce data entry errors, validate answers, offer secured and encrypted information and smart algorithm".tr(),
                     textAlign: TextAlign.center,
@@ -87,6 +87,7 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: TextButton(
+                      style: TextButton.styleFrom(backgroundColor: Color(0xFFFe3b108)),
                       onPressed: () async {
                         redirectUser(() {
                           /*Navigator.push(

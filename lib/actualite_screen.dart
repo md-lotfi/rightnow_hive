@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jiffy/jiffy.dart';
@@ -82,6 +84,7 @@ class ActualitePage extends StatelessWidget {
   }
 
   _goto(BuildContext context, Actualite ac) async {
+    log("actualité taped, ${ac.resourceType}");
     if (ac.resourceType == RESSOURCE_ARTICLE_ACTU) {
       Navigator.push(
         context,

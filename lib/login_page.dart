@@ -192,7 +192,7 @@ class LoginPageState extends State<LoginPage> {
                         //shrinkWrap: true,
                         //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
+                          /*Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               "Organisation key".tr(),
@@ -218,7 +218,7 @@ class LoginPageState extends State<LoginPage> {
                                 return null;
                               },
                             ),
-                          ),
+                          ),*/
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -308,7 +308,7 @@ class LoginPageState extends State<LoginPage> {
                                     LocalUser.fill(
                                       username: _usernameController.text.toLowerCase().trim(),
                                       password: _passController.text,
-                                      organization: _organisationController.text,
+                                      organization: "STA399", //_organisationController.text,
                                     ),
                                   );
                                 }

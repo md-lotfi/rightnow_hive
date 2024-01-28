@@ -39,7 +39,8 @@ const GPS_SEPARRATOR = ";";
 
 const HEADER_HEIGHT = 180.0;
 
-const Color COLOR_PRIMARY = Color(0xFFF00008f);
+//const Color COLOR_PRIMARY = Color(0xFFF00008f); //default RightNow color
+const Color COLOR_PRIMARY = Color(0xFFF46A583); //startup ministry
 
 const String HASH_TYPE_CATEGORIES = "HASH_TYPE_CATEGORIES";
 const String HASH_TYPE_CATEGORIES_LOADED = "HASH_TYPE_CATEGORIES_LOADED";

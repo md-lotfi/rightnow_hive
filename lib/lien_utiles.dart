@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -85,7 +87,10 @@ class LienUtiles extends StatelessWidget {
           onTap: () async {
             if (links[index].linkUrl == null) return;
             bool c = await canLaunch(links[index].linkUrl!);
-            if (c) launch(links[index].linkUrl!);
+            if (c)
+              launch(links[index].linkUrl!);
+            else
+              log("cannot launch ${links[index].linkUrl}");
           },
           leading: loadImage(links[index].icon, width: 70),
           //subtitle: Text("www.brenco-algerie.com", style: TextStyle(color: Colors.blue)),

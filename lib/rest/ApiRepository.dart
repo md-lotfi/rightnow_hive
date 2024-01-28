@@ -368,7 +368,7 @@ class ApiRepository {
   Future<ApiResult<List<Actualite>>> getActualite() async {
     try {
       final response = await apiClient.get("api/generic/actualities/"); //, queryParameters: {"api_key": _apiKey}
-      //print("response actualities length ${response.length}");
+      print("response actualities length $response");
       return ApiResult.success(data: ActualiteList.fromJson(response).fields.cast<Actualite>());
     } catch (e) {
       print("error when processing data response " + e.toString());
