@@ -19,7 +19,7 @@ class _SoundWidgetState extends State<SoundWidget> {
   @override
   void initState() {
     super.initState();
-    _myRecorder?.openAudioSession().then((value) {
+    _myRecorder?.openRecorder().then((value) {
       setState(() {
         _mRecorderIsInited = true;
       });
@@ -29,7 +29,7 @@ class _SoundWidgetState extends State<SoundWidget> {
   @override
   void dispose() {
     // Be careful : you must `close` the audio session when you have finished with it.
-    _myRecorder?.closeAudioSession();
+    _myRecorder?.closeRecorder();
     _myRecorder = null;
     super.dispose();
   }

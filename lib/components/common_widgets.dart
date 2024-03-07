@@ -618,7 +618,7 @@ Widget addBlocProviderHandlerSpinner<T extends BlocBase<S>, S extends ResultStat
   }
 }*/
 
-Future<void> showActionMessage(BuildContext context, {String title: "Apoce", List<Widget>? messages, String? positiveBtn, String? negativeBtn, Function(String)? whichTaped, dissmiss: true}) {
+Future<void> showActionMessage(BuildContext context, {String title = "Apoce", List<Widget>? messages, String? positiveBtn, String? negativeBtn, Function(String)? whichTaped, dissmiss = true}) {
   String result = "";
   return showDialog<void>(
       context: context,
@@ -800,7 +800,7 @@ Future<Profile?> getProfile(BuildContext context) async {
       return await getDataBase<ProfileDao>().fetchUserProfile();
     }
   } else {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
@@ -814,7 +814,7 @@ Widget articlaHeaderColumn(BuildContext context, Actualite actualite) {
   return Container(
     margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 25),
         Text(
@@ -824,7 +824,7 @@ Widget articlaHeaderColumn(BuildContext context, Actualite actualite) {
         ),
         SizedBox(height: 10),
         Text(
-          Jiffy(actualite.createdAt).format("dd MMMM yyyy . HH:mm"),
+          Jiffy.parse(actualite.createdAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy . HH:mm"),
           textAlign: TextAlign.end,
           style: TextStyle(color: Colors.grey.shade400),
         ),
@@ -885,7 +885,7 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  Jiffy(actualite.createdAt).format("dd MMMM yyyy . HH:mm"),
+                  Jiffy.parse(actualite.createdAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy . HH:mm"),
                   textAlign: TextAlign.start,
                   style: TextStyle(color: Colors.grey.shade400),
                 ),
@@ -994,8 +994,8 @@ Future<bool> saveUint8ListFile(Uint8List f, String filename) async {
       return true;
     }
   } else {
-    MimeType type = MimeType.JPEG;
-    String path = await FileSaver.instance.saveFile(filename, f, "jpeg", mimeType: type);
+    MimeType type = MimeType.jpeg;
+    String path = await FileSaver.instance.saveFile(name: filename, bytes: f, ext: "jpeg", mimeType: type);
     print(path);
   }
   return false;

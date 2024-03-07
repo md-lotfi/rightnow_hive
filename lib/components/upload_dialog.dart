@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -23,7 +24,7 @@ const int FILE_CROPPED = 4;
 class UploadDialogWidget extends StatefulWidget {
   final Widget renderer;
   final bool? disableTap;
-  final Function(File image)? onImageSaved;
+  final Function(XFile image)? onImageSaved;
 
   UploadDialogWidget({
     Key? key,
@@ -41,7 +42,15 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
 
   int _imageState = FILE_EMPTY;
 
-  File? _image;
+  XFile? _image;
+
+  Widget _getImage(XFile f) {
+    if (kIsWeb) {
+      return Image.network(f.path);
+    } else {
+      return Image.file(File(f.path));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +76,7 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
                         imageSource: ImageSource.gallery,
                         title: "Upload Avatar".tr(),
                         mainIcon: Icon(Icons.image, color: COLOR_PRIMARY),
-                        onFile: (File image) {
+                        onFile: (XFile image) {
                           setState(() {
                             _imageState = FILE_ADDED;
                             _image = image;
@@ -82,7 +91,7 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
                         imageSource: ImageSource.camera,
                         title: "Take Picture".tr(),
                         mainIcon: Icon(MdiIcons.camera, color: COLOR_PRIMARY),
-                        onFile: (File image) {
+                        onFile: (XFile image) {
                           setState(() {
                             _imageState = FILE_ADDED;
                             _image = image;
@@ -91,7 +100,6 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
                         },
                       ),
                     ),
-                    Container(),
                   ],
                 ),
                 showWidget(
@@ -101,7 +109,7 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
                           ? Container(
                               child: Text("Select an image to upload".tr()),
                             )
-                          : showWidget(_setProgressBar(setState), Image.file(_image!), _imageState == FILE_UPLOADING),
+                          : showWidget(_setProgressBar(setState), _getImage(_image!), _imageState == FILE_UPLOADING),
                       SizedBox(
                         height: 20,
                       ),
@@ -164,6 +172,7 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
   }
 
   _upload(BuildContext context) async {
+    if (_image == null) return;
     ApiRepository apiRepository = ApiRepository();
     setState(() {
       _imageState = FILE_UPLOADING;
@@ -185,31 +194,49 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
 
   _cropFile() async {
     if (_image != null) {
-      if (!kIsWeb) {
-        var imageCropped = await ImageCropper.cropImage(
-            sourcePath: _image!.path,
-            aspectRatioPresets: [CropAspectRatioPreset.square, CropAspectRatioPreset.ratio3x2, CropAspectRatioPreset.original, CropAspectRatioPreset.ratio4x3, CropAspectRatioPreset.ratio16x9],
-            androidUiSettings: AndroidUiSettings(
-              toolbarTitle: 'Cropper'.tr(),
-              toolbarColor: Colors.deepOrange,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false,
-            ),
-            iosUiSettings: IOSUiSettings(
-              minimumAspectRatio: 1.0,
-            ));
+      log('calling cropImage *******************');
+      //if (!kIsWeb) {
+      var imageCropped = await ImageCropper().cropImage(sourcePath: _image!.path, aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ], uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper'.tr(),
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ),
+        WebUiSettings(
+          context: context,
+          enableResize: true,
+          enableExif: true,
+          enableOrientation: true,
+          enableZoom: true,
+          enforceBoundary: true,
+        ),
+      ]);
+      if (imageCropped != null) {
+        log('image cropped != null');
         setState(() {
-          _image = imageCropped;
-          _imageState = FILE_CROPPED;
-          print("image state is $_imageState");
-        });
-      } else {
-        setState(() {
+          //_image = File(imageCropped.path);
+          _image = XFile(imageCropped.path);
           _imageState = FILE_CROPPED;
           print("image state is $_imageState");
         });
       }
+      //} else {
+      setState(() {
+        _imageState = FILE_CROPPED;
+        print("image state is $_imageState");
+      });
+      //}
     }
   }
 

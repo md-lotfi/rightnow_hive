@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+/*import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/actualite_video_screen.dart';
@@ -159,3 +159,4 @@ class ActualiteDetailsPage extends StatelessWidget {
     );
   }*/
 }
+*/

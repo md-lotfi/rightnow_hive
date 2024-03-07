@@ -167,8 +167,8 @@
   "Nom d'utilisateur ou e-mail": "اسم المستخدم أو البريد الإلكتروني",
   "Mot de passe ne doit pas ềtre vide": "يجب ألا تكون كلمة المرور فارغة",
   "Mot de passe oublié ?": "نسيت رقمك السري ؟",
-  "Nom": "اسم",
-  "Prénom": "الاسم الأول",
+  "Nom": "اللقب",
+  "Prénom": "اﻹسم",
   "Date de naissance": "تاريخ الميلاد",
   "Genre": "نوع الجنس",
   "Wilaya": "ولاية",
@@ -221,5 +221,7 @@
   "la politique de confidentialité ": "سياسة الخصوصية",
   "de FahS ": "عن طريق فحص",
   "Authentification en cours ...":"المصادقة قيد التقدم",
-  "N° réclamation":"رقم طلب"
+  "N° réclamation":"رقم طلب",
+  "Chat":"محادثة",
+  "Voulez-vous supprimer cette réponse ?":"هل ترغب في حذف هذه اﻹجابة؟"
 }

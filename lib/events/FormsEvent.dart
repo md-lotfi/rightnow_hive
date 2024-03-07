@@ -6,4 +6,5 @@ part 'FormsEvent.freezed.dart';
 @freezed
 abstract class FormsEvent with _$FormsEvent {
   const factory FormsEvent.loadLocalForms() = LoadLocalForms;
+  const factory FormsEvent.distract() = Distract;
 }

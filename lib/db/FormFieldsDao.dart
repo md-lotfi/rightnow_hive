@@ -153,7 +153,7 @@ class FormFieldsDao extends FieldSetsDao {
     //await setHash(hash)
     List<FormFields> f = [];
     for (var form in formFields) {
-      form.createdAtTimeStamp = Jiffy(form.createdAt).unix();
+      form.createdAtTimeStamp = Jiffy.parse(form.createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
       f.add(form);
       if (form.superCategory != null) {
         await insertSuperCategory(form.superCategory!);

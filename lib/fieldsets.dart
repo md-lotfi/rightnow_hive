@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:rightnow/answers_uploader_screen.dart';
@@ -45,9 +47,10 @@ class _FieldSetState extends State<FieldsSetPage> {
 
   @override
   Widget build(BuildContext context) {
+    log('fieldset opened');
     return ScreenViewerWidget(
         page: Scaffold(
-      floatingActionButton: showWidget(_addFloatingButton(), Container(), (activeAnswerHolder != null || waitingUploadAnswerHolder.length > 0)),
+      floatingActionButton: showWidget(_addFloatingButton(), SizedBox(), (activeAnswerHolder != null || waitingUploadAnswerHolder.length > 0)),
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       backgroundColor: Colors.grey.shade50,
       body: FutureBuilder<FormFields?>(
@@ -132,7 +135,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                     ],
                   ),
                   if (elements.length > 0) SizedBox(height: 20),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     height: 10,
                     child: Center(
@@ -171,34 +174,32 @@ class _FieldSetState extends State<FieldsSetPage> {
                 bottom: 70,
                 child: dataWidget(data, form),
               ),
-              FutureBuilder(
-                future: getDataBase<AnswerHolderDao>().fetchAnswerHolderOne(form.id!, HOLDER_NOT_COMPLETED),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.data != null) {
-                      return Positioned(
-                        bottom: 20,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          child: TextButton(
-                            onPressed: () async {
-                              //BlocProvider.of<AnswersPostBloc>(context).add(AnswersEvent.uploadAnswerHolder());
-                              await checkSend(context, form, () {
-                                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-                                  setState(() {});
-                                });
+              Positioned(
+                bottom: 20,
+                left: 0,
+                right: 0,
+                child: FutureBuilder(
+                  future: getDataBase<AnswerHolderDao>().fetchAnswerHolderOne(form.id!, HOLDER_NOT_COMPLETED),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.data != null) {
+                        return TextButton(
+                          onPressed: () async {
+                            //BlocProvider.of<AnswersPostBloc>(context).add(AnswersEvent.uploadAnswerHolder());
+                            await checkSend(context, form, () {
+                              SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                                setState(() {});
                               });
-                            },
-                            child: Text("Envoyer".tr()),
-                          ),
-                        ),
-                      );
-                    } else
-                      return Container();
-                  }
-                  return Center(child: CircularProgressIndicator());
-                },
+                            });
+                          },
+                          child: Text("Envoyer".tr()),
+                        );
+                      } else
+                        return SizedBox();
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
             ],
           ),
@@ -206,73 +207,6 @@ class _FieldSetState extends State<FieldsSetPage> {
       ],
     );
   }
-
-  /*_checkSend(FormFields form) async {
-    ApiRepository api = ApiRepository();
-    bool connected = await api.hasInternetConnection();
-    if (!connected) {
-      noInternetDialog(context);
-      return;
-    }
-    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_NOT_COMPLETED);
-    if (waitingUploadAnswerHolder != null) {
-      if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
-        LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
-        showLoaderDialog(context);
-        DecisionResponse? sent = await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
-        Navigator.pop(context);
-        if (sent != null) {
-          print("terminating answer holder ....");
-          await getDataBase<AnswerHolderDao>().completeAnswerHolder(waitingUploadAnswerHolder.id!);
-          await getDataBase<AnswerHolderDao>().closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
-          await getDataBase<AnswerHolderDao>().terminateAnswerHolder(waitingUploadAnswerHolder.id!);
-          sent.answerHolderId = waitingUploadAnswerHolder.id;
-          await getDataBase<DecisionResponseDao>().insertDecisionResponse(sent);
-          showResponseDialog(context, sent, () {
-            SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-              setState(() {});
-            });
-          });
-        } else {
-          Alert(
-            context: context,
-            type: AlertType.error,
-            title: "Erreur".tr(),
-            desc: "Erreur au niveau du serveur.".tr(),
-            buttons: [
-              DialogButton(
-                child: Text(
-                  "Ok".tr(),
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                color: Colors.red,
-                onPressed: () => Navigator.pop(context),
-                width: 120,
-              )
-            ],
-          ).show();
-        }
-      } else {
-        Alert(
-          context: context,
-          type: AlertType.warning,
-          title: "Attention".tr(),
-          desc: "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses".tr(),
-          buttons: [
-            DialogButton(
-              child: Text(
-                "Ok".tr(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              color: Colors.red,
-              onPressed: () => Navigator.pop(context),
-              width: 120,
-            )
-          ],
-        ).show();
-      }
-    }
-  }*/
 
   int _filterAnswers(AnswerHolder? answerHolder, int? fieldSetId) {
     if (answerHolder == null) return 0;
@@ -292,7 +226,7 @@ class _FieldSetState extends State<FieldsSetPage> {
           int totalQuestions = countQuestions(data[index]);
           double progress = (f.toDouble());
           print("progress $progress, $totalQuestions, $f");
-
+          //return Text('je suis encore la');
           return InkWell(
             onTap: () {
               Navigator.push(
@@ -351,7 +285,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                       ],
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -382,7 +316,7 @@ class _FieldSetState extends State<FieldsSetPage> {
           );
         },
         separatorBuilder: (context, index) {
-          return Container(
+          return SizedBox(
             height: 15,
             //child: Text(Jiffy().yMMMEd),
           );

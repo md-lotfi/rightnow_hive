@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'ActualiteEvent.dart';
 
@@ -10,23 +12,7 @@ part of 'ActualiteEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$ActualiteEventTearOff {
-  const _$ActualiteEventTearOff();
-
-  GetActualite getActualite() {
-    return const GetActualite();
-  }
-
-  Distract distract() {
-    return const Distract();
-  }
-}
-
-/// @nodoc
-const $ActualiteEvent = _$ActualiteEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ActualiteEvent {
@@ -34,6 +20,12 @@ mixin _$ActualiteEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() getActualite,
     required TResult Function() distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getActualite,
+    TResult? Function()? distract,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +42,12 @@ mixin _$ActualiteEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetActualite value)? getActualite,
+    TResult? Function(Distract value)? distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetActualite value)? getActualite,
     TResult Function(Distract value)? distract,
@@ -62,42 +60,40 @@ mixin _$ActualiteEvent {
 abstract class $ActualiteEventCopyWith<$Res> {
   factory $ActualiteEventCopyWith(
           ActualiteEvent value, $Res Function(ActualiteEvent) then) =
-      _$ActualiteEventCopyWithImpl<$Res>;
+      _$ActualiteEventCopyWithImpl<$Res, ActualiteEvent>;
 }
 
 /// @nodoc
-class _$ActualiteEventCopyWithImpl<$Res>
+class _$ActualiteEventCopyWithImpl<$Res, $Val extends ActualiteEvent>
     implements $ActualiteEventCopyWith<$Res> {
   _$ActualiteEventCopyWithImpl(this._value, this._then);
 
-  final ActualiteEvent _value;
   // ignore: unused_field
-  final $Res Function(ActualiteEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $GetActualiteCopyWith<$Res> {
-  factory $GetActualiteCopyWith(
-          GetActualite value, $Res Function(GetActualite) then) =
-      _$GetActualiteCopyWithImpl<$Res>;
+abstract class _$$GetActualiteImplCopyWith<$Res> {
+  factory _$$GetActualiteImplCopyWith(
+          _$GetActualiteImpl value, $Res Function(_$GetActualiteImpl) then) =
+      __$$GetActualiteImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$GetActualiteCopyWithImpl<$Res>
-    extends _$ActualiteEventCopyWithImpl<$Res>
-    implements $GetActualiteCopyWith<$Res> {
-  _$GetActualiteCopyWithImpl(
-      GetActualite _value, $Res Function(GetActualite) _then)
-      : super(_value, (v) => _then(v as GetActualite));
-
-  @override
-  GetActualite get _value => super._value as GetActualite;
+class __$$GetActualiteImplCopyWithImpl<$Res>
+    extends _$ActualiteEventCopyWithImpl<$Res, _$GetActualiteImpl>
+    implements _$$GetActualiteImplCopyWith<$Res> {
+  __$$GetActualiteImplCopyWithImpl(
+      _$GetActualiteImpl _value, $Res Function(_$GetActualiteImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$GetActualite with DiagnosticableTreeMixin implements GetActualite {
-  const _$GetActualite();
+class _$GetActualiteImpl with DiagnosticableTreeMixin implements GetActualite {
+  const _$GetActualiteImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -107,12 +103,13 @@ class _$GetActualite with DiagnosticableTreeMixin implements GetActualite {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'ActualiteEvent.getActualite'));
+    properties.add(DiagnosticsProperty('type', 'ActualiteEvent.getActualite'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is GetActualite);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$GetActualiteImpl);
   }
 
   @override
@@ -125,6 +122,15 @@ class _$GetActualite with DiagnosticableTreeMixin implements GetActualite {
     required TResult Function() distract,
   }) {
     return getActualite();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getActualite,
+    TResult? Function()? distract,
+  }) {
+    return getActualite?.call();
   }
 
   @override
@@ -151,6 +157,15 @@ class _$GetActualite with DiagnosticableTreeMixin implements GetActualite {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetActualite value)? getActualite,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return getActualite?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetActualite value)? getActualite,
     TResult Function(Distract value)? distract,
@@ -164,29 +179,29 @@ class _$GetActualite with DiagnosticableTreeMixin implements GetActualite {
 }
 
 abstract class GetActualite implements ActualiteEvent {
-  const factory GetActualite() = _$GetActualite;
+  const factory GetActualite() = _$GetActualiteImpl;
 }
 
 /// @nodoc
-abstract class $DistractCopyWith<$Res> {
-  factory $DistractCopyWith(Distract value, $Res Function(Distract) then) =
-      _$DistractCopyWithImpl<$Res>;
+abstract class _$$DistractImplCopyWith<$Res> {
+  factory _$$DistractImplCopyWith(
+          _$DistractImpl value, $Res Function(_$DistractImpl) then) =
+      __$$DistractImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DistractCopyWithImpl<$Res> extends _$ActualiteEventCopyWithImpl<$Res>
-    implements $DistractCopyWith<$Res> {
-  _$DistractCopyWithImpl(Distract _value, $Res Function(Distract) _then)
-      : super(_value, (v) => _then(v as Distract));
-
-  @override
-  Distract get _value => super._value as Distract;
+class __$$DistractImplCopyWithImpl<$Res>
+    extends _$ActualiteEventCopyWithImpl<$Res, _$DistractImpl>
+    implements _$$DistractImplCopyWith<$Res> {
+  __$$DistractImplCopyWithImpl(
+      _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Distract with DiagnosticableTreeMixin implements Distract {
-  const _$Distract();
+class _$DistractImpl with DiagnosticableTreeMixin implements Distract {
+  const _$DistractImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -196,12 +211,13 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'ActualiteEvent.distract'));
+    properties.add(DiagnosticsProperty('type', 'ActualiteEvent.distract'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Distract);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DistractImpl);
   }
 
   @override
@@ -214,6 +230,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
     required TResult Function() distract,
   }) {
     return distract();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getActualite,
+    TResult? Function()? distract,
+  }) {
+    return distract?.call();
   }
 
   @override
@@ -240,6 +265,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetActualite value)? getActualite,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return distract?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetActualite value)? getActualite,
     TResult Function(Distract value)? distract,
@@ -253,5 +287,5 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 }
 
 abstract class Distract implements ActualiteEvent {
-  const factory Distract() = _$Distract;
+  const factory Distract() = _$DistractImpl;
 }

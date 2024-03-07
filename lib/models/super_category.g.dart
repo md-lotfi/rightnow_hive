@@ -59,16 +59,15 @@ class SuperCategoryAdapter extends TypeAdapter<SuperCategory> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SuperCategory _$SuperCategoryFromJson(Map<String, dynamic> json) {
-  return SuperCategory(
-    json['id'] as int?,
-    json['name'] as String?,
-    json['name_ar'] as String?,
-    json['name_fr'] as String?,
-    json['icon'] as String?,
-    json['created_at'] as String?,
-  );
-}
+SuperCategory _$SuperCategoryFromJson(Map<String, dynamic> json) =>
+    SuperCategory(
+      json['id'] as int?,
+      json['name'] as String?,
+      json['name_ar'] as String?,
+      json['name_fr'] as String?,
+      json['icon'] as String?,
+      json['created_at'] as String?,
+    );
 
 Map<String, dynamic> _$SuperCategoryToJson(SuperCategory instance) =>
     <String, dynamic>{

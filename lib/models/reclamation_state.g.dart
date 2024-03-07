@@ -50,13 +50,12 @@ class ReclamationStateAdapter extends TypeAdapter<ReclamationState> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ReclamationState _$ReclamationStateFromJson(Map<String, dynamic> json) {
-  return ReclamationState(
-    id: json['id'] as int?,
-    name: json['name'] as String?,
-    nameAr: json['name_ar'] as String?,
-  );
-}
+ReclamationState _$ReclamationStateFromJson(Map<String, dynamic> json) =>
+    ReclamationState(
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      nameAr: json['name_ar'] as String?,
+    );
 
 Map<String, dynamic> _$ReclamationStateToJson(ReclamationState instance) =>
     <String, dynamic>{

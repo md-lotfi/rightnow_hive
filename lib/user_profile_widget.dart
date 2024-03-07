@@ -32,7 +32,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Jiffy _birthdate = Jiffy().subtract(years: 10);
+  Jiffy _birthdate = Jiffy.now().subtract(years: 10);
 
   int _gender = 0;
   Province? _province;
@@ -46,8 +46,8 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
     log("user profile ${widget.profile.provinceData?.toJson()}, ${widget.profile.name}");
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) async {
       //_email.text = widget.profile.email ?? "";
-      await Jiffy.locale("fr");
-      if (widget.profile.birthDate != null) _birthdate = Jiffy(widget.profile.birthDate, "yyyy-MM-dd");
+      await Jiffy.setLocale("fr");
+      if (widget.profile.birthDate != null) _birthdate = Jiffy.parse(widget.profile.birthDate ?? Jiffy.now().format(), pattern: "yyyy-MM-dd");
       if (widget.profile.provinceData != null) _province = widget.profile.provinceData;
       _gender = widget.profile.gender ?? 0;
     });
@@ -58,7 +58,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return RawScrollbar(
-      isAlwaysShown: true,
+      trackVisibility: true,
       thumbColor: COLOR_PRIMARY,
       child: Container(
         padding: EdgeInsets.only(left: 30, right: 30),
@@ -110,13 +110,13 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
             height: MediaQuery.of(context).size.height / 4,
             child: CupertinoDatePicker(
               mode: CupertinoDatePickerMode.date,
-              minimumDate: Jiffy().subtract(years: 80).dateTime,
-              maximumDate: Jiffy().add(years: 1).dateTime, //Jiffy().subtract(years: 1).dateTime,
+              minimumDate: Jiffy.now().subtract(years: 80).dateTime,
+              maximumDate: Jiffy.now().add(years: 1).dateTime, //Jiffy().subtract(years: 1).dateTime,
               initialDateTime: _birthdate.dateTime,
               onDateTimeChanged: (DateTime dateTime) {
-                print("dateTime: " + Jiffy(dateTime).format("yyyy-MM-dd"));
+                print("dateTime: " + Jiffy.parseFromDateTime(dateTime).format(pattern: "yyyy-MM-dd"));
                 //setState(() {
-                _birthdate = Jiffy(dateTime);
+                _birthdate = Jiffy.parseFromDateTime(dateTime);
                 //});
               },
             ),
@@ -225,6 +225,40 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
         SizedBox(
           height: 20,
         ),
+        fieldTitle(context, "Groups".tr()),
+        FutureBuilder<LocalUser?>(
+          future: getDataBase<LocalUserDao>().fetchUser(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              log("user in db is ${snapshot.data?.toJson()}");
+              if (snapshot.data != null) {
+                return Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: COLOR_PRIMARY),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Wrap(
+                      spacing: 8,
+                      children: snapshot.data?.groups
+                              ?.map((e) => Chip(
+                                  label: Text(
+                                    e.name ?? "",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: COLOR_PRIMARY))
+                              .toList() ??
+                          []),
+                );
+                //return fieldDataEdit(_email, readOnly: !isUpdate);
+              }
+            }
+            return fieldData("");
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
         TextButton(
           onPressed: () async {
             if (!isUpdate) {
@@ -241,7 +275,7 @@ class _UserProfileWidgetState extends State<UserProfileWidget> {
                   'email': _email.text,
                   'gender': _gender == 1 ? 1 : 2,
                   'province': _province?.id, //_province?.toJson(),
-                  'birth_date': _birthdate.format("yyyy-MM-dd"),
+                  'birth_date': _birthdate.format(pattern: "yyyy-MM-dd"),
                 }));
               }
             }

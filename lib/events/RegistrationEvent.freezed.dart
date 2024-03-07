@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'RegistrationEvent.dart';
 
@@ -10,45 +12,7 @@ part of 'RegistrationEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$RegistrationEventTearOff {
-  const _$RegistrationEventTearOff();
-
-  RegisterUser registerUser(LocalUser localUser) {
-    return RegisterUser(
-      localUser,
-    );
-  }
-
-  LoginUser loginUser(LocalUser localUser) {
-    return LoginUser(
-      localUser,
-    );
-  }
-
-  GetUser getUser() {
-    return const GetUser();
-  }
-
-  GetUserProfile getUserProfile() {
-    return const GetUserProfile();
-  }
-
-  SetUserProfile setUserProfile(Profile profile) {
-    return SetUserProfile(
-      profile,
-    );
-  }
-
-  Distract distract() {
-    return const Distract();
-  }
-}
-
-/// @nodoc
-const $RegistrationEvent = _$RegistrationEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$RegistrationEvent {
@@ -60,6 +24,16 @@ mixin _$RegistrationEvent {
     required TResult Function() getUserProfile,
     required TResult Function(Profile profile) setUserProfile,
     required TResult Function() distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -84,6 +58,16 @@ mixin _$RegistrationEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -100,44 +84,44 @@ mixin _$RegistrationEvent {
 abstract class $RegistrationEventCopyWith<$Res> {
   factory $RegistrationEventCopyWith(
           RegistrationEvent value, $Res Function(RegistrationEvent) then) =
-      _$RegistrationEventCopyWithImpl<$Res>;
+      _$RegistrationEventCopyWithImpl<$Res, RegistrationEvent>;
 }
 
 /// @nodoc
-class _$RegistrationEventCopyWithImpl<$Res>
+class _$RegistrationEventCopyWithImpl<$Res, $Val extends RegistrationEvent>
     implements $RegistrationEventCopyWith<$Res> {
   _$RegistrationEventCopyWithImpl(this._value, this._then);
 
-  final RegistrationEvent _value;
   // ignore: unused_field
-  final $Res Function(RegistrationEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $RegisterUserCopyWith<$Res> {
-  factory $RegisterUserCopyWith(
-          RegisterUser value, $Res Function(RegisterUser) then) =
-      _$RegisterUserCopyWithImpl<$Res>;
+abstract class _$$RegisterUserImplCopyWith<$Res> {
+  factory _$$RegisterUserImplCopyWith(
+          _$RegisterUserImpl value, $Res Function(_$RegisterUserImpl) then) =
+      __$$RegisterUserImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({LocalUser localUser});
 }
 
 /// @nodoc
-class _$RegisterUserCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res>
-    implements $RegisterUserCopyWith<$Res> {
-  _$RegisterUserCopyWithImpl(
-      RegisterUser _value, $Res Function(RegisterUser) _then)
-      : super(_value, (v) => _then(v as RegisterUser));
+class __$$RegisterUserImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res, _$RegisterUserImpl>
+    implements _$$RegisterUserImplCopyWith<$Res> {
+  __$$RegisterUserImplCopyWithImpl(
+      _$RegisterUserImpl _value, $Res Function(_$RegisterUserImpl) _then)
+      : super(_value, _then);
 
-  @override
-  RegisterUser get _value => super._value as RegisterUser;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? localUser = freezed,
+    Object? localUser = null,
   }) {
-    return _then(RegisterUser(
-      localUser == freezed
+    return _then(_$RegisterUserImpl(
+      null == localUser
           ? _value.localUser
           : localUser // ignore: cast_nullable_to_non_nullable
               as LocalUser,
@@ -147,8 +131,8 @@ class _$RegisterUserCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$RegisterUser with DiagnosticableTreeMixin implements RegisterUser {
-  const _$RegisterUser(this.localUser);
+class _$RegisterUserImpl with DiagnosticableTreeMixin implements RegisterUser {
+  const _$RegisterUserImpl(this.localUser);
 
   @override
   final LocalUser localUser;
@@ -167,22 +151,22 @@ class _$RegisterUser with DiagnosticableTreeMixin implements RegisterUser {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is RegisterUser &&
+        (other.runtimeType == runtimeType &&
+            other is _$RegisterUserImpl &&
             (identical(other.localUser, localUser) ||
-                const DeepCollectionEquality()
-                    .equals(other.localUser, localUser)));
+                other.localUser == localUser));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(localUser);
+  int get hashCode => Object.hash(runtimeType, localUser);
 
   @JsonKey(ignore: true)
   @override
-  $RegisterUserCopyWith<RegisterUser> get copyWith =>
-      _$RegisterUserCopyWithImpl<RegisterUser>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$RegisterUserImplCopyWith<_$RegisterUserImpl> get copyWith =>
+      __$$RegisterUserImplCopyWithImpl<_$RegisterUserImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -195,6 +179,19 @@ class _$RegisterUser with DiagnosticableTreeMixin implements RegisterUser {
     required TResult Function() distract,
   }) {
     return registerUser(localUser);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
+  }) {
+    return registerUser?.call(localUser);
   }
 
   @override
@@ -229,6 +226,19 @@ class _$RegisterUser with DiagnosticableTreeMixin implements RegisterUser {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return registerUser?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -246,37 +256,38 @@ class _$RegisterUser with DiagnosticableTreeMixin implements RegisterUser {
 }
 
 abstract class RegisterUser implements RegistrationEvent {
-  const factory RegisterUser(LocalUser localUser) = _$RegisterUser;
+  const factory RegisterUser(final LocalUser localUser) = _$RegisterUserImpl;
 
-  LocalUser get localUser => throw _privateConstructorUsedError;
+  LocalUser get localUser;
   @JsonKey(ignore: true)
-  $RegisterUserCopyWith<RegisterUser> get copyWith =>
+  _$$RegisterUserImplCopyWith<_$RegisterUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LoginUserCopyWith<$Res> {
-  factory $LoginUserCopyWith(LoginUser value, $Res Function(LoginUser) then) =
-      _$LoginUserCopyWithImpl<$Res>;
+abstract class _$$LoginUserImplCopyWith<$Res> {
+  factory _$$LoginUserImplCopyWith(
+          _$LoginUserImpl value, $Res Function(_$LoginUserImpl) then) =
+      __$$LoginUserImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({LocalUser localUser});
 }
 
 /// @nodoc
-class _$LoginUserCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res>
-    implements $LoginUserCopyWith<$Res> {
-  _$LoginUserCopyWithImpl(LoginUser _value, $Res Function(LoginUser) _then)
-      : super(_value, (v) => _then(v as LoginUser));
+class __$$LoginUserImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res, _$LoginUserImpl>
+    implements _$$LoginUserImplCopyWith<$Res> {
+  __$$LoginUserImplCopyWithImpl(
+      _$LoginUserImpl _value, $Res Function(_$LoginUserImpl) _then)
+      : super(_value, _then);
 
-  @override
-  LoginUser get _value => super._value as LoginUser;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? localUser = freezed,
+    Object? localUser = null,
   }) {
-    return _then(LoginUser(
-      localUser == freezed
+    return _then(_$LoginUserImpl(
+      null == localUser
           ? _value.localUser
           : localUser // ignore: cast_nullable_to_non_nullable
               as LocalUser,
@@ -286,8 +297,8 @@ class _$LoginUserCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoginUser with DiagnosticableTreeMixin implements LoginUser {
-  const _$LoginUser(this.localUser);
+class _$LoginUserImpl with DiagnosticableTreeMixin implements LoginUser {
+  const _$LoginUserImpl(this.localUser);
 
   @override
   final LocalUser localUser;
@@ -306,22 +317,22 @@ class _$LoginUser with DiagnosticableTreeMixin implements LoginUser {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is LoginUser &&
+        (other.runtimeType == runtimeType &&
+            other is _$LoginUserImpl &&
             (identical(other.localUser, localUser) ||
-                const DeepCollectionEquality()
-                    .equals(other.localUser, localUser)));
+                other.localUser == localUser));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(localUser);
+  int get hashCode => Object.hash(runtimeType, localUser);
 
   @JsonKey(ignore: true)
   @override
-  $LoginUserCopyWith<LoginUser> get copyWith =>
-      _$LoginUserCopyWithImpl<LoginUser>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$LoginUserImplCopyWith<_$LoginUserImpl> get copyWith =>
+      __$$LoginUserImplCopyWithImpl<_$LoginUserImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -334,6 +345,19 @@ class _$LoginUser with DiagnosticableTreeMixin implements LoginUser {
     required TResult Function() distract,
   }) {
     return loginUser(localUser);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
+  }) {
+    return loginUser?.call(localUser);
   }
 
   @override
@@ -368,6 +392,19 @@ class _$LoginUser with DiagnosticableTreeMixin implements LoginUser {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return loginUser?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -385,34 +422,34 @@ class _$LoginUser with DiagnosticableTreeMixin implements LoginUser {
 }
 
 abstract class LoginUser implements RegistrationEvent {
-  const factory LoginUser(LocalUser localUser) = _$LoginUser;
+  const factory LoginUser(final LocalUser localUser) = _$LoginUserImpl;
 
-  LocalUser get localUser => throw _privateConstructorUsedError;
+  LocalUser get localUser;
   @JsonKey(ignore: true)
-  $LoginUserCopyWith<LoginUser> get copyWith =>
+  _$$LoginUserImplCopyWith<_$LoginUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GetUserCopyWith<$Res> {
-  factory $GetUserCopyWith(GetUser value, $Res Function(GetUser) then) =
-      _$GetUserCopyWithImpl<$Res>;
+abstract class _$$GetUserImplCopyWith<$Res> {
+  factory _$$GetUserImplCopyWith(
+          _$GetUserImpl value, $Res Function(_$GetUserImpl) then) =
+      __$$GetUserImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$GetUserCopyWithImpl<$Res> extends _$RegistrationEventCopyWithImpl<$Res>
-    implements $GetUserCopyWith<$Res> {
-  _$GetUserCopyWithImpl(GetUser _value, $Res Function(GetUser) _then)
-      : super(_value, (v) => _then(v as GetUser));
-
-  @override
-  GetUser get _value => super._value as GetUser;
+class __$$GetUserImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res, _$GetUserImpl>
+    implements _$$GetUserImplCopyWith<$Res> {
+  __$$GetUserImplCopyWithImpl(
+      _$GetUserImpl _value, $Res Function(_$GetUserImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$GetUser with DiagnosticableTreeMixin implements GetUser {
-  const _$GetUser();
+class _$GetUserImpl with DiagnosticableTreeMixin implements GetUser {
+  const _$GetUserImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -422,12 +459,13 @@ class _$GetUser with DiagnosticableTreeMixin implements GetUser {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'RegistrationEvent.getUser'));
+    properties.add(DiagnosticsProperty('type', 'RegistrationEvent.getUser'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is GetUser);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$GetUserImpl);
   }
 
   @override
@@ -444,6 +482,19 @@ class _$GetUser with DiagnosticableTreeMixin implements GetUser {
     required TResult Function() distract,
   }) {
     return getUser();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
+  }) {
+    return getUser?.call();
   }
 
   @override
@@ -478,6 +529,19 @@ class _$GetUser with DiagnosticableTreeMixin implements GetUser {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return getUser?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -495,32 +559,31 @@ class _$GetUser with DiagnosticableTreeMixin implements GetUser {
 }
 
 abstract class GetUser implements RegistrationEvent {
-  const factory GetUser() = _$GetUser;
+  const factory GetUser() = _$GetUserImpl;
 }
 
 /// @nodoc
-abstract class $GetUserProfileCopyWith<$Res> {
-  factory $GetUserProfileCopyWith(
-          GetUserProfile value, $Res Function(GetUserProfile) then) =
-      _$GetUserProfileCopyWithImpl<$Res>;
+abstract class _$$GetUserProfileImplCopyWith<$Res> {
+  factory _$$GetUserProfileImplCopyWith(_$GetUserProfileImpl value,
+          $Res Function(_$GetUserProfileImpl) then) =
+      __$$GetUserProfileImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$GetUserProfileCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res>
-    implements $GetUserProfileCopyWith<$Res> {
-  _$GetUserProfileCopyWithImpl(
-      GetUserProfile _value, $Res Function(GetUserProfile) _then)
-      : super(_value, (v) => _then(v as GetUserProfile));
-
-  @override
-  GetUserProfile get _value => super._value as GetUserProfile;
+class __$$GetUserProfileImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res, _$GetUserProfileImpl>
+    implements _$$GetUserProfileImplCopyWith<$Res> {
+  __$$GetUserProfileImplCopyWithImpl(
+      _$GetUserProfileImpl _value, $Res Function(_$GetUserProfileImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$GetUserProfile with DiagnosticableTreeMixin implements GetUserProfile {
-  const _$GetUserProfile();
+class _$GetUserProfileImpl
+    with DiagnosticableTreeMixin
+    implements GetUserProfile {
+  const _$GetUserProfileImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -531,12 +594,13 @@ class _$GetUserProfile with DiagnosticableTreeMixin implements GetUserProfile {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'RegistrationEvent.getUserProfile'));
+        .add(DiagnosticsProperty('type', 'RegistrationEvent.getUserProfile'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is GetUserProfile);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$GetUserProfileImpl);
   }
 
   @override
@@ -553,6 +617,19 @@ class _$GetUserProfile with DiagnosticableTreeMixin implements GetUserProfile {
     required TResult Function() distract,
   }) {
     return getUserProfile();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
+  }) {
+    return getUserProfile?.call();
   }
 
   @override
@@ -587,6 +664,19 @@ class _$GetUserProfile with DiagnosticableTreeMixin implements GetUserProfile {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return getUserProfile?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -604,34 +694,33 @@ class _$GetUserProfile with DiagnosticableTreeMixin implements GetUserProfile {
 }
 
 abstract class GetUserProfile implements RegistrationEvent {
-  const factory GetUserProfile() = _$GetUserProfile;
+  const factory GetUserProfile() = _$GetUserProfileImpl;
 }
 
 /// @nodoc
-abstract class $SetUserProfileCopyWith<$Res> {
-  factory $SetUserProfileCopyWith(
-          SetUserProfile value, $Res Function(SetUserProfile) then) =
-      _$SetUserProfileCopyWithImpl<$Res>;
+abstract class _$$SetUserProfileImplCopyWith<$Res> {
+  factory _$$SetUserProfileImplCopyWith(_$SetUserProfileImpl value,
+          $Res Function(_$SetUserProfileImpl) then) =
+      __$$SetUserProfileImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({Profile profile});
 }
 
 /// @nodoc
-class _$SetUserProfileCopyWithImpl<$Res>
-    extends _$RegistrationEventCopyWithImpl<$Res>
-    implements $SetUserProfileCopyWith<$Res> {
-  _$SetUserProfileCopyWithImpl(
-      SetUserProfile _value, $Res Function(SetUserProfile) _then)
-      : super(_value, (v) => _then(v as SetUserProfile));
+class __$$SetUserProfileImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res, _$SetUserProfileImpl>
+    implements _$$SetUserProfileImplCopyWith<$Res> {
+  __$$SetUserProfileImplCopyWithImpl(
+      _$SetUserProfileImpl _value, $Res Function(_$SetUserProfileImpl) _then)
+      : super(_value, _then);
 
-  @override
-  SetUserProfile get _value => super._value as SetUserProfile;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? profile = freezed,
+    Object? profile = null,
   }) {
-    return _then(SetUserProfile(
-      profile == freezed
+    return _then(_$SetUserProfileImpl(
+      null == profile
           ? _value.profile
           : profile // ignore: cast_nullable_to_non_nullable
               as Profile,
@@ -641,8 +730,10 @@ class _$SetUserProfileCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SetUserProfile with DiagnosticableTreeMixin implements SetUserProfile {
-  const _$SetUserProfile(this.profile);
+class _$SetUserProfileImpl
+    with DiagnosticableTreeMixin
+    implements SetUserProfile {
+  const _$SetUserProfileImpl(this.profile);
 
   @override
   final Profile profile;
@@ -661,21 +752,22 @@ class _$SetUserProfile with DiagnosticableTreeMixin implements SetUserProfile {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is SetUserProfile &&
-            (identical(other.profile, profile) ||
-                const DeepCollectionEquality().equals(other.profile, profile)));
+        (other.runtimeType == runtimeType &&
+            other is _$SetUserProfileImpl &&
+            (identical(other.profile, profile) || other.profile == profile));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(profile);
+  int get hashCode => Object.hash(runtimeType, profile);
 
   @JsonKey(ignore: true)
   @override
-  $SetUserProfileCopyWith<SetUserProfile> get copyWith =>
-      _$SetUserProfileCopyWithImpl<SetUserProfile>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$SetUserProfileImplCopyWith<_$SetUserProfileImpl> get copyWith =>
+      __$$SetUserProfileImplCopyWithImpl<_$SetUserProfileImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -688,6 +780,19 @@ class _$SetUserProfile with DiagnosticableTreeMixin implements SetUserProfile {
     required TResult Function() distract,
   }) {
     return setUserProfile(profile);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
+  }) {
+    return setUserProfile?.call(profile);
   }
 
   @override
@@ -722,6 +827,19 @@ class _$SetUserProfile with DiagnosticableTreeMixin implements SetUserProfile {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return setUserProfile?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -739,34 +857,34 @@ class _$SetUserProfile with DiagnosticableTreeMixin implements SetUserProfile {
 }
 
 abstract class SetUserProfile implements RegistrationEvent {
-  const factory SetUserProfile(Profile profile) = _$SetUserProfile;
+  const factory SetUserProfile(final Profile profile) = _$SetUserProfileImpl;
 
-  Profile get profile => throw _privateConstructorUsedError;
+  Profile get profile;
   @JsonKey(ignore: true)
-  $SetUserProfileCopyWith<SetUserProfile> get copyWith =>
+  _$$SetUserProfileImplCopyWith<_$SetUserProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DistractCopyWith<$Res> {
-  factory $DistractCopyWith(Distract value, $Res Function(Distract) then) =
-      _$DistractCopyWithImpl<$Res>;
+abstract class _$$DistractImplCopyWith<$Res> {
+  factory _$$DistractImplCopyWith(
+          _$DistractImpl value, $Res Function(_$DistractImpl) then) =
+      __$$DistractImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DistractCopyWithImpl<$Res> extends _$RegistrationEventCopyWithImpl<$Res>
-    implements $DistractCopyWith<$Res> {
-  _$DistractCopyWithImpl(Distract _value, $Res Function(Distract) _then)
-      : super(_value, (v) => _then(v as Distract));
-
-  @override
-  Distract get _value => super._value as Distract;
+class __$$DistractImplCopyWithImpl<$Res>
+    extends _$RegistrationEventCopyWithImpl<$Res, _$DistractImpl>
+    implements _$$DistractImplCopyWith<$Res> {
+  __$$DistractImplCopyWithImpl(
+      _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Distract with DiagnosticableTreeMixin implements Distract {
-  const _$Distract();
+class _$DistractImpl with DiagnosticableTreeMixin implements Distract {
+  const _$DistractImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -776,12 +894,13 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'RegistrationEvent.distract'));
+    properties.add(DiagnosticsProperty('type', 'RegistrationEvent.distract'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Distract);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DistractImpl);
   }
 
   @override
@@ -798,6 +917,19 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
     required TResult Function() distract,
   }) {
     return distract();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(LocalUser localUser)? registerUser,
+    TResult? Function(LocalUser localUser)? loginUser,
+    TResult? Function()? getUser,
+    TResult? Function()? getUserProfile,
+    TResult? Function(Profile profile)? setUserProfile,
+    TResult? Function()? distract,
+  }) {
+    return distract?.call();
   }
 
   @override
@@ -832,6 +964,19 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(RegisterUser value)? registerUser,
+    TResult? Function(LoginUser value)? loginUser,
+    TResult? Function(GetUser value)? getUser,
+    TResult? Function(GetUserProfile value)? getUserProfile,
+    TResult? Function(SetUserProfile value)? setUserProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return distract?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(RegisterUser value)? registerUser,
     TResult Function(LoginUser value)? loginUser,
@@ -849,5 +994,5 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 }
 
 abstract class Distract implements RegistrationEvent {
-  const factory Distract() = _$Distract;
+  const factory Distract() = _$DistractImpl;
 }

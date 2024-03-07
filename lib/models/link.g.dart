@@ -56,15 +56,13 @@ class LinkAdapter extends TypeAdapter<Link> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Link _$LinkFromJson(Map<String, dynamic> json) {
-  return Link(
-    id: json['id'] as int?,
-    title: json['title'] as String?,
-    titleAr: json['title_ar'] as String?,
-    icon: json['icon'] as String?,
-    linkUrl: json['link'] as String?,
-  );
-}
+Link _$LinkFromJson(Map<String, dynamic> json) => Link(
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      titleAr: json['title_ar'] as String?,
+      icon: json['icon'] as String?,
+      linkUrl: json['link'] as String?,
+    );
 
 Map<String, dynamic> _$LinkToJson(Link instance) => <String, dynamic>{
       'id': instance.id,

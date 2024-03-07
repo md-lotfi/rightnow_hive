@@ -12,9 +12,27 @@ import 'package:rightnow/states/result_state.dart';
 class FieldsetsBloc extends Bloc<FieldsetsEvent, ResultState<List<FieldSet>>> {
   final ApiRepository apiRepository = ApiRepository();
 
-  FieldsetsBloc() : super(Idle());
+  FieldsetsBloc() : super(const Idle()) {
+    //on<Distract>((event, emit) => emit(const ResultState.idle()));
+    on<LoadLocalFieldSets>((event, emit) async => await _mapEventToState(event, emit));
+  }
 
-  @override
+  Future<void> _mapEventToState(LoadLocalFieldSets event, Emitter<ResultState<List<FieldSet>>> emit) async {
+    emit(const ResultState.loading());
+
+    ApiResult<List<FieldSet>> apiResult = await getDataBase<FieldSetsDao>().fetchFieldsAll(event.formId).then((value) {
+      return ApiResult.success(data: value);
+    });
+
+    await apiResult.when(
+      success: (data) async => emit(ResultState.data(data: data)),
+      failure: (error) async => emit(ResultState.error(error: error)),
+    );
+  }
+
+  //FieldsetsBloc() : super(Idle());
+
+  /*@override
   Stream<ResultState<List<FieldSet>>> mapEventToState(FieldsetsEvent event) async* {
     yield ResultState.loading();
 
@@ -40,5 +58,5 @@ class FieldsetsBloc extends Bloc<FieldsetsEvent, ResultState<List<FieldSet>>> {
         yield ResultState.error(error: error);
       });
     }*/
-  }
+  }*/
 }

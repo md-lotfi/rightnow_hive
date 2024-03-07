@@ -199,7 +199,7 @@ class HomePage extends StatelessWidget {
                   future: getDataBase<SuperCategoryDao>().fetchSuperCategories(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      log("sueprcatgegory count ${snapshot.data?.length}, ${snapshot.data![0].icon}");
+                      //log("sueprcatgegory count ${snapshot.data?.length}, ${snapshot.data![0].icon}");
                       List<Widget> w = [];
                       for (SuperCategory item in snapshot.data ?? []) {
                         w.add(_topButton(item.title(context.locale.languageCode), item.icon, () async {

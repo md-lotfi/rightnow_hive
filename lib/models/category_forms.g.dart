@@ -62,23 +62,22 @@ class CategoryFormsAdapter extends TypeAdapter<CategoryForms> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-CategoryForms _$CategoryFormsFromJson(Map<String, dynamic> json) {
-  return CategoryForms(
-    json['id'] as int?,
-    json['name'] as String?,
-    json['name_ar'] as String?,
-    json['name_fr'] as String?,
-    json['icon'] as String?,
-    json['belongs_to'] as int?,
-    json['created_at'] as String?,
-  )
-    ..tags = (json['tags'] as List<dynamic>?)
-        ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..forms = (json['forms'] as List<dynamic>?)
-        ?.map((e) => FormFields.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+CategoryForms _$CategoryFormsFromJson(Map<String, dynamic> json) =>
+    CategoryForms(
+      json['id'] as int?,
+      json['name'] as String?,
+      json['name_ar'] as String?,
+      json['name_fr'] as String?,
+      json['icon'] as String?,
+      json['belongs_to'] as int?,
+      json['created_at'] as String?,
+    )
+      ..tags = (json['tags'] as List<dynamic>?)
+          ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..forms = (json['forms'] as List<dynamic>?)
+          ?.map((e) => FormFields.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$CategoryFormsToJson(CategoryForms instance) =>
     <String, dynamic>{

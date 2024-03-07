@@ -116,7 +116,8 @@ class FormsDisplayWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    Jiffy(formsFields.createdAt).yMMMMEEEEd,
+                    formsFields.formatCreatedAt(),
+                    //Jiffy.parse(formsFields.createdAt ?? Jiffy.now().format()).yMMMMEEEEd,
                     style: TextStyle(color: Colors.grey),
                   ),
                   InkWell(

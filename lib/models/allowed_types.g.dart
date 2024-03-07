@@ -56,15 +56,13 @@ class AllowedTypesAdapter extends TypeAdapter<AllowedTypes> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-AllowedTypes _$AllowedTypesFromJson(Map<String, dynamic> json) {
-  return AllowedTypes(
-    json['id'] as int?,
-    json['name'] as String?,
-    json['extension'] as String?,
-    json['mime_type'] as String?,
-    json['questionId'] as int?,
-  );
-}
+AllowedTypes _$AllowedTypesFromJson(Map<String, dynamic> json) => AllowedTypes(
+      json['id'] as int?,
+      json['name'] as String?,
+      json['extension'] as String?,
+      json['mime_type'] as String?,
+      json['questionId'] as int?,
+    );
 
 Map<String, dynamic> _$AllowedTypesToJson(AllowedTypes instance) =>
     <String, dynamic>{

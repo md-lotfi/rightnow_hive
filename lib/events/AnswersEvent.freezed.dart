@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'AnswersEvent.dart';
 
@@ -10,23 +12,7 @@ part of 'AnswersEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$AnswersEventTearOff {
-  const _$AnswersEventTearOff();
-
-  UploadAnswerHolder uploadAnswerHolder() {
-    return const UploadAnswerHolder();
-  }
-
-  Distract distract() {
-    return const Distract();
-  }
-}
-
-/// @nodoc
-const $AnswersEvent = _$AnswersEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AnswersEvent {
@@ -34,6 +20,12 @@ mixin _$AnswersEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() uploadAnswerHolder,
     required TResult Function() distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? uploadAnswerHolder,
+    TResult? Function()? distract,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +42,12 @@ mixin _$AnswersEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UploadAnswerHolder value)? uploadAnswerHolder,
+    TResult? Function(Distract value)? distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UploadAnswerHolder value)? uploadAnswerHolder,
     TResult Function(Distract value)? distract,
@@ -62,43 +60,42 @@ mixin _$AnswersEvent {
 abstract class $AnswersEventCopyWith<$Res> {
   factory $AnswersEventCopyWith(
           AnswersEvent value, $Res Function(AnswersEvent) then) =
-      _$AnswersEventCopyWithImpl<$Res>;
+      _$AnswersEventCopyWithImpl<$Res, AnswersEvent>;
 }
 
 /// @nodoc
-class _$AnswersEventCopyWithImpl<$Res> implements $AnswersEventCopyWith<$Res> {
+class _$AnswersEventCopyWithImpl<$Res, $Val extends AnswersEvent>
+    implements $AnswersEventCopyWith<$Res> {
   _$AnswersEventCopyWithImpl(this._value, this._then);
 
-  final AnswersEvent _value;
   // ignore: unused_field
-  final $Res Function(AnswersEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $UploadAnswerHolderCopyWith<$Res> {
-  factory $UploadAnswerHolderCopyWith(
-          UploadAnswerHolder value, $Res Function(UploadAnswerHolder) then) =
-      _$UploadAnswerHolderCopyWithImpl<$Res>;
+abstract class _$$UploadAnswerHolderImplCopyWith<$Res> {
+  factory _$$UploadAnswerHolderImplCopyWith(_$UploadAnswerHolderImpl value,
+          $Res Function(_$UploadAnswerHolderImpl) then) =
+      __$$UploadAnswerHolderImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$UploadAnswerHolderCopyWithImpl<$Res>
-    extends _$AnswersEventCopyWithImpl<$Res>
-    implements $UploadAnswerHolderCopyWith<$Res> {
-  _$UploadAnswerHolderCopyWithImpl(
-      UploadAnswerHolder _value, $Res Function(UploadAnswerHolder) _then)
-      : super(_value, (v) => _then(v as UploadAnswerHolder));
-
-  @override
-  UploadAnswerHolder get _value => super._value as UploadAnswerHolder;
+class __$$UploadAnswerHolderImplCopyWithImpl<$Res>
+    extends _$AnswersEventCopyWithImpl<$Res, _$UploadAnswerHolderImpl>
+    implements _$$UploadAnswerHolderImplCopyWith<$Res> {
+  __$$UploadAnswerHolderImplCopyWithImpl(_$UploadAnswerHolderImpl _value,
+      $Res Function(_$UploadAnswerHolderImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$UploadAnswerHolder
+class _$UploadAnswerHolderImpl
     with DiagnosticableTreeMixin
     implements UploadAnswerHolder {
-  const _$UploadAnswerHolder();
+  const _$UploadAnswerHolderImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -109,12 +106,13 @@ class _$UploadAnswerHolder
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty('type', 'AnswersEvent.uploadAnswerHolder'));
+        .add(DiagnosticsProperty('type', 'AnswersEvent.uploadAnswerHolder'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is UploadAnswerHolder);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$UploadAnswerHolderImpl);
   }
 
   @override
@@ -127,6 +125,15 @@ class _$UploadAnswerHolder
     required TResult Function() distract,
   }) {
     return uploadAnswerHolder();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? uploadAnswerHolder,
+    TResult? Function()? distract,
+  }) {
+    return uploadAnswerHolder?.call();
   }
 
   @override
@@ -153,6 +160,15 @@ class _$UploadAnswerHolder
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UploadAnswerHolder value)? uploadAnswerHolder,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return uploadAnswerHolder?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UploadAnswerHolder value)? uploadAnswerHolder,
     TResult Function(Distract value)? distract,
@@ -166,29 +182,29 @@ class _$UploadAnswerHolder
 }
 
 abstract class UploadAnswerHolder implements AnswersEvent {
-  const factory UploadAnswerHolder() = _$UploadAnswerHolder;
+  const factory UploadAnswerHolder() = _$UploadAnswerHolderImpl;
 }
 
 /// @nodoc
-abstract class $DistractCopyWith<$Res> {
-  factory $DistractCopyWith(Distract value, $Res Function(Distract) then) =
-      _$DistractCopyWithImpl<$Res>;
+abstract class _$$DistractImplCopyWith<$Res> {
+  factory _$$DistractImplCopyWith(
+          _$DistractImpl value, $Res Function(_$DistractImpl) then) =
+      __$$DistractImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DistractCopyWithImpl<$Res> extends _$AnswersEventCopyWithImpl<$Res>
-    implements $DistractCopyWith<$Res> {
-  _$DistractCopyWithImpl(Distract _value, $Res Function(Distract) _then)
-      : super(_value, (v) => _then(v as Distract));
-
-  @override
-  Distract get _value => super._value as Distract;
+class __$$DistractImplCopyWithImpl<$Res>
+    extends _$AnswersEventCopyWithImpl<$Res, _$DistractImpl>
+    implements _$$DistractImplCopyWith<$Res> {
+  __$$DistractImplCopyWithImpl(
+      _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Distract with DiagnosticableTreeMixin implements Distract {
-  const _$Distract();
+class _$DistractImpl with DiagnosticableTreeMixin implements Distract {
+  const _$DistractImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -198,12 +214,13 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'AnswersEvent.distract'));
+    properties.add(DiagnosticsProperty('type', 'AnswersEvent.distract'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Distract);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DistractImpl);
   }
 
   @override
@@ -216,6 +233,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
     required TResult Function() distract,
   }) {
     return distract();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? uploadAnswerHolder,
+    TResult? Function()? distract,
+  }) {
+    return distract?.call();
   }
 
   @override
@@ -242,6 +268,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(UploadAnswerHolder value)? uploadAnswerHolder,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return distract?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(UploadAnswerHolder value)? uploadAnswerHolder,
     TResult Function(Distract value)? distract,
@@ -255,5 +290,5 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 }
 
 abstract class Distract implements AnswersEvent {
-  const factory Distract() = _$Distract;
+  const factory Distract() = _$DistractImpl;
 }

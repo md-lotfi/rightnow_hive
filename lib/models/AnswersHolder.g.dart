@@ -77,30 +77,28 @@ class AnswerHolderAdapter extends TypeAdapter<AnswerHolder> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-AnswerHolder _$AnswerHolderFromJson(Map<String, dynamic> json) {
-  return AnswerHolder(
-    id: json['id'] as int?,
-    formId: json['form'] as int?,
-    uploaded: json['uploaded'] as bool?,
-    closed: json['closed'] as bool?,
-    formTitle: json['formTitle'] as String?,
-    completedAt: json['completed_at'] as String?,
-    createdAt: json['createdAt'] as String?,
-    deviceId: json['device_id'] as String?,
-  )
-    ..completed = json['completed'] as bool?
-    ..offline = json['offline'] as bool?
-    ..answers = (json['responses'] as List<dynamic>?)
-        ?.map((e) => Answer.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..formFields = json['formFields'] == null
-        ? null
-        : FormFields.fromJson(json['formFields'] as Map<String, dynamic>)
-    ..decisionResponse = json['decisionResponse'] == null
-        ? null
-        : DecisionResponse.fromJson(
-            json['decisionResponse'] as Map<String, dynamic>);
-}
+AnswerHolder _$AnswerHolderFromJson(Map<String, dynamic> json) => AnswerHolder(
+      id: json['id'] as int?,
+      formId: json['form'] as int?,
+      uploaded: json['uploaded'] as bool?,
+      closed: json['closed'] as bool?,
+      formTitle: json['formTitle'] as String?,
+      completedAt: json['completed_at'] as String?,
+      createdAt: json['createdAt'] as String?,
+      deviceId: json['device_id'] as String?,
+    )
+      ..completed = json['completed'] as bool?
+      ..offline = json['offline'] as bool?
+      ..answers = (json['responses'] as List<dynamic>?)
+          ?.map((e) => Answer.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..formFields = json['formFields'] == null
+          ? null
+          : FormFields.fromJson(json['formFields'] as Map<String, dynamic>)
+      ..decisionResponse = json['decisionResponse'] == null
+          ? null
+          : DecisionResponse.fromJson(
+              json['decisionResponse'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$AnswerHolderToJson(AnswerHolder instance) =>
     <String, dynamic>{

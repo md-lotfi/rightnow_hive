@@ -53,14 +53,13 @@ class FCMNotificationAdapter extends TypeAdapter<FCMNotification> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FCMNotification _$FCMNotificationFromJson(Map<String, dynamic> json) {
-  return FCMNotification(
-    id: json['id'] as int?,
-    title: json['title'] as String?,
-    message: json['message'] as String?,
-    viewed: json['viewed'] as int?,
-  );
-}
+FCMNotification _$FCMNotificationFromJson(Map<String, dynamic> json) =>
+    FCMNotification(
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      message: json['message'] as String?,
+      viewed: json['viewed'] as int?,
+    );
 
 Map<String, dynamic> _$FCMNotificationToJson(FCMNotification instance) =>
     <String, dynamic>{

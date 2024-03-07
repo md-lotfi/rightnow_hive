@@ -45,21 +45,21 @@ abstract class NetworkExceptions with _$NetworkExceptions {
     if (error is Exception) {
       try {
         NetworkExceptions networkExceptions;
-        if (error is DioError) {
+        if (error is DioException) {
           switch (error.type) {
-            case DioErrorType.cancel:
+            case DioExceptionType.cancel:
               networkExceptions = NetworkExceptions.requestCancelled();
               break;
-            case DioErrorType.connectTimeout:
+            case DioExceptionType.connectionTimeout:
               networkExceptions = NetworkExceptions.requestTimeout();
               break;
-            case DioErrorType.other:
+            case DioExceptionType.unknown:
               networkExceptions = NetworkExceptions.noInternetConnection();
               break;
-            case DioErrorType.receiveTimeout:
+            case DioExceptionType.receiveTimeout:
               networkExceptions = NetworkExceptions.sendTimeout();
               break;
-            case DioErrorType.response:
+            case DioExceptionType.sendTimeout:
               if (error.response == null) {
                 return NetworkExceptions.defaultError(
                   "Received invalid status code: unknown",
@@ -97,8 +97,17 @@ abstract class NetworkExceptions with _$NetworkExceptions {
                   );
               }
               break;
-            case DioErrorType.sendTimeout:
+            case DioExceptionType.sendTimeout:
               networkExceptions = NetworkExceptions.sendTimeout();
+              break;
+            case DioExceptionType.badCertificate:
+              networkExceptions = NetworkExceptions.badRequest();
+              break;
+            case DioExceptionType.badResponse:
+              networkExceptions = NetworkExceptions.badRequest();
+              break;
+            case DioExceptionType.connectionError:
+              networkExceptions = NetworkExceptions.badRequest();
               break;
           }
         } else if (error is SocketException) {

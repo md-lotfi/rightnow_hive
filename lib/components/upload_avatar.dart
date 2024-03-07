@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -9,8 +10,8 @@ class UploadAvatarWidget extends StatelessWidget {
   final ImageSource imageSource;
   final String title;
   final Icon mainIcon;
-  final Function(File file)? onFile; //mobile
-  final Function(Image file)? onImage; //web
+  final Function(XFile file)? onFile; //mobile
+  //final Function(Image file)? onImage; //web
 
   const UploadAvatarWidget({
     Key? key,
@@ -18,7 +19,7 @@ class UploadAvatarWidget extends StatelessWidget {
     required this.title,
     required this.mainIcon,
     this.onFile,
-    this.onImage,
+    //this.onImage,
   }) : super(key: key);
 
   @override
@@ -41,15 +42,17 @@ class UploadAvatarWidget extends StatelessWidget {
 
   Future getImage() async {
     final picker = ImagePicker();
-    PickedFile? pickedFile = await picker.getImage(source: imageSource);
+    XFile? pickedFile = await picker.pickImage(source: imageSource, imageQuality: 65);
     if (pickedFile != null) {
-      if (kIsWeb) {
+      if (onFile != null) onFile!(pickedFile);
+      /*if (kIsWeb) {
+        log('image loading in web');
         Image _i = Image.network(pickedFile.path);
-        if (onImage != null) onImage!(_i);
+        //if (onImage != null) onImage!(_i);
       } else {
         File _f = File(pickedFile.path);
         if (onFile != null) onFile!(_f);
-      }
+      }*/
     }
   }
 }

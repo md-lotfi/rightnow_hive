@@ -59,16 +59,15 @@ class MultiSelectAnswerAdapter extends TypeAdapter<MultiSelectAnswer> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-MultiSelectAnswer _$MultiSelectAnswerFromJson(Map<String, dynamic> json) {
-  return MultiSelectAnswer(
-    json['id'] as int?,
-    json['answerId'] as int?,
-    json['answerHolderId'] as int?,
-    json['selectedId'] as int?,
-    json['selectedLabel'] as String?,
-    (json['geoHolder'] as num?)?.toDouble(),
-  );
-}
+MultiSelectAnswer _$MultiSelectAnswerFromJson(Map<String, dynamic> json) =>
+    MultiSelectAnswer(
+      json['id'] as int?,
+      json['answerId'] as int?,
+      json['answerHolderId'] as int?,
+      json['selectedId'] as int?,
+      json['selectedLabel'] as String?,
+      (json['geoHolder'] as num?)?.toDouble(),
+    );
 
 Map<String, dynamic> _$MultiSelectAnswerToJson(MultiSelectAnswer instance) =>
     <String, dynamic>{

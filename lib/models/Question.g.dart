@@ -101,45 +101,43 @@ class QuestionAdapter extends TypeAdapter<Question> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Question _$QuestionFromJson(Map<String, dynamic> json) {
-  return Question(
-    json['id'] as int?,
-    json['label'] as String?,
-    json['label_ar'] as String?,
-    json['is_active'] as bool?,
-    json['active_always'] as bool?,
-    json['created_at'] as String?,
-    json['updated'] as String?,
-    json['max_length'] as int?,
-    json['min_value'] as String?,
-    json['max_value'] as String?,
-    json['polymorphic_ctype'] as int?,
-    json['fieldSet'] as int?,
-    json['formId'] as int?,
-    json['file'] as String?,
-    json['resourcetype'] as String?,
-    Question._dynToString(json['type']),
-    json['custom_identifiers'] as bool?,
-    json['is_required'] as bool?,
-    (json['max_size_kb'] as num?)?.toDouble(),
-    (json['min_size_kb'] as num?)?.toDouble(),
-  )
-    ..choices = (json['choices'] as List<dynamic>?)
-        ?.map((e) => Choice.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..depandantConditions = (json['dependant_conditions'] as List<dynamic>?)
-        ?.map((e) => DependentCondition.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..branchedLinks = (json['branched_links'] as List<dynamic>?)
-        ?.map((e) => BranchedLinks.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..branchedConditions = (json['branched_conditions'] as List<dynamic>?)
-        ?.map((e) => BranchedConditions.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..allowedTypes = (json['allowed_types'] as List<dynamic>?)
-        ?.map((e) => AllowedTypes.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+Question _$QuestionFromJson(Map<String, dynamic> json) => Question(
+      json['id'] as int?,
+      json['label'] as String?,
+      json['label_ar'] as String?,
+      json['is_active'] as bool?,
+      json['active_always'] as bool?,
+      json['created_at'] as String?,
+      json['updated'] as String?,
+      json['max_length'] as int?,
+      json['min_value'] as String?,
+      json['max_value'] as String?,
+      json['polymorphic_ctype'] as int?,
+      json['fieldSet'] as int?,
+      json['formId'] as int?,
+      json['file'] as String?,
+      json['resourcetype'] as String?,
+      Question._dynToString(json['type']),
+      json['custom_identifiers'] as bool?,
+      json['is_required'] as bool?,
+      (json['max_size_kb'] as num?)?.toDouble(),
+      (json['min_size_kb'] as num?)?.toDouble(),
+    )
+      ..choices = (json['choices'] as List<dynamic>?)
+          ?.map((e) => Choice.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..depandantConditions = (json['dependant_conditions'] as List<dynamic>?)
+          ?.map((e) => DependentCondition.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..branchedLinks = (json['branched_links'] as List<dynamic>?)
+          ?.map((e) => BranchedLinks.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..branchedConditions = (json['branched_conditions'] as List<dynamic>?)
+          ?.map((e) => BranchedConditions.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..allowedTypes = (json['allowed_types'] as List<dynamic>?)
+          ?.map((e) => AllowedTypes.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$QuestionToJson(Question instance) => <String, dynamic>{
       'id': instance.id,

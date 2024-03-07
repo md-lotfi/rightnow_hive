@@ -66,13 +66,13 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
       }
     }
 
-    _myPlayer?.openAudioSession().then((value) {
+    _myPlayer?.openPlayer().then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
     });
     if (!widget.viewOnly)
-      _myRecorder?.openAudioSession().then((value) {
+      _myRecorder?.closeRecorder().then((value) {
         setState(() {
           _mRecorderIsInited = true;
         });
@@ -84,9 +84,9 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
   @override
   void dispose() {
     // Be careful : you must `close` the audio session when you have finished with it.
-    _myRecorder?.closeAudioSession();
+    _myRecorder?.closeRecorder();
     _myRecorder = null;
-    _myPlayer?.closeAudioSession();
+    _myPlayer?.closePlayer();
     _myPlayer = null;
     super.dispose();
   }
@@ -94,9 +94,9 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
   Future<String> _getRecordPath() async {
     if (!kIsWeb) {
       var tempDir = await getTemporaryDirectory();
-      return '${tempDir.path}/myFile_${widget.question?.id}_${Jiffy().unix()}.mp4';
+      return '${tempDir.path}/myFile_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}.mp4';
     } else {
-      return 'myFile_${widget.question?.id}_${Jiffy().unix()}';
+      return 'myFile_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}';
     }
   }
 
@@ -116,17 +116,20 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
       if (statuses[Permission.microphone] == PermissionStatus.granted) {
         recordPath = await _getRecordPath();
         print("record path $recordPath");
-        _myRecorder
-            ?.startRecorder(
-          codec: Codec.aacMP4,
-          toFile: recordPath,
-          sampleRate: 16000,
-          numChannels: 1,
-        )
-            .then((value) {
-          hasRecord = true;
-          if (state != null) state.didChange(hasRecord);
-          setState(() {});
+        _myRecorder?.openRecorder().then((value) {
+          log('recoreder is open $value');
+          value
+              ?.startRecorder(
+            codec: Codec.aacMP4,
+            toFile: recordPath,
+            sampleRate: 16000,
+            numChannels: 1,
+          )
+              .then((value) {
+            hasRecord = true;
+            if (state != null) state.didChange(hasRecord);
+            setState(() {});
+          });
         });
       }
     }

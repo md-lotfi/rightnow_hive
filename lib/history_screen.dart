@@ -109,7 +109,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         if (snapshot.data != null) {
                           return _dataWidget(snapshot.data);
                         }
-                        return Container();
+                        return SizedBox();
                       }
                       return Center(
                         child: CircularProgressIndicator(),
@@ -133,7 +133,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return Center(
         child: RefreshIndicator(
       child: RawScrollbar(
-        isAlwaysShown: true,
+        trackVisibility: true,
         thumbColor: COLOR_PRIMARY,
         child: _builder(data),
       ),
@@ -158,7 +158,7 @@ class _HistoryPageState extends State<HistoryPage> {
             border: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
           ),
         ),
-        Container(
+        Padding(
           padding: EdgeInsets.only(top: 15, bottom: 15),
           child: Text(text, style: TextStyle(backgroundColor: Colors.grey.shade50)),
         ),
@@ -167,23 +167,23 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Widget _builder(List<Reclamations>? data) {
-    if (data == null) return Container();
+    if (data == null) return SizedBox();
     return ScrollTouchWidget(
       listChild: ListView.separated(
         padding: const EdgeInsets.all(10),
         separatorBuilder: (context, index) {
-          if (data.length == 0) return Container();
-          if ((index + 1) == (data.length + 1)) return Container();
-          if (index == 0) return Container();
-          return _listDivider(Jiffy(data[index].formEntry?.completedAt).format("dd MMMM yyyy"));
+          if (data.length == 0) return SizedBox();
+          if ((index + 1) == (data.length + 1)) return SizedBox();
+          if (index == 0) return SizedBox();
+          return _listDivider(Jiffy.parse(data[index].formEntry?.completedAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy"));
         },
         itemCount: data.length + 2,
         itemBuilder: (BuildContext context, int index) {
-          if (data.length == 0) return Container();
+          if (data.length == 0) return SizedBox();
           String f = "";
-          if ((index + 1) == (data.length + 2)) return Container();
+          if ((index + 1) == (data.length + 2)) return SizedBox();
           if (index == 0) {
-            return _listDivider(Jiffy(data[index].formEntry?.completedAt).format("dd MMMM yyyy"));
+            return _listDivider(Jiffy.parse(data[index].formEntry?.completedAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy"));
           }
           if (data[index - 1].formEntry?.completedAt != null) {
             DateTime d = DateTime.parse(data[index - 1].formEntry?.completedAt ?? "");
@@ -366,7 +366,26 @@ class _HistoryPageState extends State<HistoryPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.grey),
               ),
-              (data.localAnswerHolder?.uploaded == false) ? const Icon(Icons.close, color: Colors.red) : const Icon(Icons.check_circle, color: Colors.green),
+              (data.localAnswerHolder?.uploaded == false)
+                  ? InkWell(
+                      onTap: () {
+                        showActionMessage(
+                          context,
+                          title: "Confirmation".tr(),
+                          messages: [Text("Voulez-vous supprimer cette réponse ?".tr())],
+                          positiveBtn: 'Oui'.tr(),
+                          negativeBtn: 'Non'.tr(),
+                          whichTaped: (w) async {
+                            if (w == 'Positive') {
+                              await data.localAnswerHolder?.delete();
+                              setState(() {});
+                            }
+                          },
+                        );
+                      },
+                      child: const Icon(Icons.close, color: Colors.red),
+                    )
+                  : const Icon(Icons.check_circle, color: Colors.green),
               /*CircularProgressIndicator(
                 backgroundColor: Colors.grey,
                 color: Colors.green, //answersCount.totalQuestions == 0 ? Colors.grey : ((answersCount.progress) < 1 ? Colors.red : Colors.green),
@@ -375,13 +394,13 @@ class _HistoryPageState extends State<HistoryPage> {
             ],
           ),
         ),
-        Container(
+        SizedBox(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Text(
-                  Jiffy(data.formEntry?.completedAt).Hm,
+                  Jiffy.parse(data.formEntry?.completedAt ?? Jiffy.now().format()).Hm,
                   style: TextStyle(color: Colors.grey),
                 ),
               ),

@@ -61,7 +61,7 @@ class _HashPageState extends State<HashPage> {
       }
       startCategoriesPage(newForms, hash);
     });*/
-    SchedulerBinding.instance?.addPostFrameCallback((timeStamp) async {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       await LocalDBUpdate(
         context: context,
         loadFinished: () async {
@@ -107,11 +107,14 @@ class _HashPageState extends State<HashPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/loading_bg.gif",
-                      fit: BoxFit.contain,
-                      width: double.infinity,
-                      //height: MediaQuery.of(context).size.height - 70,
+                    Expanded(
+                      child: Image.asset(
+                        "assets/loading_bg.gif",
+                        //"assets/axxa_splash.png",
+                        fit: BoxFit.fill,
+                        width: double.infinity,
+                        //height: MediaQuery.of(context).size.height - 70,
+                      ),
                     ),
                   ],
                 ),

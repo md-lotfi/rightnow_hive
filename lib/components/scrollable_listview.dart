@@ -18,7 +18,7 @@ class ScrollableListView extends StatelessWidget {
         scrollbars: false,
       ),
       child: Scrollbar(
-        isAlwaysShown: true,
+        trackVisibility: true,
         controller: _listScrollCrontroller,
         child: ListView(
           controller: _listScrollCrontroller,

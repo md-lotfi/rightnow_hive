@@ -72,7 +72,7 @@ class Actualite {
   }
 
   int createdAtTimeStamp() {
-    return Jiffy(createdAt).unix();
+    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
   }
 
   Actualite({

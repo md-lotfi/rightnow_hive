@@ -28,9 +28,10 @@ class ActualitePage extends StatelessWidget {
       extendBodyBehindAppBar: true,
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       appBar: AppBar(
-        title: Text(""),
-        foregroundColor: COLOR_PRIMARY,
-        backgroundColor: Colors.transparent,
+        title: Text("Actualités".tr()),
+        foregroundColor: Colors.white, // COLOR_PRIMARY,
+        backgroundColor: COLOR_PRIMARY, // Colors.transparent,
+        centerTitle: true,
         elevation: 0,
         /*actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.settings_outlined)),
@@ -55,7 +56,7 @@ class ActualitePage extends StatelessWidget {
       onFinish: (data) {
         if (data != null) {
           if (data.length > 0) {
-            return Container(
+            return SizedBox(
               child: _data(context, List.from(data)),
             );
           }
@@ -140,7 +141,7 @@ class ActualitePage extends StatelessWidget {
         if (act == null) SizedBox(height: 100),
         Expanded(
           child: RawScrollbar(
-            isAlwaysShown: true,
+            trackVisibility: true,
             thumbColor: COLOR_PRIMARY,
             child: ScrollTouchWidget(listChild: _list(data, act)),
           ),
@@ -182,7 +183,7 @@ class ActualitePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          Jiffy(ac.createdAt).format("dd MMMM yyyy"),
+                          Jiffy.parse(ac.createdAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy"),
                           textAlign: TextAlign.start,
                           style: TextStyle(color: Colors.grey.shade400),
                         ),

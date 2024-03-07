@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'result_state.dart';
 
@@ -10,35 +12,7 @@ part of 'result_state.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$ResultStateTearOff {
-  const _$ResultStateTearOff();
-
-  Idle<T> idle<T>() {
-    return Idle<T>();
-  }
-
-  Loading<T> loading<T>() {
-    return Loading<T>();
-  }
-
-  Data<T> data<T>({T? data}) {
-    return Data<T>(
-      data: data,
-    );
-  }
-
-  Error<T> error<T>({NetworkExceptions? error}) {
-    return Error<T>(
-      error: error,
-    );
-  }
-}
-
-/// @nodoc
-const $ResultState = _$ResultStateTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ResultState<T> {
@@ -48,6 +22,14 @@ mixin _$ResultState<T> {
     required TResult Function() loading,
     required TResult Function(T? data) data,
     required TResult Function(NetworkExceptions? error) error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? idle,
+    TResult? Function()? loading,
+    TResult? Function(T? data)? data,
+    TResult? Function(NetworkExceptions? error)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -68,6 +50,14 @@ mixin _$ResultState<T> {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Idle<T> value)? idle,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Data<T> value)? data,
+    TResult? Function(Error<T> value)? error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Idle<T> value)? idle,
     TResult Function(Loading<T> value)? loading,
@@ -82,39 +72,40 @@ mixin _$ResultState<T> {
 abstract class $ResultStateCopyWith<T, $Res> {
   factory $ResultStateCopyWith(
           ResultState<T> value, $Res Function(ResultState<T>) then) =
-      _$ResultStateCopyWithImpl<T, $Res>;
+      _$ResultStateCopyWithImpl<T, $Res, ResultState<T>>;
 }
 
 /// @nodoc
-class _$ResultStateCopyWithImpl<T, $Res>
+class _$ResultStateCopyWithImpl<T, $Res, $Val extends ResultState<T>>
     implements $ResultStateCopyWith<T, $Res> {
   _$ResultStateCopyWithImpl(this._value, this._then);
 
-  final ResultState<T> _value;
   // ignore: unused_field
-  final $Res Function(ResultState<T>) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $IdleCopyWith<T, $Res> {
-  factory $IdleCopyWith(Idle<T> value, $Res Function(Idle<T>) then) =
-      _$IdleCopyWithImpl<T, $Res>;
+abstract class _$$IdleImplCopyWith<T, $Res> {
+  factory _$$IdleImplCopyWith(
+          _$IdleImpl<T> value, $Res Function(_$IdleImpl<T>) then) =
+      __$$IdleImplCopyWithImpl<T, $Res>;
 }
 
 /// @nodoc
-class _$IdleCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
-    implements $IdleCopyWith<T, $Res> {
-  _$IdleCopyWithImpl(Idle<T> _value, $Res Function(Idle<T>) _then)
-      : super(_value, (v) => _then(v as Idle<T>));
-
-  @override
-  Idle<T> get _value => super._value as Idle<T>;
+class __$$IdleImplCopyWithImpl<T, $Res>
+    extends _$ResultStateCopyWithImpl<T, $Res, _$IdleImpl<T>>
+    implements _$$IdleImplCopyWith<T, $Res> {
+  __$$IdleImplCopyWithImpl(
+      _$IdleImpl<T> _value, $Res Function(_$IdleImpl<T>) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Idle<T> with DiagnosticableTreeMixin implements Idle<T> {
-  const _$Idle();
+class _$IdleImpl<T> with DiagnosticableTreeMixin implements Idle<T> {
+  const _$IdleImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -124,12 +115,13 @@ class _$Idle<T> with DiagnosticableTreeMixin implements Idle<T> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'ResultState<$T>.idle'));
+    properties.add(DiagnosticsProperty('type', 'ResultState<$T>.idle'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Idle<T>);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$IdleImpl<T>);
   }
 
   @override
@@ -144,6 +136,17 @@ class _$Idle<T> with DiagnosticableTreeMixin implements Idle<T> {
     required TResult Function(NetworkExceptions? error) error,
   }) {
     return idle();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? idle,
+    TResult? Function()? loading,
+    TResult? Function(T? data)? data,
+    TResult? Function(NetworkExceptions? error)? error,
+  }) {
+    return idle?.call();
   }
 
   @override
@@ -174,6 +177,17 @@ class _$Idle<T> with DiagnosticableTreeMixin implements Idle<T> {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Idle<T> value)? idle,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Data<T> value)? data,
+    TResult? Function(Error<T> value)? error,
+  }) {
+    return idle?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Idle<T> value)? idle,
     TResult Function(Loading<T> value)? loading,
@@ -189,29 +203,29 @@ class _$Idle<T> with DiagnosticableTreeMixin implements Idle<T> {
 }
 
 abstract class Idle<T> implements ResultState<T> {
-  const factory Idle() = _$Idle<T>;
+  const factory Idle() = _$IdleImpl<T>;
 }
 
 /// @nodoc
-abstract class $LoadingCopyWith<T, $Res> {
-  factory $LoadingCopyWith(Loading<T> value, $Res Function(Loading<T>) then) =
-      _$LoadingCopyWithImpl<T, $Res>;
+abstract class _$$LoadingImplCopyWith<T, $Res> {
+  factory _$$LoadingImplCopyWith(
+          _$LoadingImpl<T> value, $Res Function(_$LoadingImpl<T>) then) =
+      __$$LoadingImplCopyWithImpl<T, $Res>;
 }
 
 /// @nodoc
-class _$LoadingCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
-    implements $LoadingCopyWith<T, $Res> {
-  _$LoadingCopyWithImpl(Loading<T> _value, $Res Function(Loading<T>) _then)
-      : super(_value, (v) => _then(v as Loading<T>));
-
-  @override
-  Loading<T> get _value => super._value as Loading<T>;
+class __$$LoadingImplCopyWithImpl<T, $Res>
+    extends _$ResultStateCopyWithImpl<T, $Res, _$LoadingImpl<T>>
+    implements _$$LoadingImplCopyWith<T, $Res> {
+  __$$LoadingImplCopyWithImpl(
+      _$LoadingImpl<T> _value, $Res Function(_$LoadingImpl<T>) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Loading<T> with DiagnosticableTreeMixin implements Loading<T> {
-  const _$Loading();
+class _$LoadingImpl<T> with DiagnosticableTreeMixin implements Loading<T> {
+  const _$LoadingImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -221,12 +235,13 @@ class _$Loading<T> with DiagnosticableTreeMixin implements Loading<T> {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'ResultState<$T>.loading'));
+    properties.add(DiagnosticsProperty('type', 'ResultState<$T>.loading'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Loading<T>);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$LoadingImpl<T>);
   }
 
   @override
@@ -241,6 +256,17 @@ class _$Loading<T> with DiagnosticableTreeMixin implements Loading<T> {
     required TResult Function(NetworkExceptions? error) error,
   }) {
     return loading();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? idle,
+    TResult? Function()? loading,
+    TResult? Function(T? data)? data,
+    TResult? Function(NetworkExceptions? error)? error,
+  }) {
+    return loading?.call();
   }
 
   @override
@@ -271,6 +297,17 @@ class _$Loading<T> with DiagnosticableTreeMixin implements Loading<T> {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Idle<T> value)? idle,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Data<T> value)? data,
+    TResult? Function(Error<T> value)? error,
+  }) {
+    return loading?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Idle<T> value)? idle,
     TResult Function(Loading<T> value)? loading,
@@ -286,31 +323,33 @@ class _$Loading<T> with DiagnosticableTreeMixin implements Loading<T> {
 }
 
 abstract class Loading<T> implements ResultState<T> {
-  const factory Loading() = _$Loading<T>;
+  const factory Loading() = _$LoadingImpl<T>;
 }
 
 /// @nodoc
-abstract class $DataCopyWith<T, $Res> {
-  factory $DataCopyWith(Data<T> value, $Res Function(Data<T>) then) =
-      _$DataCopyWithImpl<T, $Res>;
+abstract class _$$DataImplCopyWith<T, $Res> {
+  factory _$$DataImplCopyWith(
+          _$DataImpl<T> value, $Res Function(_$DataImpl<T>) then) =
+      __$$DataImplCopyWithImpl<T, $Res>;
+  @useResult
   $Res call({T? data});
 }
 
 /// @nodoc
-class _$DataCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
-    implements $DataCopyWith<T, $Res> {
-  _$DataCopyWithImpl(Data<T> _value, $Res Function(Data<T>) _then)
-      : super(_value, (v) => _then(v as Data<T>));
+class __$$DataImplCopyWithImpl<T, $Res>
+    extends _$ResultStateCopyWithImpl<T, $Res, _$DataImpl<T>>
+    implements _$$DataImplCopyWith<T, $Res> {
+  __$$DataImplCopyWithImpl(
+      _$DataImpl<T> _value, $Res Function(_$DataImpl<T>) _then)
+      : super(_value, _then);
 
-  @override
-  Data<T> get _value => super._value as Data<T>;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? data = freezed,
   }) {
-    return _then(Data<T>(
-      data: data == freezed
+    return _then(_$DataImpl<T>(
+      data: freezed == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
               as T?,
@@ -320,8 +359,8 @@ class _$DataCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$Data<T> with DiagnosticableTreeMixin implements Data<T> {
-  const _$Data({this.data});
+class _$DataImpl<T> with DiagnosticableTreeMixin implements Data<T> {
+  const _$DataImpl({this.data});
 
   @override
   final T? data;
@@ -340,21 +379,22 @@ class _$Data<T> with DiagnosticableTreeMixin implements Data<T> {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is Data<T> &&
-            (identical(other.data, data) ||
-                const DeepCollectionEquality().equals(other.data, data)));
+        (other.runtimeType == runtimeType &&
+            other is _$DataImpl<T> &&
+            const DeepCollectionEquality().equals(other.data, data));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(data);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
 
   @JsonKey(ignore: true)
   @override
-  $DataCopyWith<T, Data<T>> get copyWith =>
-      _$DataCopyWithImpl<T, Data<T>>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$DataImplCopyWith<T, _$DataImpl<T>> get copyWith =>
+      __$$DataImplCopyWithImpl<T, _$DataImpl<T>>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -365,6 +405,17 @@ class _$Data<T> with DiagnosticableTreeMixin implements Data<T> {
     required TResult Function(NetworkExceptions? error) error,
   }) {
     return data(this.data);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? idle,
+    TResult? Function()? loading,
+    TResult? Function(T? data)? data,
+    TResult? Function(NetworkExceptions? error)? error,
+  }) {
+    return data?.call(this.data);
   }
 
   @override
@@ -395,6 +446,17 @@ class _$Data<T> with DiagnosticableTreeMixin implements Data<T> {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Idle<T> value)? idle,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Data<T> value)? data,
+    TResult? Function(Error<T> value)? error,
+  }) {
+    return data?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Idle<T> value)? idle,
     TResult Function(Loading<T> value)? loading,
@@ -410,37 +472,40 @@ class _$Data<T> with DiagnosticableTreeMixin implements Data<T> {
 }
 
 abstract class Data<T> implements ResultState<T> {
-  const factory Data({T? data}) = _$Data<T>;
+  const factory Data({final T? data}) = _$DataImpl<T>;
 
-  T? get data => throw _privateConstructorUsedError;
+  T? get data;
   @JsonKey(ignore: true)
-  $DataCopyWith<T, Data<T>> get copyWith => throw _privateConstructorUsedError;
+  _$$DataImplCopyWith<T, _$DataImpl<T>> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ErrorCopyWith<T, $Res> {
-  factory $ErrorCopyWith(Error<T> value, $Res Function(Error<T>) then) =
-      _$ErrorCopyWithImpl<T, $Res>;
+abstract class _$$ErrorImplCopyWith<T, $Res> {
+  factory _$$ErrorImplCopyWith(
+          _$ErrorImpl<T> value, $Res Function(_$ErrorImpl<T>) then) =
+      __$$ErrorImplCopyWithImpl<T, $Res>;
+  @useResult
   $Res call({NetworkExceptions? error});
 
   $NetworkExceptionsCopyWith<$Res>? get error;
 }
 
 /// @nodoc
-class _$ErrorCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
-    implements $ErrorCopyWith<T, $Res> {
-  _$ErrorCopyWithImpl(Error<T> _value, $Res Function(Error<T>) _then)
-      : super(_value, (v) => _then(v as Error<T>));
+class __$$ErrorImplCopyWithImpl<T, $Res>
+    extends _$ResultStateCopyWithImpl<T, $Res, _$ErrorImpl<T>>
+    implements _$$ErrorImplCopyWith<T, $Res> {
+  __$$ErrorImplCopyWithImpl(
+      _$ErrorImpl<T> _value, $Res Function(_$ErrorImpl<T>) _then)
+      : super(_value, _then);
 
-  @override
-  Error<T> get _value => super._value as Error<T>;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? error = freezed,
   }) {
-    return _then(Error<T>(
-      error: error == freezed
+    return _then(_$ErrorImpl<T>(
+      error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as NetworkExceptions?,
@@ -448,6 +513,7 @@ class _$ErrorCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $NetworkExceptionsCopyWith<$Res>? get error {
     if (_value.error == null) {
       return null;
@@ -461,8 +527,8 @@ class _$ErrorCopyWithImpl<T, $Res> extends _$ResultStateCopyWithImpl<T, $Res>
 
 /// @nodoc
 
-class _$Error<T> with DiagnosticableTreeMixin implements Error<T> {
-  const _$Error({this.error});
+class _$ErrorImpl<T> with DiagnosticableTreeMixin implements Error<T> {
+  const _$ErrorImpl({this.error});
 
   @override
   final NetworkExceptions? error;
@@ -481,21 +547,21 @@ class _$Error<T> with DiagnosticableTreeMixin implements Error<T> {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is Error<T> &&
-            (identical(other.error, error) ||
-                const DeepCollectionEquality().equals(other.error, error)));
+        (other.runtimeType == runtimeType &&
+            other is _$ErrorImpl<T> &&
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(error);
+  int get hashCode => Object.hash(runtimeType, error);
 
   @JsonKey(ignore: true)
   @override
-  $ErrorCopyWith<T, Error<T>> get copyWith =>
-      _$ErrorCopyWithImpl<T, Error<T>>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$ErrorImplCopyWith<T, _$ErrorImpl<T>> get copyWith =>
+      __$$ErrorImplCopyWithImpl<T, _$ErrorImpl<T>>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -506,6 +572,17 @@ class _$Error<T> with DiagnosticableTreeMixin implements Error<T> {
     required TResult Function(NetworkExceptions? error) error,
   }) {
     return error(this.error);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? idle,
+    TResult? Function()? loading,
+    TResult? Function(T? data)? data,
+    TResult? Function(NetworkExceptions? error)? error,
+  }) {
+    return error?.call(this.error);
   }
 
   @override
@@ -536,6 +613,17 @@ class _$Error<T> with DiagnosticableTreeMixin implements Error<T> {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Idle<T> value)? idle,
+    TResult? Function(Loading<T> value)? loading,
+    TResult? Function(Data<T> value)? data,
+    TResult? Function(Error<T> value)? error,
+  }) {
+    return error?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Idle<T> value)? idle,
     TResult Function(Loading<T> value)? loading,
@@ -551,10 +639,10 @@ class _$Error<T> with DiagnosticableTreeMixin implements Error<T> {
 }
 
 abstract class Error<T> implements ResultState<T> {
-  const factory Error({NetworkExceptions? error}) = _$Error<T>;
+  const factory Error({final NetworkExceptions? error}) = _$ErrorImpl<T>;
 
-  NetworkExceptions? get error => throw _privateConstructorUsedError;
+  NetworkExceptions? get error;
   @JsonKey(ignore: true)
-  $ErrorCopyWith<T, Error<T>> get copyWith =>
+  _$$ErrorImplCopyWith<T, _$ErrorImpl<T>> get copyWith =>
       throw _privateConstructorUsedError;
 }

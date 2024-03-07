@@ -36,10 +36,11 @@ class AboutPage extends StatelessWidget {
             textAlign: TextAlign.justify,
           ),
         },
-        onLinkTap: (url, _, __, ___) async {
+        onLinkTap: (url, attributes, element) async {
           print("Opening $url...");
-          bool b = await canLaunch(url ?? "");
-          if (b) launch(url ?? "");
+          var uri = Uri.parse(url ?? "");
+          bool b = await canLaunchUrl(uri);
+          if (b) launchUrl(uri);
         },
       ),
       /*Text(
@@ -62,7 +63,8 @@ class AboutPage extends StatelessWidget {
         NavState.NAV_HOME,
       ),
       appBar: AppBar(
-        //backgroundColor: Colors.grey.shade50,
+        foregroundColor: Colors.white, // COLOR_PRIMARY,
+        backgroundColor: COLOR_PRIMARY, // Colors.transpa
         title: Text('A propos'.tr()),
         //leading: Icon(MdiIcons.bell),
         centerTitle: true,
@@ -81,7 +83,7 @@ class AboutPage extends StatelessWidget {
                     right: 0,
                     bottom: 140,
                     child: RawScrollbar(
-                      isAlwaysShown: true,
+                      trackVisibility: true,
                       thumbColor: COLOR_PRIMARY,
                       child: _body(context),
                     ),

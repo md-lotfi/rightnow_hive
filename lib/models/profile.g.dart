@@ -110,35 +110,33 @@ class ProfileAdapter extends TypeAdapter<Profile> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Profile _$ProfileFromJson(Map<String, dynamic> json) {
-  return Profile(
-    json['id'] as int?,
-    json['lastname'] as String?,
-    json['picture'] as String?,
-    json['firstname'] as String?,
-    json['email'] as String?,
-    json['gender'] as int?,
-    json['birth_date'] as String?,
-    json['createdAt'] as String?,
-    json['updatedAt'] as String?,
-    json['user'] as int?,
-    json['town'] as int?,
-    (json['weight'] as num?)?.toDouble(),
-    (json['height'] as num?)?.toDouble(),
-    (json['IMC'] as num?)?.toDouble(),
-    json['vaccination'] as bool?,
-    json['blood_group'] as int?,
-    (json['diseases'] as List<dynamic>?)?.map((e) => e as int).toList(),
-    json['is_pregnant'] as bool?,
-    json['is_smoker'] as bool?,
-    json['vaccin_dose'] as int?,
-    json['updated_mobile'] as bool?,
-  )
-    ..provinceData = json['province_data'] == null
-        ? null
-        : Province.fromJson(json['province_data'] as Map<String, dynamic>)
-    ..province = json['province'] as String?;
-}
+Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
+      json['id'] as int?,
+      json['lastname'] as String?,
+      json['picture'] as String?,
+      json['firstname'] as String?,
+      json['email'] as String?,
+      json['gender'] as int?,
+      json['birth_date'] as String?,
+      json['createdAt'] as String?,
+      json['updatedAt'] as String?,
+      json['user'] as int?,
+      json['town'] as int?,
+      (json['weight'] as num?)?.toDouble(),
+      (json['height'] as num?)?.toDouble(),
+      (json['IMC'] as num?)?.toDouble(),
+      json['vaccination'] as bool?,
+      json['blood_group'] as int?,
+      (json['diseases'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      json['is_pregnant'] as bool?,
+      json['is_smoker'] as bool?,
+      json['vaccin_dose'] as int?,
+      json['updated_mobile'] as bool?,
+    )
+      ..provinceData = json['province_data'] == null
+          ? null
+          : Province.fromJson(json['province_data'] as Map<String, dynamic>)
+      ..province = json['province'] as String?;
 
 Map<String, dynamic> _$ProfileToJson(Profile instance) => <String, dynamic>{
       'id': instance.id,

@@ -12,29 +12,20 @@ import 'package:rightnow/states/result_state.dart';
 class QuestionsBloc extends Bloc<QuestionsEvent, ResultState<List<Question>>> {
   final ApiRepository apiRepository = ApiRepository();
 
-  QuestionsBloc() : super(Idle());
+  QuestionsBloc() : super(const Idle()) {
+    on<Distract>((event, emit) => emit(const ResultState.idle()));
+    on<LoadQuestions>((event, emit) async => await _mapEventToState(event, emit));
+  }
 
-  @override
-  Stream<ResultState<List<Question>>> mapEventToState(QuestionsEvent event) async* {
-    yield ResultState.loading();
+  Future<void> _mapEventToState(LoadQuestions event, Emitter<ResultState<List<Question>>> emit) async {
+    emit(const ResultState.loading());
 
-    if (event is Distract) {
-      yield ResultState.idle();
-    } else if (event is LoadQuestions) {
-      print("we already have an is called loadifngQuestions ${event.fieldSetId}");
-      List<Question> qs = await getDataBase<QuestionsDao>().fetchQuestionsWithChoices(event.fieldSetId);
-      //ApiResult<List<Question>> apiResult = ApiResult.success(data: qs);
-      /*await getDataBase<QuestionsDao>().fetchQuestionsWithChoices(event.fieldSetId).then((value) async {
-        print("we already have an result success");
-        return ApiResult.success(data: value);
-      });*/
+    print("we already have an is called loadifngQuestions ${event.fieldSetId}");
+    List<Question> qs = await getDataBase<QuestionsDao>().fetchQuestionsWithChoices(event.fieldSetId);
 
-      yield* ApiResult.success(data: qs).when(success: (List<Question>? data) async* {
-        print("we already have an result success 2");
-        yield ResultState.data(data: data);
-      }, failure: (NetworkExceptions? error) async* {
-        yield ResultState.error(error: error);
-      });
-    }
+    await ApiResult.success(data: qs).when(
+      success: (data) async => emit(ResultState.data(data: data)),
+      failure: (error) async => emit(ResultState.error(error: error)),
+    );
   }
 }

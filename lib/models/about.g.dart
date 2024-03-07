@@ -56,15 +56,13 @@ class AboutAdapter extends TypeAdapter<About> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-About _$AboutFromJson(Map<String, dynamic> json) {
-  return About(
-    id: json['id'] as int?,
-    title: json['title'] as String?,
-    titleAr: json['title_ar'] as String?,
-    description: json['description'] as String?,
-    descriptionAr: json['description_ar'] as String,
-  );
-}
+About _$AboutFromJson(Map<String, dynamic> json) => About(
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      titleAr: json['title_ar'] as String?,
+      description: json['description'] as String?,
+      descriptionAr: json['description_ar'] as String,
+    );
 
 Map<String, dynamic> _$AboutToJson(About instance) => <String, dynamic>{
       'id': instance.id,

@@ -22,13 +22,13 @@ class LocalUserAdapter extends TypeAdapter<LocalUser> {
       fields[3] as String?,
       fields[5] as String?,
       fields[0] as int?,
-    );
+    )..groups = (fields[6] as List?)?.cast<UserGroup>();
   }
 
   @override
   void write(BinaryWriter writer, LocalUser obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.user)
       ..writeByte(2)
@@ -38,7 +38,9 @@ class LocalUserAdapter extends TypeAdapter<LocalUser> {
       ..writeByte(4)
       ..write(obj.password)
       ..writeByte(5)
-      ..write(obj.organization);
+      ..write(obj.organization)
+      ..writeByte(6)
+      ..write(obj.groups);
   }
 
   @override
@@ -56,15 +58,15 @@ class LocalUserAdapter extends TypeAdapter<LocalUser> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-LocalUser _$LocalUserFromJson(Map<String, dynamic> json) {
-  return LocalUser(
-    json['username'] as String?,
-    json['password'] as String?,
-    json['email'] as String?,
-    json['organization'] as String?,
-    json['user'] as int?,
-  );
-}
+LocalUser _$LocalUserFromJson(Map<String, dynamic> json) => LocalUser(
+      json['username'] as String?,
+      json['password'] as String?,
+      json['email'] as String?,
+      json['organization'] as String?,
+      json['user'] as int?,
+    )..groups = (json['groups'] as List<dynamic>?)
+        ?.map((e) => UserGroup.fromJson(e as Map<String, dynamic>))
+        .toList();
 
 Map<String, dynamic> _$LocalUserToJson(LocalUser instance) => <String, dynamic>{
       'user': instance.user,
@@ -72,4 +74,5 @@ Map<String, dynamic> _$LocalUserToJson(LocalUser instance) => <String, dynamic>{
       'email': instance.email,
       'password': instance.password,
       'organization': instance.organization,
+      'groups': instance.groups,
     };

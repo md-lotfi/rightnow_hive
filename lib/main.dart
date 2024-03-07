@@ -27,6 +27,7 @@ import 'package:rightnow/components/dependency_injection.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/FCMNotificationsDao.dart';
 import 'package:rightnow/fieldsets.dart';
+import 'package:rightnow/firebase_options.dart';
 import 'package:rightnow/forms.dart';
 import 'package:rightnow/hash_page.dart';
 import 'package:rightnow/history_screen.dart';
@@ -62,6 +63,7 @@ import 'package:rightnow/models/reclamations.dart';
 import 'package:rightnow/models/sub_category.dart';
 import 'package:rightnow/models/super_category.dart';
 import 'package:rightnow/models/tag.dart';
+import 'package:rightnow/models/user_group.dart';
 import 'package:rightnow/models/user_notification.dart';
 import 'package:rightnow/profile.dart';
 import 'package:rightnow/questions_screen.dart';
@@ -123,7 +125,9 @@ Color shadeColor(Color color, double factor) => Color.fromRGBO(shadeValue(color.
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   HttpOverrides.global = new MyHttpOverrides();
   if (!kIsWeb) {
@@ -152,6 +156,7 @@ Future<void> main() async {
   }
   Hive.registerAdapter(SuperCategoryAdapter());
   Hive.registerAdapter(LocalUserAdapter());
+  Hive.registerAdapter(UserGroupAdapter());
   Hive.registerAdapter(ProfileAdapter());
   Hive.registerAdapter(AllowedTypesAdapter());
   Hive.registerAdapter(AnswerAdapter());
@@ -338,7 +343,7 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Colors.grey.shade50,
             primaryIconTheme: Theme.of(context).primaryIconTheme.copyWith(color: COLOR_PRIMARY),
             primaryTextTheme: TextTheme(
-              headline6: TextStyle(color: COLOR_PRIMARY),
+              titleLarge: TextStyle(color: COLOR_PRIMARY),
             ),
             popupMenuTheme: PopupMenuThemeData(
               color: Colors.white,
@@ -350,12 +355,12 @@ class MyApp extends StatelessWidget {
                   fontSize: 20,
                 ),
                 padding: EdgeInsets.all(15.0),
-                primary: Colors.white,
+                foregroundColor: Colors.white,
                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
                 backgroundColor: generateMaterialColor(Palette.primary),
               ),
             ),
-            accentColor: Colors.white,
+            colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white),
             radioTheme: RadioThemeData(
               fillColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
@@ -363,6 +368,9 @@ class MyApp extends StatelessWidget {
                   return Colors.grey; // Use the component's default.
                 },
               ),
+            ),
+            inputDecorationTheme: InputDecorationTheme(
+              border: OutlineInputBorder(),
             ),
             checkboxTheme: CheckboxThemeData(
               checkColor: MaterialStateProperty.resolveWith<Color>(

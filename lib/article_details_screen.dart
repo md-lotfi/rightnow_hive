@@ -29,7 +29,9 @@ class ArticleDetailsPage extends StatelessWidget {
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
       appBar: AppBar(
         title: Text(""),
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white, // COLOR_PRIMARY,
+        backgroundColor: COLOR_PRIMARY, // Colors.transpa
         elevation: 0,
         actions: [
           IconButton(
@@ -71,11 +73,17 @@ class ArticleDetailsPage extends StatelessWidget {
                     textAlign: TextAlign.justify,
                   ),
                 },
-                onLinkTap: (url, _, __, ___) async {
+                onLinkTap: (url, attributes, element) async {
+                  print("Opening $url...");
+                  var uri = Uri.parse(url ?? "");
+                  bool b = await canLaunchUrl(uri);
+                  if (b) launchUrl(uri);
+                },
+                /*onLinkTap: (url, _, __, ___) async {
                   print("Opening $url...");
                   bool b = await canLaunch(url ?? "");
                   if (b) launch(url ?? "");
-                },
+                },*/
               ),
             )
           ],

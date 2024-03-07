@@ -67,7 +67,7 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
       }
     } else if (widget.responseSet != null) {
       log("response time is ${widget.responseSet?.value}");
-      _currentDateTime = Jiffy(widget.responseSet?.value, 'HH:mm:ss').dateTime; //DateTime.parse(widget.responseSet?.value);
+      _currentDateTime = Jiffy.parse(widget.responseSet?.value, pattern: 'HH:mm:ss').dateTime; //DateTime.parse(widget.responseSet?.value);
     }
     super.initState();
   }
@@ -76,7 +76,7 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
     DateFormat df = DateFormat('HH:mm:ss');
     //DateTime? minTime = df.parse(question?.minValue ?? "00:00:00");
     //DateTime? maxTime = df.parse(question?.maxValue ?? "00:00:00");
-    String t = Jiffy(_currentDateTime).format("HH:mm");
+    String t = Jiffy.parseFromDateTime(_currentDateTime).format(pattern: "HH:mm");
     _selectedDateTime = _currentDateTime;
     print("selected time: $t");
     onSelectedValue!(
@@ -117,7 +117,7 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
                           onDateTimeChanged: (DateTime dateTime) {
                             _hasDate = true;
                             _selectedDateTime = dateTime;
-                            String t = Jiffy(dateTime).format("HH:mm");
+                            String t = Jiffy.parseFromDateTime(dateTime).format(pattern: "HH:mm");
                             print("selected time: $t");
                             onSelectedValue!(
                               Answer.fill(question!.id, question!.fieldSet, t, null, t, transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
@@ -136,7 +136,7 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
                   return null;
                 },
               ),
-            if (widget.viewOnly) fieldData(Jiffy(_currentDateTime).format("HH:mm")),
+            if (widget.viewOnly) fieldData(Jiffy.parseFromDateTime(_currentDateTime).format(pattern: "HH:mm")),
             Divider(),
           ],
         ),

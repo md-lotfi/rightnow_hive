@@ -45,7 +45,7 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
               if (snapshot.hasData) {
                 return Center(
                   child: RawScrollbar(
-                      isAlwaysShown: true,
+                      trackVisibility: true,
                       thumbColor: COLOR_PRIMARY,
                       child: RefreshIndicator(
                         child: Container(
@@ -111,9 +111,9 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(Jiffy(data.createdAt).yMMMd, textAlign: TextAlign.center),
+            Text(Jiffy.parse(data.createdAt ?? Jiffy.now().format()).yMMMd, textAlign: TextAlign.center),
             Text(
-              Jiffy(data.createdAt).Hm,
+              Jiffy.parse(data.createdAt ?? Jiffy.now().format()).Hm,
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.blue),
             ),

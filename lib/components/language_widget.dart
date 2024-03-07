@@ -18,10 +18,10 @@ class _LanguageWidgetState extends State<LanguageWidget> {
       onTap: () async {
         if (context.locale.languageCode == LANGUAGE_FR) {
           context.setLocale(Locale(LANGUAGE_AR, LANGUAGE_AR_CODE));
-          await Jiffy.locale(LANGUAGE_AR);
+          await Jiffy.setLocale(LANGUAGE_AR);
         } else {
           context.setLocale(Locale(LANGUAGE_FR));
-          await Jiffy.locale(LANGUAGE_FR);
+          await Jiffy.setLocale(LANGUAGE_FR);
         }
         setState(() {});
       },

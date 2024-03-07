@@ -62,19 +62,18 @@ class ResponseEntryAdapter extends TypeAdapter<ResponseEntry> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ResponseEntry _$ResponseEntryFromJson(Map<String, dynamic> json) {
-  return ResponseEntry(
-    id: json['id'] as int?,
-    uploadedAt: json['uploaded_at'] as String?,
-    completedAt: json['completed_at'] as String?,
-    deviceId: json['device_id'] as String?,
-    form: json['form'] as int?,
-    user: json['user'] as int?,
-    responseSet: (json['response_set'] as List<dynamic>?)
-        ?.map((e) => ResponseSet.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+ResponseEntry _$ResponseEntryFromJson(Map<String, dynamic> json) =>
+    ResponseEntry(
+      id: json['id'] as int?,
+      uploadedAt: json['uploaded_at'] as String?,
+      completedAt: json['completed_at'] as String?,
+      deviceId: json['device_id'] as String?,
+      form: json['form'] as int?,
+      user: json['user'] as int?,
+      responseSet: (json['response_set'] as List<dynamic>?)
+          ?.map((e) => ResponseSet.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$ResponseEntryToJson(ResponseEntry instance) =>
     <String, dynamic>{

@@ -7,14 +7,13 @@ import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/language_widget.dart';
 import 'package:rightnow/data_privacy_page.dart';
-import 'package:rightnow/preventive1.dart';
 import 'package:rightnow/user_consent_screen.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
-      await Jiffy.locale(context.locale.languageCode);
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Jiffy.setLocale(context.locale.languageCode);
     });
     return Scaffold(
       body: Container(
@@ -87,7 +86,7 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: TextButton(
-                      style: TextButton.styleFrom(backgroundColor: Color(0xFFFe3b108)),
+                      //style: TextButton.styleFrom(backgroundColor: Color(0xFFFe3b108)),
                       onPressed: () async {
                         redirectUser(() {
                           /*Navigator.push(

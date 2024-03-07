@@ -47,12 +47,10 @@ class BloodGroupAdapter extends TypeAdapter<BloodGroup> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-BloodGroup _$BloodGroupFromJson(Map<String, dynamic> json) {
-  return BloodGroup(
-    json['id'] as int?,
-    json['name'] as String?,
-  );
-}
+BloodGroup _$BloodGroupFromJson(Map<String, dynamic> json) => BloodGroup(
+      json['id'] as int?,
+      json['name'] as String?,
+    );
 
 Map<String, dynamic> _$BloodGroupToJson(BloodGroup instance) =>
     <String, dynamic>{

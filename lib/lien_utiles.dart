@@ -23,6 +23,8 @@ class LienUtiles extends StatelessWidget {
       appBar: AppBar(
         title: Text("Lien Utiles".tr()),
         centerTitle: true,
+        foregroundColor: Colors.white, // COLOR_PRIMARY,
+        backgroundColor: COLOR_PRIMARY, // Colors.transpa
         elevation: 1,
       ),
       bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
@@ -30,7 +32,7 @@ class LienUtiles extends StatelessWidget {
       body: Container(
         margin: EdgeInsets.all(20),
         child: RawScrollbar(
-          isAlwaysShown: true,
+          trackVisibility: true,
           thumbColor: COLOR_PRIMARY,
           child: ScrollTouchWidget(
             listChild: FutureBuilder<List<Link>>(
@@ -86,9 +88,10 @@ class LienUtiles extends StatelessWidget {
         return ListTile(
           onTap: () async {
             if (links[index].linkUrl == null) return;
-            bool c = await canLaunch(links[index].linkUrl!);
+            var uri = Uri.parse(links[index].linkUrl!);
+            bool c = await canLaunchUrl(uri);
             if (c)
-              launch(links[index].linkUrl!);
+              launchUrl(uri);
             else
               log("cannot launch ${links[index].linkUrl}");
           },

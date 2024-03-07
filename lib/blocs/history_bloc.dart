@@ -22,9 +22,28 @@ import 'package:rightnow/states/result_state.dart';
 class HistoryBloc extends Bloc<HistoryEvent, ResultState<List<AnswerHolder>>> {
   final ApiRepository apiRepository = ApiRepository();
 
-  HistoryBloc() : super(Idle());
+  HistoryBloc() : super(const Idle()) {
+    //on<Distract>((event, emit) => emit(const ResultState.idle()));
+    on<LoadHistory>((event, emit) async => await _mapEventToState(event, emit));
+  }
 
-  @override
+  Future<void> _mapEventToState(LoadHistory event, Emitter<ResultState<List<AnswerHolder>>> emit) async {
+    emit(const ResultState.loading());
+
+    ApiResult<List<AnswerHolder>> apiResult = await getDataBase<AnswerHolderDao>().loadAllAnswerHolders().then((value) {
+      print("loading answerHolders success " + value.toString());
+      return ApiResult.success(data: value);
+    });
+
+    await apiResult.when(
+      success: (data) async => emit(ResultState.data(data: data)),
+      failure: (error) async => emit(ResultState.error(error: error)),
+    );
+  }
+
+  //HistoryBloc() : super(Idle());
+
+  /*@override
   Stream<ResultState<List<AnswerHolder>>> mapEventToState(HistoryEvent event) async* {
     yield ResultState.loading();
 
@@ -39,5 +58,5 @@ class HistoryBloc extends Bloc<HistoryEvent, ResultState<List<AnswerHolder>>> {
         yield ResultState.error(error: error);
       });
     }
-  }
+  }*/
 }

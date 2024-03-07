@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-//import 'package:open_file_safe/open_file_safe.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -279,27 +279,34 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
   }
 
   Future<void> downloadOrOpenAttahment() async {
-    /*ApiRepository api = ApiRepository();
+    ApiRepository api = ApiRepository();
     if (_attachment != null) {
+      log("trying to open file ${_attachment!.path}");
       await OpenFile.open(_attachment!.path);
     } else {
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        api.download(widget.question!.file!, (count, progress) {}).then((file) {
-          _attachment = file;
-          if (_attachment != null) {
-            log("openeing file ${_attachment!.path}, answerHolder ${answerHolder?.toJson()}");
-            /*setState(() {
+      //var r = await Permission.storage.request();
+      //log("read storage ${_attachment!.path}");
+      //if (r.isGranted) {
+      //var r = await Permission.manageExternalStorage.request();
+      api.download(widget.question!.file!, (count, progress) {}).then((file) async {
+        _attachment = file;
+        if (_attachment != null) {
+          log("openeing file ${_attachment!.path}, answerHolder ${answerHolder?.toJson()}");
+          /*setState(() {
             _fileState = 1;
           });*/
-            OpenFile.open(_attachment!.path).then((result) async {
-              log("file open result opened");
-            });
-            setState(() {});
-          }
-        });
-      }
+          //var x = await Permission.storage.request();
+          OpenFile.open(_attachment!.path).then((result) async {
+            log("file open result opened, ${result.message}");
+          });
+          setState(() {});
+        }
+      });
+      /*} else if (r == PermissionStatus.permanentlyDenied) {
+        openAppSettings();
+      }*/
     }
-    return;*/
+    return;
   }
 
   Future<FilePickerResult?> selectFile() async {

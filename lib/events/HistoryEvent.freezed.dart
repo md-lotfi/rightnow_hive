@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'HistoryEvent.dart';
 
@@ -10,25 +12,18 @@ part of 'HistoryEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$HistoryEventTearOff {
-  const _$HistoryEventTearOff();
-
-  LoadHistory loadHistory() {
-    return const LoadHistory();
-  }
-}
-
-/// @nodoc
-const $HistoryEvent = _$HistoryEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$HistoryEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loadHistory,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadHistory,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -43,6 +38,11 @@ mixin _$HistoryEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadHistory value)? loadHistory,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadHistory value)? loadHistory,
     required TResult orElse(),
@@ -54,40 +54,40 @@ mixin _$HistoryEvent {
 abstract class $HistoryEventCopyWith<$Res> {
   factory $HistoryEventCopyWith(
           HistoryEvent value, $Res Function(HistoryEvent) then) =
-      _$HistoryEventCopyWithImpl<$Res>;
+      _$HistoryEventCopyWithImpl<$Res, HistoryEvent>;
 }
 
 /// @nodoc
-class _$HistoryEventCopyWithImpl<$Res> implements $HistoryEventCopyWith<$Res> {
+class _$HistoryEventCopyWithImpl<$Res, $Val extends HistoryEvent>
+    implements $HistoryEventCopyWith<$Res> {
   _$HistoryEventCopyWithImpl(this._value, this._then);
 
-  final HistoryEvent _value;
   // ignore: unused_field
-  final $Res Function(HistoryEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $LoadHistoryCopyWith<$Res> {
-  factory $LoadHistoryCopyWith(
-          LoadHistory value, $Res Function(LoadHistory) then) =
-      _$LoadHistoryCopyWithImpl<$Res>;
+abstract class _$$LoadHistoryImplCopyWith<$Res> {
+  factory _$$LoadHistoryImplCopyWith(
+          _$LoadHistoryImpl value, $Res Function(_$LoadHistoryImpl) then) =
+      __$$LoadHistoryImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$LoadHistoryCopyWithImpl<$Res> extends _$HistoryEventCopyWithImpl<$Res>
-    implements $LoadHistoryCopyWith<$Res> {
-  _$LoadHistoryCopyWithImpl(
-      LoadHistory _value, $Res Function(LoadHistory) _then)
-      : super(_value, (v) => _then(v as LoadHistory));
-
-  @override
-  LoadHistory get _value => super._value as LoadHistory;
+class __$$LoadHistoryImplCopyWithImpl<$Res>
+    extends _$HistoryEventCopyWithImpl<$Res, _$LoadHistoryImpl>
+    implements _$$LoadHistoryImplCopyWith<$Res> {
+  __$$LoadHistoryImplCopyWithImpl(
+      _$LoadHistoryImpl _value, $Res Function(_$LoadHistoryImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$LoadHistory with DiagnosticableTreeMixin implements LoadHistory {
-  const _$LoadHistory();
+class _$LoadHistoryImpl with DiagnosticableTreeMixin implements LoadHistory {
+  const _$LoadHistoryImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -97,12 +97,13 @@ class _$LoadHistory with DiagnosticableTreeMixin implements LoadHistory {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'HistoryEvent.loadHistory'));
+    properties.add(DiagnosticsProperty('type', 'HistoryEvent.loadHistory'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is LoadHistory);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$LoadHistoryImpl);
   }
 
   @override
@@ -114,6 +115,14 @@ class _$LoadHistory with DiagnosticableTreeMixin implements LoadHistory {
     required TResult Function() loadHistory,
   }) {
     return loadHistory();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loadHistory,
+  }) {
+    return loadHistory?.call();
   }
 
   @override
@@ -138,6 +147,14 @@ class _$LoadHistory with DiagnosticableTreeMixin implements LoadHistory {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadHistory value)? loadHistory,
+  }) {
+    return loadHistory?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadHistory value)? loadHistory,
     required TResult orElse(),
@@ -150,5 +167,5 @@ class _$LoadHistory with DiagnosticableTreeMixin implements LoadHistory {
 }
 
 abstract class LoadHistory implements HistoryEvent {
-  const factory LoadHistory() = _$LoadHistory;
+  const factory LoadHistory() = _$LoadHistoryImpl;
 }

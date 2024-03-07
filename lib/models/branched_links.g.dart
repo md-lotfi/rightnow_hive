@@ -62,17 +62,16 @@ class BranchedLinksAdapter extends TypeAdapter<BranchedLinks> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-BranchedLinks _$BranchedLinksFromJson(Map<String, dynamic> json) {
-  return BranchedLinks(
-    json['id'] as int?,
-    json['condition'] as String?,
-    json['is_active'] as bool?,
-    json['polymorphic_ctype'] as int?,
-    json['dependant_question'] as int?,
-    json['branch_question'] as int?,
-    json['questionId'] as int?,
-  );
-}
+BranchedLinks _$BranchedLinksFromJson(Map<String, dynamic> json) =>
+    BranchedLinks(
+      json['id'] as int?,
+      json['condition'] as String?,
+      json['is_active'] as bool?,
+      json['polymorphic_ctype'] as int?,
+      json['dependant_question'] as int?,
+      json['branch_question'] as int?,
+      json['questionId'] as int?,
+    );
 
 Map<String, dynamic> _$BranchedLinksToJson(BranchedLinks instance) =>
     <String, dynamic>{

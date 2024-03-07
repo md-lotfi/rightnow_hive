@@ -55,7 +55,7 @@ class _QuestionsValidateDialogState extends State<QuestionsValidateDialog> {
                 children: [
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: FlatButton(
+                    child: TextButton(
                         onPressed: () {
                           widget.onButtonClicked(1);
                           Navigator.of(context).pop();
@@ -67,7 +67,7 @@ class _QuestionsValidateDialogState extends State<QuestionsValidateDialog> {
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
-                    child: FlatButton(
+                    child: TextButton(
                         onPressed: () {
                           widget.onButtonClicked(-1);
                           Navigator.of(context).pop();

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:microphone/microphone.dart';
+//import 'package:microphone/microphone.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 
@@ -39,7 +39,7 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
 
   double progress = 0;
   FlutterSoundPlayer? _myPlayer = FlutterSoundPlayer();
-  MicrophoneRecorder? _microphoneRecorder = MicrophoneRecorder()..init();
+  //MicrophoneRecorder? _microphoneRecorder = MicrophoneRecorder()..init();
   bool _mRecorderIsInited = false;
   bool _mPlayerIsInited = false;
   String? recordPath;
@@ -69,7 +69,7 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
       }
     }
 
-    _myPlayer?.openAudioSession().then((value) {
+    _myPlayer?.openPlayer().then((value) {
       setState(() {
         _mPlayerIsInited = true;
         _mRecorderIsInited = true;
@@ -81,16 +81,16 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
   @override
   void dispose() {
     // Be careful : you must `close` the audio session when you have finished with it.
-    _microphoneRecorder?.dispose();
-    _microphoneRecorder = null;
-    _myPlayer?.closeAudioSession();
+    //_microphoneRecorder?.dispose();
+    //_microphoneRecorder = null;
+    _myPlayer?.closePlayer();
     _myPlayer = null;
     super.dispose();
   }
 
   Future<void> _record(FormFieldState<bool>? state) async {
     if (_mRecorderIsInited) {
-      _microphoneRecorder?.start();
+      //_microphoneRecorder?.start();
       _isRecording = true;
       setState(() {});
     }
@@ -98,10 +98,10 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
 
   Future<void> _stopRecorder() async {
     if (_isRecording) {
-      await _microphoneRecorder?.stop();
+      //await _microphoneRecorder?.stop();
       _isRecording = false;
-      recordPath = _microphoneRecorder?.value.recording?.url;
-      _recordedBytes = await _microphoneRecorder?.toBytes();
+      //recordPath = _microphoneRecorder?.value.recording?.url;
+      //_recordedBytes = await _microphoneRecorder?.toBytes();
       log("saved record url is $recordPath, ${_recordedBytes?.length}");
       if (_recordedBytes != null) {
         await FileSaver.set(FileSaver(name: recordPath!, path: "", file: _recordedBytes!, questionId: widget.question!.id!, answerHolderId: widget.answerHolder!.id!));

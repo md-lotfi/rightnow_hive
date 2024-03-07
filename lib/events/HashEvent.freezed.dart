@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'HashEvent.dart';
 
@@ -10,33 +12,7 @@ part of 'HashEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$HashEventTearOff {
-  const _$HashEventTearOff();
-
-  GetCategoriesHash getCategoriesHash() {
-    return const GetCategoriesHash();
-  }
-
-  LoadCategories loadCategories(String currentHash) {
-    return LoadCategories(
-      currentHash,
-    );
-  }
-
-  RestoreCategories restoreCategories() {
-    return const RestoreCategories();
-  }
-
-  Distract distract() {
-    return const Distract();
-  }
-}
-
-/// @nodoc
-const $HashEvent = _$HashEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$HashEvent {
@@ -46,6 +22,14 @@ mixin _$HashEvent {
     required TResult Function(String currentHash) loadCategories,
     required TResult Function() restoreCategories,
     required TResult Function() distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getCategoriesHash,
+    TResult? Function(String currentHash)? loadCategories,
+    TResult? Function()? restoreCategories,
+    TResult? Function()? distract,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -66,6 +50,14 @@ mixin _$HashEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetCategoriesHash value)? getCategoriesHash,
+    TResult? Function(LoadCategories value)? loadCategories,
+    TResult? Function(RestoreCategories value)? restoreCategories,
+    TResult? Function(Distract value)? distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetCategoriesHash value)? getCategoriesHash,
     TResult Function(LoadCategories value)? loadCategories,
@@ -79,43 +71,42 @@ mixin _$HashEvent {
 /// @nodoc
 abstract class $HashEventCopyWith<$Res> {
   factory $HashEventCopyWith(HashEvent value, $Res Function(HashEvent) then) =
-      _$HashEventCopyWithImpl<$Res>;
+      _$HashEventCopyWithImpl<$Res, HashEvent>;
 }
 
 /// @nodoc
-class _$HashEventCopyWithImpl<$Res> implements $HashEventCopyWith<$Res> {
+class _$HashEventCopyWithImpl<$Res, $Val extends HashEvent>
+    implements $HashEventCopyWith<$Res> {
   _$HashEventCopyWithImpl(this._value, this._then);
 
-  final HashEvent _value;
   // ignore: unused_field
-  final $Res Function(HashEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $GetCategoriesHashCopyWith<$Res> {
-  factory $GetCategoriesHashCopyWith(
-          GetCategoriesHash value, $Res Function(GetCategoriesHash) then) =
-      _$GetCategoriesHashCopyWithImpl<$Res>;
+abstract class _$$GetCategoriesHashImplCopyWith<$Res> {
+  factory _$$GetCategoriesHashImplCopyWith(_$GetCategoriesHashImpl value,
+          $Res Function(_$GetCategoriesHashImpl) then) =
+      __$$GetCategoriesHashImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$GetCategoriesHashCopyWithImpl<$Res>
-    extends _$HashEventCopyWithImpl<$Res>
-    implements $GetCategoriesHashCopyWith<$Res> {
-  _$GetCategoriesHashCopyWithImpl(
-      GetCategoriesHash _value, $Res Function(GetCategoriesHash) _then)
-      : super(_value, (v) => _then(v as GetCategoriesHash));
-
-  @override
-  GetCategoriesHash get _value => super._value as GetCategoriesHash;
+class __$$GetCategoriesHashImplCopyWithImpl<$Res>
+    extends _$HashEventCopyWithImpl<$Res, _$GetCategoriesHashImpl>
+    implements _$$GetCategoriesHashImplCopyWith<$Res> {
+  __$$GetCategoriesHashImplCopyWithImpl(_$GetCategoriesHashImpl _value,
+      $Res Function(_$GetCategoriesHashImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$GetCategoriesHash
+class _$GetCategoriesHashImpl
     with DiagnosticableTreeMixin
     implements GetCategoriesHash {
-  const _$GetCategoriesHash();
+  const _$GetCategoriesHashImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -125,12 +116,13 @@ class _$GetCategoriesHash
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'HashEvent.getCategoriesHash'));
+    properties.add(DiagnosticsProperty('type', 'HashEvent.getCategoriesHash'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is GetCategoriesHash);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$GetCategoriesHashImpl);
   }
 
   @override
@@ -145,6 +137,17 @@ class _$GetCategoriesHash
     required TResult Function() distract,
   }) {
     return getCategoriesHash();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getCategoriesHash,
+    TResult? Function(String currentHash)? loadCategories,
+    TResult? Function()? restoreCategories,
+    TResult? Function()? distract,
+  }) {
+    return getCategoriesHash?.call();
   }
 
   @override
@@ -175,6 +178,17 @@ class _$GetCategoriesHash
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetCategoriesHash value)? getCategoriesHash,
+    TResult? Function(LoadCategories value)? loadCategories,
+    TResult? Function(RestoreCategories value)? restoreCategories,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return getCategoriesHash?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetCategoriesHash value)? getCategoriesHash,
     TResult Function(LoadCategories value)? loadCategories,
@@ -190,33 +204,33 @@ class _$GetCategoriesHash
 }
 
 abstract class GetCategoriesHash implements HashEvent {
-  const factory GetCategoriesHash() = _$GetCategoriesHash;
+  const factory GetCategoriesHash() = _$GetCategoriesHashImpl;
 }
 
 /// @nodoc
-abstract class $LoadCategoriesCopyWith<$Res> {
-  factory $LoadCategoriesCopyWith(
-          LoadCategories value, $Res Function(LoadCategories) then) =
-      _$LoadCategoriesCopyWithImpl<$Res>;
+abstract class _$$LoadCategoriesImplCopyWith<$Res> {
+  factory _$$LoadCategoriesImplCopyWith(_$LoadCategoriesImpl value,
+          $Res Function(_$LoadCategoriesImpl) then) =
+      __$$LoadCategoriesImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({String currentHash});
 }
 
 /// @nodoc
-class _$LoadCategoriesCopyWithImpl<$Res> extends _$HashEventCopyWithImpl<$Res>
-    implements $LoadCategoriesCopyWith<$Res> {
-  _$LoadCategoriesCopyWithImpl(
-      LoadCategories _value, $Res Function(LoadCategories) _then)
-      : super(_value, (v) => _then(v as LoadCategories));
+class __$$LoadCategoriesImplCopyWithImpl<$Res>
+    extends _$HashEventCopyWithImpl<$Res, _$LoadCategoriesImpl>
+    implements _$$LoadCategoriesImplCopyWith<$Res> {
+  __$$LoadCategoriesImplCopyWithImpl(
+      _$LoadCategoriesImpl _value, $Res Function(_$LoadCategoriesImpl) _then)
+      : super(_value, _then);
 
-  @override
-  LoadCategories get _value => super._value as LoadCategories;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? currentHash = freezed,
+    Object? currentHash = null,
   }) {
-    return _then(LoadCategories(
-      currentHash == freezed
+    return _then(_$LoadCategoriesImpl(
+      null == currentHash
           ? _value.currentHash
           : currentHash // ignore: cast_nullable_to_non_nullable
               as String,
@@ -226,8 +240,10 @@ class _$LoadCategoriesCopyWithImpl<$Res> extends _$HashEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadCategories with DiagnosticableTreeMixin implements LoadCategories {
-  const _$LoadCategories(this.currentHash);
+class _$LoadCategoriesImpl
+    with DiagnosticableTreeMixin
+    implements LoadCategories {
+  const _$LoadCategoriesImpl(this.currentHash);
 
   @override
   final String currentHash;
@@ -246,22 +262,23 @@ class _$LoadCategories with DiagnosticableTreeMixin implements LoadCategories {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is LoadCategories &&
+        (other.runtimeType == runtimeType &&
+            other is _$LoadCategoriesImpl &&
             (identical(other.currentHash, currentHash) ||
-                const DeepCollectionEquality()
-                    .equals(other.currentHash, currentHash)));
+                other.currentHash == currentHash));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(currentHash);
+  int get hashCode => Object.hash(runtimeType, currentHash);
 
   @JsonKey(ignore: true)
   @override
-  $LoadCategoriesCopyWith<LoadCategories> get copyWith =>
-      _$LoadCategoriesCopyWithImpl<LoadCategories>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$LoadCategoriesImplCopyWith<_$LoadCategoriesImpl> get copyWith =>
+      __$$LoadCategoriesImplCopyWithImpl<_$LoadCategoriesImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -272,6 +289,17 @@ class _$LoadCategories with DiagnosticableTreeMixin implements LoadCategories {
     required TResult Function() distract,
   }) {
     return loadCategories(currentHash);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getCategoriesHash,
+    TResult? Function(String currentHash)? loadCategories,
+    TResult? Function()? restoreCategories,
+    TResult? Function()? distract,
+  }) {
+    return loadCategories?.call(currentHash);
   }
 
   @override
@@ -302,6 +330,17 @@ class _$LoadCategories with DiagnosticableTreeMixin implements LoadCategories {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetCategoriesHash value)? getCategoriesHash,
+    TResult? Function(LoadCategories value)? loadCategories,
+    TResult? Function(RestoreCategories value)? restoreCategories,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return loadCategories?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetCategoriesHash value)? getCategoriesHash,
     TResult Function(LoadCategories value)? loadCategories,
@@ -317,39 +356,36 @@ class _$LoadCategories with DiagnosticableTreeMixin implements LoadCategories {
 }
 
 abstract class LoadCategories implements HashEvent {
-  const factory LoadCategories(String currentHash) = _$LoadCategories;
+  const factory LoadCategories(final String currentHash) = _$LoadCategoriesImpl;
 
-  String get currentHash => throw _privateConstructorUsedError;
+  String get currentHash;
   @JsonKey(ignore: true)
-  $LoadCategoriesCopyWith<LoadCategories> get copyWith =>
+  _$$LoadCategoriesImplCopyWith<_$LoadCategoriesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $RestoreCategoriesCopyWith<$Res> {
-  factory $RestoreCategoriesCopyWith(
-          RestoreCategories value, $Res Function(RestoreCategories) then) =
-      _$RestoreCategoriesCopyWithImpl<$Res>;
+abstract class _$$RestoreCategoriesImplCopyWith<$Res> {
+  factory _$$RestoreCategoriesImplCopyWith(_$RestoreCategoriesImpl value,
+          $Res Function(_$RestoreCategoriesImpl) then) =
+      __$$RestoreCategoriesImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$RestoreCategoriesCopyWithImpl<$Res>
-    extends _$HashEventCopyWithImpl<$Res>
-    implements $RestoreCategoriesCopyWith<$Res> {
-  _$RestoreCategoriesCopyWithImpl(
-      RestoreCategories _value, $Res Function(RestoreCategories) _then)
-      : super(_value, (v) => _then(v as RestoreCategories));
-
-  @override
-  RestoreCategories get _value => super._value as RestoreCategories;
+class __$$RestoreCategoriesImplCopyWithImpl<$Res>
+    extends _$HashEventCopyWithImpl<$Res, _$RestoreCategoriesImpl>
+    implements _$$RestoreCategoriesImplCopyWith<$Res> {
+  __$$RestoreCategoriesImplCopyWithImpl(_$RestoreCategoriesImpl _value,
+      $Res Function(_$RestoreCategoriesImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$RestoreCategories
+class _$RestoreCategoriesImpl
     with DiagnosticableTreeMixin
     implements RestoreCategories {
-  const _$RestoreCategories();
+  const _$RestoreCategoriesImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -359,12 +395,13 @@ class _$RestoreCategories
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'HashEvent.restoreCategories'));
+    properties.add(DiagnosticsProperty('type', 'HashEvent.restoreCategories'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is RestoreCategories);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$RestoreCategoriesImpl);
   }
 
   @override
@@ -379,6 +416,17 @@ class _$RestoreCategories
     required TResult Function() distract,
   }) {
     return restoreCategories();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getCategoriesHash,
+    TResult? Function(String currentHash)? loadCategories,
+    TResult? Function()? restoreCategories,
+    TResult? Function()? distract,
+  }) {
+    return restoreCategories?.call();
   }
 
   @override
@@ -409,6 +457,17 @@ class _$RestoreCategories
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetCategoriesHash value)? getCategoriesHash,
+    TResult? Function(LoadCategories value)? loadCategories,
+    TResult? Function(RestoreCategories value)? restoreCategories,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return restoreCategories?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetCategoriesHash value)? getCategoriesHash,
     TResult Function(LoadCategories value)? loadCategories,
@@ -424,29 +483,29 @@ class _$RestoreCategories
 }
 
 abstract class RestoreCategories implements HashEvent {
-  const factory RestoreCategories() = _$RestoreCategories;
+  const factory RestoreCategories() = _$RestoreCategoriesImpl;
 }
 
 /// @nodoc
-abstract class $DistractCopyWith<$Res> {
-  factory $DistractCopyWith(Distract value, $Res Function(Distract) then) =
-      _$DistractCopyWithImpl<$Res>;
+abstract class _$$DistractImplCopyWith<$Res> {
+  factory _$$DistractImplCopyWith(
+          _$DistractImpl value, $Res Function(_$DistractImpl) then) =
+      __$$DistractImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DistractCopyWithImpl<$Res> extends _$HashEventCopyWithImpl<$Res>
-    implements $DistractCopyWith<$Res> {
-  _$DistractCopyWithImpl(Distract _value, $Res Function(Distract) _then)
-      : super(_value, (v) => _then(v as Distract));
-
-  @override
-  Distract get _value => super._value as Distract;
+class __$$DistractImplCopyWithImpl<$Res>
+    extends _$HashEventCopyWithImpl<$Res, _$DistractImpl>
+    implements _$$DistractImplCopyWith<$Res> {
+  __$$DistractImplCopyWithImpl(
+      _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Distract with DiagnosticableTreeMixin implements Distract {
-  const _$Distract();
+class _$DistractImpl with DiagnosticableTreeMixin implements Distract {
+  const _$DistractImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -456,12 +515,13 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'HashEvent.distract'));
+    properties.add(DiagnosticsProperty('type', 'HashEvent.distract'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Distract);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DistractImpl);
   }
 
   @override
@@ -476,6 +536,17 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
     required TResult Function() distract,
   }) {
     return distract();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? getCategoriesHash,
+    TResult? Function(String currentHash)? loadCategories,
+    TResult? Function()? restoreCategories,
+    TResult? Function()? distract,
+  }) {
+    return distract?.call();
   }
 
   @override
@@ -506,6 +577,17 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(GetCategoriesHash value)? getCategoriesHash,
+    TResult? Function(LoadCategories value)? loadCategories,
+    TResult? Function(RestoreCategories value)? restoreCategories,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return distract?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(GetCategoriesHash value)? getCategoriesHash,
     TResult Function(LoadCategories value)? loadCategories,
@@ -521,5 +603,5 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 }
 
 abstract class Distract implements HashEvent {
-  const factory Distract() = _$Distract;
+  const factory Distract() = _$DistractImpl;
 }

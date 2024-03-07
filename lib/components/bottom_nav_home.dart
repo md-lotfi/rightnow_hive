@@ -1,4 +1,5 @@
 import 'package:rightnow/categories.dart';
+import 'package:rightnow/chat_page.dart';
 import 'package:rightnow/components/db_service.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/history_screen.dart';
@@ -8,13 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:rightnow/profile.dart';
 import 'package:rightnow/settings_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const int NAV_HOME = 0;
 const int NAV_HISTORY = 1;
 const int NAV_PROFILE = 2;
 const int NAV_SETTINGS = 3;
+const int NAV_CHAT = 4;
 
-enum NavState { NAV_HOME, NAV_HISTORY, NAV_PROFILE, NAV_SETTINGS }
+enum NavState { NAV_HOME, NAV_HISTORY, NAV_PROFILE, NAV_SETTINGS, NAV_CHAT }
 
 class HomeNavBarComp extends StatelessWidget {
   final NavState currentIndex;
@@ -63,6 +66,9 @@ class HomeNavBarComp extends StatelessWidget {
               ),
             );
             break;
+          case NAV_CHAT:
+            launch("https://tawk.to/startupdzsupport", forceWebView: true, enableJavaScript: true, enableDomStorage: true);
+            break;
         }
       },
       items: <BottomNavigationBarItem>[
@@ -85,6 +91,10 @@ class HomeNavBarComp extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: "Configuration".tr(),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat),
+          label: "Chat".tr(),
         ),
       ],
     );

@@ -68,19 +68,18 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserNotification _$UserNotificationFromJson(Map<String, dynamic> json) {
-  return UserNotification(
-    id: json['id'] as int?,
-    titleAr: json['title_ar'] as String?,
-    titleFr: json['title_fr'] as String?,
-    contentAr: json['content_ar'] as String?,
-    contentFr: json['content_fr'] as String?,
-    sender: json['sender'] as int?,
-    targeting: json['targeting'] as int?,
-    createdAt: json['created_at'] as String?,
-    viewed: json['viewed'] as int?,
-  );
-}
+UserNotification _$UserNotificationFromJson(Map<String, dynamic> json) =>
+    UserNotification(
+      id: json['id'] as int?,
+      titleAr: json['title_ar'] as String?,
+      titleFr: json['title_fr'] as String?,
+      contentAr: json['content_ar'] as String?,
+      contentFr: json['content_fr'] as String?,
+      sender: json['sender'] as int?,
+      targeting: json['targeting'] as int?,
+      createdAt: json['created_at'] as String?,
+      viewed: json['viewed'] as int?,
+    );
 
 Map<String, dynamic> _$UserNotificationToJson(UserNotification instance) =>
     <String, dynamic>{

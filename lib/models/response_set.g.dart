@@ -68,24 +68,22 @@ class ResponseSetAdapter extends TypeAdapter<ResponseSet> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ResponseSet _$ResponseSetFromJson(Map<String, dynamic> json) {
-  return ResponseSet(
-    id: json['id'] as int?,
-    value: json['value'],
-    entry: json['entry'] as Map<String, dynamic>?,
-    question: json['question'] as int?,
-    resourcetype: json['resourcetype'] as String?,
-    questionHist: json['question_hist'] == null
-        ? null
-        : ResponseQuestionHist.fromJson(
-            json['question_hist'] as Map<String, dynamic>),
-  )
-    ..type = ResponseSet._dynToString(json['type'])
-    ..url = json['url'] as String?
-    ..choiceValue = (json['choice_value'] as List<dynamic>?)
-        ?.map((e) => Choice.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+ResponseSet _$ResponseSetFromJson(Map<String, dynamic> json) => ResponseSet(
+      id: json['id'] as int?,
+      value: json['value'],
+      entry: json['entry'] as Map<String, dynamic>?,
+      question: json['question'] as int?,
+      resourcetype: json['resourcetype'] as String?,
+      questionHist: json['question_hist'] == null
+          ? null
+          : ResponseQuestionHist.fromJson(
+              json['question_hist'] as Map<String, dynamic>),
+    )
+      ..type = ResponseSet._dynToString(json['type'])
+      ..url = json['url'] as String?
+      ..choiceValue = (json['choice_value'] as List<dynamic>?)
+          ?.map((e) => Choice.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$ResponseSetToJson(ResponseSet instance) =>
     <String, dynamic>{

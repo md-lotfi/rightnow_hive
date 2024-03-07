@@ -53,7 +53,7 @@ class Question {
   List<Choice>? choices;
 
   int createdAtTimeStamp() {
-    return Jiffy(createdAt).unix();
+    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
   }
 
   @JsonKey(name: 'dependant_conditions')

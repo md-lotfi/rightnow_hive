@@ -10,7 +10,23 @@ import 'package:rightnow/states/result_state.dart';
 class ActualiteBloc extends Bloc<ActualiteEvent, ResultState<List<Actualite>>> {
   final ApiRepository apiRepository = ApiRepository();
 
-  ActualiteBloc() : super(Idle());
+  ActualiteBloc() : super(const Idle()) {
+    on<Distract>((event, emit) => emit(const ResultState.idle()));
+    on<GetActualite>((event, emit) async => await _mapEventToState(event, emit));
+  }
+
+  Future<void> _mapEventToState(GetActualite event, Emitter<ResultState<List<Actualite>>> emit) async {
+    emit(const ResultState.loading());
+
+    ApiResult<List<Actualite>> apiResult = await apiRepository.getActualite();
+
+    await apiResult.when(
+      success: (data) async => emit(ResultState.data(data: data)),
+      failure: (error) async => emit(ResultState.error(error: error)),
+    );
+  }
+
+  /*ActualiteBloc() : super(Idle());
 
   @override
   Stream<ResultState<List<Actualite>>> mapEventToState(ActualiteEvent event) async* {
@@ -25,5 +41,5 @@ class ActualiteBloc extends Bloc<ActualiteEvent, ResultState<List<Actualite>>> {
         yield ResultState.error(error: error);
       });
     }
-  }
+  }*/
 }

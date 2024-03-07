@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'SearchEvent.dart';
 
@@ -10,29 +12,19 @@ part of 'SearchEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$SearchEventTearOff {
-  const _$SearchEventTearOff();
-
-  Search search(String keyword) {
-    return Search(
-      keyword,
-    );
-  }
-}
-
-/// @nodoc
-const $SearchEvent = _$SearchEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$SearchEvent {
   String get keyword => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String keyword) search,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String keyword)? search,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -44,6 +36,11 @@ mixin _$SearchEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(Search value) search,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Search value)? search,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -62,54 +59,61 @@ mixin _$SearchEvent {
 abstract class $SearchEventCopyWith<$Res> {
   factory $SearchEventCopyWith(
           SearchEvent value, $Res Function(SearchEvent) then) =
-      _$SearchEventCopyWithImpl<$Res>;
+      _$SearchEventCopyWithImpl<$Res, SearchEvent>;
+  @useResult
   $Res call({String keyword});
 }
 
 /// @nodoc
-class _$SearchEventCopyWithImpl<$Res> implements $SearchEventCopyWith<$Res> {
+class _$SearchEventCopyWithImpl<$Res, $Val extends SearchEvent>
+    implements $SearchEventCopyWith<$Res> {
   _$SearchEventCopyWithImpl(this._value, this._then);
 
-  final SearchEvent _value;
   // ignore: unused_field
-  final $Res Function(SearchEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? keyword = freezed,
+    Object? keyword = null,
   }) {
     return _then(_value.copyWith(
-      keyword: keyword == freezed
+      keyword: null == keyword
           ? _value.keyword
           : keyword // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class $SearchCopyWith<$Res> implements $SearchEventCopyWith<$Res> {
-  factory $SearchCopyWith(Search value, $Res Function(Search) then) =
-      _$SearchCopyWithImpl<$Res>;
+abstract class _$$SearchImplCopyWith<$Res>
+    implements $SearchEventCopyWith<$Res> {
+  factory _$$SearchImplCopyWith(
+          _$SearchImpl value, $Res Function(_$SearchImpl) then) =
+      __$$SearchImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String keyword});
 }
 
 /// @nodoc
-class _$SearchCopyWithImpl<$Res> extends _$SearchEventCopyWithImpl<$Res>
-    implements $SearchCopyWith<$Res> {
-  _$SearchCopyWithImpl(Search _value, $Res Function(Search) _then)
-      : super(_value, (v) => _then(v as Search));
+class __$$SearchImplCopyWithImpl<$Res>
+    extends _$SearchEventCopyWithImpl<$Res, _$SearchImpl>
+    implements _$$SearchImplCopyWith<$Res> {
+  __$$SearchImplCopyWithImpl(
+      _$SearchImpl _value, $Res Function(_$SearchImpl) _then)
+      : super(_value, _then);
 
-  @override
-  Search get _value => super._value as Search;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? keyword = freezed,
+    Object? keyword = null,
   }) {
-    return _then(Search(
-      keyword == freezed
+    return _then(_$SearchImpl(
+      null == keyword
           ? _value.keyword
           : keyword // ignore: cast_nullable_to_non_nullable
               as String,
@@ -119,8 +123,8 @@ class _$SearchCopyWithImpl<$Res> extends _$SearchEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$Search with DiagnosticableTreeMixin implements Search {
-  const _$Search(this.keyword);
+class _$SearchImpl with DiagnosticableTreeMixin implements Search {
+  const _$SearchImpl(this.keyword);
 
   @override
   final String keyword;
@@ -139,21 +143,21 @@ class _$Search with DiagnosticableTreeMixin implements Search {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is Search &&
-            (identical(other.keyword, keyword) ||
-                const DeepCollectionEquality().equals(other.keyword, keyword)));
+        (other.runtimeType == runtimeType &&
+            other is _$SearchImpl &&
+            (identical(other.keyword, keyword) || other.keyword == keyword));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(keyword);
+  int get hashCode => Object.hash(runtimeType, keyword);
 
   @JsonKey(ignore: true)
   @override
-  $SearchCopyWith<Search> get copyWith =>
-      _$SearchCopyWithImpl<Search>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
+      __$$SearchImplCopyWithImpl<_$SearchImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -161,6 +165,14 @@ class _$Search with DiagnosticableTreeMixin implements Search {
     required TResult Function(String keyword) search,
   }) {
     return search(keyword);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String keyword)? search,
+  }) {
+    return search?.call(keyword);
   }
 
   @override
@@ -185,6 +197,14 @@ class _$Search with DiagnosticableTreeMixin implements Search {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(Search value)? search,
+  }) {
+    return search?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(Search value)? search,
     required TResult orElse(),
@@ -197,11 +217,12 @@ class _$Search with DiagnosticableTreeMixin implements Search {
 }
 
 abstract class Search implements SearchEvent {
-  const factory Search(String keyword) = _$Search;
+  const factory Search(final String keyword) = _$SearchImpl;
 
   @override
-  String get keyword => throw _privateConstructorUsedError;
+  String get keyword;
   @override
   @JsonKey(ignore: true)
-  $SearchCopyWith<Search> get copyWith => throw _privateConstructorUsedError;
+  _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

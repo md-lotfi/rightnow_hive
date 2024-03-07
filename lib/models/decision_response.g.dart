@@ -86,25 +86,24 @@ class DecisionResponseAdapter extends TypeAdapter<DecisionResponse> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-DecisionResponse _$DecisionResponseFromJson(Map<String, dynamic> json) {
-  return DecisionResponse(
-    id: json['id'] as int?,
-    title: json['title'] as String?,
-    text: json['text'] as String?,
-    image: json['image'] as String?,
-    url: json['url'] as String?,
-    sound: json['sound'] as String?,
-    textActive: json['text_active'] as bool?,
-    imageActive: json['image_active'] as bool?,
-    urlActive: json['url_active'] as bool?,
-    soundActive: json['sound_active'] as bool?,
-    defaultResponse: json['default'] as bool?,
-    algorithme: json['algorithme'] as int?,
-    answerHolderId: json['answerHolderId'] as int?,
-    textAr: json['text_ar'] as String?,
-    titleAr: json['title_ar'] as String?,
-  );
-}
+DecisionResponse _$DecisionResponseFromJson(Map<String, dynamic> json) =>
+    DecisionResponse(
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      text: json['text'] as String?,
+      image: json['image'] as String?,
+      url: json['url'] as String?,
+      sound: json['sound'] as String?,
+      textActive: json['text_active'] as bool?,
+      imageActive: json['image_active'] as bool?,
+      urlActive: json['url_active'] as bool?,
+      soundActive: json['sound_active'] as bool?,
+      defaultResponse: json['default'] as bool?,
+      algorithme: json['algorithme'] as int?,
+      answerHolderId: json['answerHolderId'] as int?,
+      textAr: json['text_ar'] as String?,
+      titleAr: json['title_ar'] as String?,
+    );
 
 Map<String, dynamic> _$DecisionResponseToJson(DecisionResponse instance) =>
     <String, dynamic>{

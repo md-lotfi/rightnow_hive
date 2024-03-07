@@ -6,11 +6,9 @@ part of 'user_logged.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-UserLogged _$UserLoggedFromJson(Map<String, dynamic> json) {
-  return UserLogged(
-    json['token'] as String,
-  );
-}
+UserLogged _$UserLoggedFromJson(Map<String, dynamic> json) => UserLogged(
+      json['token'] as String,
+    );
 
 Map<String, dynamic> _$UserLoggedToJson(UserLogged instance) =>
     <String, dynamic>{

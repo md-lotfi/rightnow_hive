@@ -59,16 +59,14 @@ class FormEntryAdapter extends TypeAdapter<FormEntry> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FormEntry _$FormEntryFromJson(Map<String, dynamic> json) {
-  return FormEntry(
-    id: json['id'] as int?,
-    form: json['form'] as int?,
-    user: json['user'] as int?,
-    uploadedAt: json['uploaded_at'] as String?,
-    completedAt: json['completed_at'] as String?,
-    deviceId: json['device_id'] as String?,
-  );
-}
+FormEntry _$FormEntryFromJson(Map<String, dynamic> json) => FormEntry(
+      id: json['id'] as int?,
+      form: json['form'] as int?,
+      user: json['user'] as int?,
+      uploadedAt: json['uploaded_at'] as String?,
+      completedAt: json['completed_at'] as String?,
+      deviceId: json['device_id'] as String?,
+    );
 
 Map<String, dynamic> _$FormEntryToJson(FormEntry instance) => <String, dynamic>{
       'id': instance.id,

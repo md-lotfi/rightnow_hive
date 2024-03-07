@@ -74,21 +74,20 @@ class BranchedConditionsAdapter extends TypeAdapter<BranchedConditions> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-BranchedConditions _$BranchedConditionsFromJson(Map<String, dynamic> json) {
-  return BranchedConditions(
-    json['id'] as int?,
-    json['condition'] as int?,
-    json['is_active'] as bool?,
-    json['polymorphic_ctype'] as int?,
-    json['dependant_question'] as int?,
-    json['branch_question'] as int?,
-    BranchedConditions._allToString(json['value']),
-    json['questionId'] as int?,
-    json['condition_name'] as String?,
-    json['preceded_by'] as int?,
-    (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList(),
-  );
-}
+BranchedConditions _$BranchedConditionsFromJson(Map<String, dynamic> json) =>
+    BranchedConditions(
+      json['id'] as int?,
+      json['condition'] as int?,
+      json['is_active'] as bool?,
+      json['polymorphic_ctype'] as int?,
+      json['dependant_question'] as int?,
+      json['branch_question'] as int?,
+      BranchedConditions._allToString(json['value']),
+      json['questionId'] as int?,
+      json['condition_name'] as String?,
+      json['preceded_by'] as int?,
+      (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList(),
+    );
 
 Map<String, dynamic> _$BranchedConditionsToJson(BranchedConditions instance) =>
     <String, dynamic>{

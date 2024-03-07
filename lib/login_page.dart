@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:rightnow/blocs/hash_bloc.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -114,7 +115,7 @@ class LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: Center(
         child: RawScrollbar(
-          isAlwaysShown: true,
+          trackVisibility: true,
           thumbColor: COLOR_PRIMARY,
           child: Container(
             margin: kIsWeb ? null : EdgeInsets.all(30),
@@ -192,7 +193,7 @@ class LoginPageState extends State<LoginPage> {
                         //shrinkWrap: true,
                         //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          /*Container(
+                          Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
                               "Organisation key".tr(),
@@ -206,8 +207,11 @@ class LoginPageState extends State<LoginPage> {
                               textAlign: TextAlign.start,
                               keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.characters,
+                              inputFormatters: [UpperCaseFormatter()],
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(),
                                 hintText: "xxxxxxx",
                                 suffixIcon: Icon(Icons.vpn_key_outlined),
                               ),
@@ -218,7 +222,7 @@ class LoginPageState extends State<LoginPage> {
                                 return null;
                               },
                             ),
-                          ),*/
+                          ),
                           Container(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -235,6 +239,8 @@ class LoginPageState extends State<LoginPage> {
                               textCapitalization: TextCapitalization.none,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(),
                                 hintText: "name@email.com".tr(),
                                 suffixIcon: Icon(Icons.mail_outline),
                               ),
@@ -272,6 +278,8 @@ class LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(),
+                                focusedBorder: OutlineInputBorder(),
                                 hintText: "Mot de passe".tr(),
                               ),
                               validator: (value) {
@@ -308,7 +316,7 @@ class LoginPageState extends State<LoginPage> {
                                     LocalUser.fill(
                                       username: _usernameController.text.toLowerCase().trim(),
                                       password: _passController.text,
-                                      organization: "STA399", //_organisationController.text,
+                                      organization: _organisationController.text,
                                     ),
                                   );
                                 }
@@ -338,5 +346,12 @@ class LoginPageState extends State<LoginPage> {
         ),
       ),
     ));
+  }
+}
+
+class UpperCaseFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    return newValue.copyWith(text: newValue.text.toUpperCase());
   }
 }

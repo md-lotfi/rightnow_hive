@@ -53,14 +53,12 @@ class OrganisationAdapter extends TypeAdapter<Organisation> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Organisation _$OrganisationFromJson(Map<String, dynamic> json) {
-  return Organisation(
-    orgKey: json['org_key'] as String?,
-    name: json['name'] as String?,
-    logo: json['logo'] as String?,
-    icon: json['icon'] as String?,
-  );
-}
+Organisation _$OrganisationFromJson(Map<String, dynamic> json) => Organisation(
+      orgKey: json['org_key'] as String?,
+      name: json['name'] as String?,
+      logo: json['logo'] as String?,
+      icon: json['icon'] as String?,
+    );
 
 Map<String, dynamic> _$OrganisationToJson(Organisation instance) =>
     <String, dynamic>{

@@ -313,7 +313,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     right: 0,
                     bottom: 80,
                     child: RawScrollbar(
-                      isAlwaysShown: true,
+                      trackVisibility: true,
                       thumbColor: COLOR_PRIMARY,
                       child: Form(
                         key: _formKey,
@@ -431,7 +431,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
           viewState[q.id!] = _initViewVisibility(q);
           print("setting question visisbility AAAA ${q.id} as state ${viewState[q.id!]}");
         } else
-          print("quetion state " + Jiffy(q.createdAt).jms);
+          print("quetion state " + Jiffy.parse(q.createdAt ?? Jiffy.now().format()).jms);
         switch (q.resourcetype) {
           case SCANNER_QUESTION:
             return Visibility(

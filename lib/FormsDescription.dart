@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/fieldsets.dart';
 import 'package:rightnow/models/FormFields.dart';
@@ -20,70 +22,85 @@ class FormsDescription extends StatelessWidget {
 
   Widget setUp(BuildContext context) {
     return ScreenViewerWidget(
-        page: Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Description".tr()),
-      ),
-      body: Center(
-          child: Stack(
-        children: [
-          Positioned.fill(
-            //top: 0,
-            left: 0,
-            right: 0,
-            bottom: 100,
-            child: Center(
-              child: _content(context),
-            ),
+      page: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            title: Text("Description".tr()),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _btn(context),
-          ),
-        ],
-      )),
-    ));
+          body: Stack(
+            children: [
+              Positioned.fill(
+                //top: 0,
+                left: 0,
+                right: 0,
+                bottom: 100,
+                child: Center(
+                  child: _content(context),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: _btn(context),
+              ),
+            ],
+          )),
+    );
   }
 
   Widget _content(BuildContext context) {
     return ListView(
-      shrinkWrap: true,
+      shrinkWrap: false,
       children: [
-        Center(
-          child: Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 20, bottom: 5, left: 20),
-                  child: Text(
-                    form.getName(context.locale.languageCode),
-                    style: TextStyle(color: COLOR_PRIMARY, fontSize: 22),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
-                  child: Text(
-                    form.getDescription(context.locale.languageCode),
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ),
-                /*SingleChildScrollView(
-                        padding: EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
-                        child: Text(
-                          form.getDescription(context.locale.languageCode),
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 5),
+                padding: EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+                decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            form.getName(context.locale.languageCode),
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: COLOR_PRIMARY, fontSize: 22),
+                          ),
                         ),
-                      ),*/
-              ],
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            form.getDescription(context.locale.languageCode),
+                            textAlign: TextAlign.start,
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                        ),
+                      ],
+                    ),
+                    /*Container(
+                      padding: EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+                      child: Text(
+                        form.getDescription(context.locale.languageCode),
+                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
+                    ),*/
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ],
     );
@@ -93,11 +110,11 @@ class FormsDescription extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Container(),
+          child: SizedBox(),
           flex: 3,
         ),
         Expanded(
-          child: Container(
+          child: Padding(
             padding: EdgeInsets.only(top: 10, bottom: 10),
             child: TextButton(
               onPressed: () {
@@ -117,7 +134,7 @@ class FormsDescription extends StatelessWidget {
           flex: 4,
         ),
         Expanded(
-          child: Container(),
+          child: SizedBox(),
           flex: 3,
         ),
       ],

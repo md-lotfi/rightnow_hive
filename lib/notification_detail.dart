@@ -59,11 +59,17 @@ class NotificationDetail extends StatelessWidget {
                         textAlign: TextAlign.justify,
                       ),
                     },
-                    onLinkTap: (url, _, __, ___) async {
+                    onLinkTap: (url, attributes, element) async {
+                      print("Opening $url...");
+                      var uri = Uri.parse(url ?? "");
+                      bool b = await canLaunchUrl(uri);
+                      if (b) launchUrl(uri);
+                    },
+                    /*onLinkTap: (url, _, __, ___) async {
                       print("Opening $url...");
                       bool b = await canLaunch(url ?? "");
                       if (b) launch(url ?? "");
-                    },
+                    },*/
                   ),
                   //Text(notification.getContent(context.locale.languageCode)),
                 ),

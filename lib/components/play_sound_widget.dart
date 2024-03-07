@@ -18,7 +18,7 @@ class _PlaySoundWidgetState extends State<PlaySoundWidget> {
 
   @override
   void initState() {
-    _mPlayer?.openAudioSession().then((value) {
+    _mPlayer?.openPlayer().then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -30,7 +30,7 @@ class _PlaySoundWidgetState extends State<PlaySoundWidget> {
   void dispose() {
     stopPlayer();
     // Be careful : you must `close` the audio session when you have finished with it.
-    _mPlayer?.closeAudioSession();
+    _mPlayer?.closePlayer();
     _mPlayer = null;
 
     super.dispose();

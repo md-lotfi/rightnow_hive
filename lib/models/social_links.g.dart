@@ -56,15 +56,13 @@ class SocialLinksAdapter extends TypeAdapter<SocialLinks> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SocialLinks _$SocialLinksFromJson(Map<String, dynamic> json) {
-  return SocialLinks(
-    id: json['id'] as int?,
-    name: json['name'] as String?,
-    nameAr: json['name_ar'] as String?,
-    icon: json['icon'] as String?,
-    link: json['link'] as String?,
-  );
-}
+SocialLinks _$SocialLinksFromJson(Map<String, dynamic> json) => SocialLinks(
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      nameAr: json['name_ar'] as String?,
+      icon: json['icon'] as String?,
+      link: json['link'] as String?,
+    );
 
 Map<String, dynamic> _$SocialLinksToJson(SocialLinks instance) =>
     <String, dynamic>{

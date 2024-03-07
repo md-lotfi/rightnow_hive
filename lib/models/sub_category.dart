@@ -50,7 +50,7 @@ class SubCategory {
   }
 
   int createdAtTimeStamp() {
-    return Jiffy(createdAt).unix();
+    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
   }
 
   SubCategory(this.id, this.nameAr, this.nameFr, this.icon, this.createdAt);

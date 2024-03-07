@@ -62,7 +62,7 @@ class AnswerHolder extends HiveObject {
   DecisionResponse? decisionResponse;
 
   int createdAtTimeStamp() {
-    return Jiffy(createdAt).unix();
+    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
   }
 
   AnswerHolder({this.id, this.formId, this.uploaded, this.state, this.closed, this.formTitle, this.completedAt, this.createdAt, this.deviceId, this.webArchived});

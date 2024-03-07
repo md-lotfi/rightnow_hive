@@ -15,69 +15,62 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.36+25
+version: 2.0.44+25
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: '>=3.1.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  #floor: ^1.1.0
-  dio: ^4.0.0
-  freezed: ^0.14.1+3
-  flutter_bloc: ^7.0.0
+  dio: ^5.4.0
+  freezed: ^2.4.7
+  flutter_bloc: ^8.1.3
   json_annotation: ^4.0.1
-  file_picker: ^4.0.0
-  #firebase_core: ^1.5.0
-  firebase_core: ^1.10.2
-  #firebase_crashlytics: ^2.0.2
-  #firebase_crashlytics: ^2.4.0
-  #firebase_analytics: ^8.0.3
-  #firebase_auth: ^1.1.3
-  firebase_auth: ^3.3.0
-  flutter_search_bar: ^3.0.0-dev.1
-  #date_util: ^0.1.4
+  file_picker: ^6.1.1
+  firebase_core: ^2.25.4
+  firebase_auth: ^4.17.4
+  #flutter_search_bar: ^3.0.0-dev.1
   uuid: ^3.0.4
-  #to_string: ^1.2.1
   collection: ^1.15.0
-  image_picker: ^0.7.4
+  image_picker: ^1.0.7
   shared_preferences: ^2.0.5
   flutter_screenutil: ^5.0.0+2
   google_maps_flutter: ^2.0.3
-  location: ^4.1.1
-  material_design_icons_flutter: ^5.0.5955-rc.1
-  screenshot: ^1.0.0-nullsafety.1
+  location: ^5.0.3
+  material_design_icons_flutter: ^7.0.7296
+  screenshot: ^2.1.0
   flutter_simple_dependency_injection: ^2.0.0
   easy_localization: ^3.0.0
-  jiffy: ^4.1.0
+  jiffy: ^6.2.1
   change_app_package_name: ^1.0.0
   video_player: ^2.1.6
   url_launcher: ^6.0.9
-  #firebase_messaging: ^10.0.5
-  youtube_player_flutter: ^8.0.0
-  simple_url_preview: ^3.0.1
-  flutter_native_splash: ^1.2.1
+  youtube_player_flutter: ^8.1.2
+  #simple_url_preview: ^3.0.1
+  flutter_native_splash: ^2.3.10
   rflutter_alert: ^2.0.4
-  image_cropper: ^1.4.0
-  flutter_sound: ^8.3.9
+  image_cropper: ^5.0.1
+  flutter_sound: ^9.2.13
   flutter_phoenix: ^1.0.0
-  scrollable_positioned_list: ^0.2.0-nullsafety.0
+  scrollable_positioned_list: ^0.3.8
   provider: ^6.0.0
   hive: ^2.0.4
-  hive_generator: ^1.1.0
+  hive_generator: ^2.0.1
   hive_flutter: ^1.1.0
-  #firebase_messaging: ^10.0.7
-  firebase_messaging: ^11.2.0
-  badges: ^2.0.1
-  signature: ^4.1.1
+  firebase_messaging: ^14.7.15
+  badges: ^3.1.2
+  signature: ^5.4.1
   path_provider: ^2.0.4
-  permission_handler: ^8.1.6
-  flutter_html: ^2.1.5
+  permission_handler: ^11.2.1
+  flutter_html: ^3.0.0-beta.2
   flutter_barcode_scanner: ^2.0.0
-  file_saver: ^0.0.10
-  microphone: ^0.1.0
-  google_maps_flutter_web: ^0.3.2+1
+  file_saver: ^0.2.9
+  #microphone: ^0.1.0
+  google_maps_flutter_web: ^0.5.4+3
+  open_file: ^3.3.2
+  #open_file:
+  #  path: ../packages/open_file
   #open_file_safe: ^3.2.3
 
 #dependency_overrides:
@@ -87,6 +80,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 #  cupertino_icons: ^1.0.0
 
+#dependency_overrides:
+#  flutter_inappwebview:
+#    git:
+#      url: https://github.com/rshrc/flutter_inappwebview
+#      ref: master
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -94,9 +93,9 @@ dev_dependencies:
     #path: ../packages/translation_generator
   #floor_generator: ^1.1.0
   build_runner: ^2.0.2
-  json_serializable: ^4.1.1
+  json_serializable: ^6.7.1
   #to_string_generator: ^1.2.1
-  flutter_launcher_icons: ^0.9.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter_icons:
   android: "launcher_icon"

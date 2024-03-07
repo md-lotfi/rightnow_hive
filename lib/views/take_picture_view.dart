@@ -83,7 +83,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   _TakePictureWidgetState(this.question, this.onSelectedValue, this.answerHolder);
 
   String _getPictureFilename() {
-    return "PICTURE_FILENAME_${widget.question?.id}_${Jiffy().unix()}";
+    return "PICTURE_FILENAME_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}";
   }
 
   Future<void> _save(String? fPath, FormFieldState<int> state) async {
@@ -124,7 +124,7 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   Future getImage(FormFieldState<int> state) async {
     progress = 0;
     log("getting image ....");
-    final pickedFile = await picker.getImage(source: ImageSource.camera, maxWidth: 1080, imageQuality: 75);
+    final pickedFile = await picker.pickImage(source: ImageSource.camera, maxWidth: 1080, imageQuality: 75);
     if (pickedFile != null) {
       log("picked file is ....");
       _image = await pickedFile.readAsBytes();

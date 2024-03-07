@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'FieldsetsEvent.dart';
 
@@ -10,29 +12,19 @@ part of 'FieldsetsEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$FieldsetsEventTearOff {
-  const _$FieldsetsEventTearOff();
-
-  LoadLocalFieldSets loadLocalFieldSets(int formId) {
-    return LoadLocalFieldSets(
-      formId,
-    );
-  }
-}
-
-/// @nodoc
-const $FieldsetsEvent = _$FieldsetsEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$FieldsetsEvent {
   int get formId => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int formId) loadLocalFieldSets,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int formId)? loadLocalFieldSets,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -44,6 +36,11 @@ mixin _$FieldsetsEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LoadLocalFieldSets value) loadLocalFieldSets,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadLocalFieldSets value)? loadLocalFieldSets,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -62,59 +59,61 @@ mixin _$FieldsetsEvent {
 abstract class $FieldsetsEventCopyWith<$Res> {
   factory $FieldsetsEventCopyWith(
           FieldsetsEvent value, $Res Function(FieldsetsEvent) then) =
-      _$FieldsetsEventCopyWithImpl<$Res>;
+      _$FieldsetsEventCopyWithImpl<$Res, FieldsetsEvent>;
+  @useResult
   $Res call({int formId});
 }
 
 /// @nodoc
-class _$FieldsetsEventCopyWithImpl<$Res>
+class _$FieldsetsEventCopyWithImpl<$Res, $Val extends FieldsetsEvent>
     implements $FieldsetsEventCopyWith<$Res> {
   _$FieldsetsEventCopyWithImpl(this._value, this._then);
 
-  final FieldsetsEvent _value;
   // ignore: unused_field
-  final $Res Function(FieldsetsEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? formId = freezed,
+    Object? formId = null,
   }) {
     return _then(_value.copyWith(
-      formId: formId == freezed
+      formId: null == formId
           ? _value.formId
           : formId // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class $LoadLocalFieldSetsCopyWith<$Res>
+abstract class _$$LoadLocalFieldSetsImplCopyWith<$Res>
     implements $FieldsetsEventCopyWith<$Res> {
-  factory $LoadLocalFieldSetsCopyWith(
-          LoadLocalFieldSets value, $Res Function(LoadLocalFieldSets) then) =
-      _$LoadLocalFieldSetsCopyWithImpl<$Res>;
+  factory _$$LoadLocalFieldSetsImplCopyWith(_$LoadLocalFieldSetsImpl value,
+          $Res Function(_$LoadLocalFieldSetsImpl) then) =
+      __$$LoadLocalFieldSetsImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({int formId});
 }
 
 /// @nodoc
-class _$LoadLocalFieldSetsCopyWithImpl<$Res>
-    extends _$FieldsetsEventCopyWithImpl<$Res>
-    implements $LoadLocalFieldSetsCopyWith<$Res> {
-  _$LoadLocalFieldSetsCopyWithImpl(
-      LoadLocalFieldSets _value, $Res Function(LoadLocalFieldSets) _then)
-      : super(_value, (v) => _then(v as LoadLocalFieldSets));
+class __$$LoadLocalFieldSetsImplCopyWithImpl<$Res>
+    extends _$FieldsetsEventCopyWithImpl<$Res, _$LoadLocalFieldSetsImpl>
+    implements _$$LoadLocalFieldSetsImplCopyWith<$Res> {
+  __$$LoadLocalFieldSetsImplCopyWithImpl(_$LoadLocalFieldSetsImpl _value,
+      $Res Function(_$LoadLocalFieldSetsImpl) _then)
+      : super(_value, _then);
 
-  @override
-  LoadLocalFieldSets get _value => super._value as LoadLocalFieldSets;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? formId = freezed,
+    Object? formId = null,
   }) {
-    return _then(LoadLocalFieldSets(
-      formId == freezed
+    return _then(_$LoadLocalFieldSetsImpl(
+      null == formId
           ? _value.formId
           : formId // ignore: cast_nullable_to_non_nullable
               as int,
@@ -124,10 +123,10 @@ class _$LoadLocalFieldSetsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadLocalFieldSets
+class _$LoadLocalFieldSetsImpl
     with DiagnosticableTreeMixin
     implements LoadLocalFieldSets {
-  const _$LoadLocalFieldSets(this.formId);
+  const _$LoadLocalFieldSetsImpl(this.formId);
 
   @override
   final int formId;
@@ -146,21 +145,22 @@ class _$LoadLocalFieldSets
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is LoadLocalFieldSets &&
-            (identical(other.formId, formId) ||
-                const DeepCollectionEquality().equals(other.formId, formId)));
+        (other.runtimeType == runtimeType &&
+            other is _$LoadLocalFieldSetsImpl &&
+            (identical(other.formId, formId) || other.formId == formId));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(formId);
+  int get hashCode => Object.hash(runtimeType, formId);
 
   @JsonKey(ignore: true)
   @override
-  $LoadLocalFieldSetsCopyWith<LoadLocalFieldSets> get copyWith =>
-      _$LoadLocalFieldSetsCopyWithImpl<LoadLocalFieldSets>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$LoadLocalFieldSetsImplCopyWith<_$LoadLocalFieldSetsImpl> get copyWith =>
+      __$$LoadLocalFieldSetsImplCopyWithImpl<_$LoadLocalFieldSetsImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -168,6 +168,14 @@ class _$LoadLocalFieldSets
     required TResult Function(int formId) loadLocalFieldSets,
   }) {
     return loadLocalFieldSets(formId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int formId)? loadLocalFieldSets,
+  }) {
+    return loadLocalFieldSets?.call(formId);
   }
 
   @override
@@ -192,6 +200,14 @@ class _$LoadLocalFieldSets
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadLocalFieldSets value)? loadLocalFieldSets,
+  }) {
+    return loadLocalFieldSets?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadLocalFieldSets value)? loadLocalFieldSets,
     required TResult orElse(),
@@ -204,12 +220,12 @@ class _$LoadLocalFieldSets
 }
 
 abstract class LoadLocalFieldSets implements FieldsetsEvent {
-  const factory LoadLocalFieldSets(int formId) = _$LoadLocalFieldSets;
+  const factory LoadLocalFieldSets(final int formId) = _$LoadLocalFieldSetsImpl;
 
   @override
-  int get formId => throw _privateConstructorUsedError;
+  int get formId;
   @override
   @JsonKey(ignore: true)
-  $LoadLocalFieldSetsCopyWith<LoadLocalFieldSets> get copyWith =>
+  _$$LoadLocalFieldSetsImplCopyWith<_$LoadLocalFieldSetsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

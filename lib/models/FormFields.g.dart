@@ -95,37 +95,35 @@ class FormFieldsAdapter extends TypeAdapter<FormFields> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FormFields _$FormFieldsFromJson(Map<String, dynamic> json) {
-  return FormFields(
-    nameAr: json['name_ar'] as String?,
-    name: json['name'] as String?,
-    id: json['id'] as int?,
-    description: json['description'] as String?,
-    descriptionAr: json['description_ar'] as String?,
-    createdAt: json['created_at'] as String?,
-    isActive: json['is_active'] as bool?,
-    activeUntil: json['active_until'] as String?,
-    successPageTitle: json['success_page_title'] as String?,
-    successPageBody: json['success_page_body'] as String?,
-    icon: json['icon'] as String?,
-    isAnonymous: json['is_anonymous'] as bool?,
-    formInactivePageTitle: json['form_inactive_page_title'] as String?,
-    formInactivePageBody: json['form_inactive_page_body'] as String?,
-  )
-    ..fieldSets = (json['field_sets'] as List<dynamic>?)
-        ?.map((e) => FieldSet.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..category = json['category'] == null
-        ? null
-        : Category.fromJson(json['category'] as Map<String, dynamic>)
-    ..subCategory = json['sub_category'] == null
-        ? null
-        : SubCategory.fromJson(json['sub_category'] as Map<String, dynamic>)
-    ..superCategory = json['super_category'] == null
-        ? null
-        : SuperCategory.fromJson(
-            json['super_category'] as Map<String, dynamic>);
-}
+FormFields _$FormFieldsFromJson(Map<String, dynamic> json) => FormFields(
+      nameAr: json['name_ar'] as String?,
+      name: json['name'] as String?,
+      id: json['id'] as int?,
+      description: json['description'] as String?,
+      descriptionAr: json['description_ar'] as String?,
+      createdAt: json['created_at'] as String?,
+      isActive: json['is_active'] as bool?,
+      activeUntil: json['active_until'] as String?,
+      successPageTitle: json['success_page_title'] as String?,
+      successPageBody: json['success_page_body'] as String?,
+      icon: json['icon'] as String?,
+      isAnonymous: json['is_anonymous'] as bool?,
+      formInactivePageTitle: json['form_inactive_page_title'] as String?,
+      formInactivePageBody: json['form_inactive_page_body'] as String?,
+    )
+      ..fieldSets = (json['field_sets'] as List<dynamic>?)
+          ?.map((e) => FieldSet.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..category = json['category'] == null
+          ? null
+          : Category.fromJson(json['category'] as Map<String, dynamic>)
+      ..subCategory = json['sub_category'] == null
+          ? null
+          : SubCategory.fromJson(json['sub_category'] as Map<String, dynamic>)
+      ..superCategory = json['super_category'] == null
+          ? null
+          : SuperCategory.fromJson(
+              json['super_category'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$FormFieldsToJson(FormFields instance) =>
     <String, dynamic>{

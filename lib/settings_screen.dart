@@ -12,6 +12,7 @@ import 'package:rightnow/db/FormFieldsDao.dart';
 import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/db/UserNotificationsDao.dart';
 import 'package:rightnow/login_page.dart';
+import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -31,7 +32,8 @@ class _SettingsPageState extends State<SettingsPage> {
       page: Scaffold(
         bottomNavigationBar: HomeNavBarComp(NavState.NAV_SETTINGS),
         appBar: AppBar(
-          backgroundColor: Colors.grey.shade50,
+          foregroundColor: Colors.white, // COLOR_PRIMARY,
+          backgroundColor: COLOR_PRIMARY,
           title: Text("Paramètres".tr()),
           centerTitle: true,
           elevation: 0,
@@ -90,21 +92,28 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 Divider(),
                 ListTile(
-                  onTap: () async {
-                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                    await prefs.clear();
-                    await getDataBase<LocalUserDao>().removeUser();
-                    await getDataBase<FormFieldsDao>().setForms([], null);
-                    await getDataBase<AnswerHolderDao>().deleteAnswerHolderAll();
-                    await getDataBase<FCMNotificationsDao>().removeAllFCMNotification();
-                    await getDataBase<UserNotificationsDao>().removeAllUserNotification();
-                    Phoenix.rebirth(context);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginPage(),
-                      ),
-                    );
+                  onTap: () {
+                    showLoaderDialog(context, title: "Login out in progress ...".tr());
+                    ApiRepository api = ApiRepository();
+                    api.logout().then((value) async {
+                      //if (value) {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+                      await getDataBase<LocalUserDao>().removeUser();
+                      await getDataBase<FormFieldsDao>().setForms([], null);
+                      await getDataBase<AnswerHolderDao>().deleteAnswerHolderAll();
+                      await getDataBase<FCMNotificationsDao>().removeAllFCMNotification();
+                      await getDataBase<UserNotificationsDao>().removeAllUserNotification();
+                      Phoenix.rebirth(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+
+                      Navigator.pop(context);
+                    });
                   },
                   title: Text(
                     "Déconnexion".tr(),

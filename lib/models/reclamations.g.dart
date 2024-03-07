@@ -74,23 +74,21 @@ class ReclamationsAdapter extends TypeAdapter<Reclamations> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Reclamations _$ReclamationsFromJson(Map<String, dynamic> json) {
-  return Reclamations(
-    id: json['id'] as int?,
-    state: json['state'] == null
-        ? null
-        : ReclamationState.fromJson(json['state'] as Map<String, dynamic>),
-    formEntry: json['form_entry'] == null
-        ? null
-        : FormEntry.fromJson(json['form_entry'] as Map<String, dynamic>),
-    user: json['user'] as int?,
-    createdAt: json['created_at'] as String?,
-    form: json['form'] as String?,
-    formAr: json['form_ar'] as String?,
-    formDescription: json['form_description'] as String?,
-    formDescriptionAr: json['form_description_ar'] as String?,
-  );
-}
+Reclamations _$ReclamationsFromJson(Map<String, dynamic> json) => Reclamations(
+      id: json['id'] as int?,
+      state: json['state'] == null
+          ? null
+          : ReclamationState.fromJson(json['state'] as Map<String, dynamic>),
+      formEntry: json['form_entry'] == null
+          ? null
+          : FormEntry.fromJson(json['form_entry'] as Map<String, dynamic>),
+      user: json['user'] as int?,
+      createdAt: json['created_at'] as String?,
+      form: json['form'] as String?,
+      formAr: json['form_ar'] as String?,
+      formDescription: json['form_description'] as String?,
+      formDescriptionAr: json['form_description_ar'] as String?,
+    );
 
 Map<String, dynamic> _$ReclamationsToJson(Reclamations instance) =>
     <String, dynamic>{

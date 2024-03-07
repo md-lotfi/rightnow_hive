@@ -1,4 +1,4 @@
-import 'dart:developer';
+/*import 'dart:developer';
 
 import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/blocs/reclamations_bloc.dart';
@@ -411,3 +411,4 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 }
+*/

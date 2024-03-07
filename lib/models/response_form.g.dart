@@ -50,15 +50,13 @@ class ResponseFormAdapter extends TypeAdapter<ResponseForm> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ResponseForm _$ResponseFormFromJson(Map<String, dynamic> json) {
-  return ResponseForm(
-    name: json['name'] as String?,
-    nameAr: json['name_ar'] as String?,
-    entries: (json['entries'] as List<dynamic>?)
-        ?.map((e) => ResponseEntry.fromJson(e as Map<String, dynamic>))
-        .toList(),
-  );
-}
+ResponseForm _$ResponseFormFromJson(Map<String, dynamic> json) => ResponseForm(
+      name: json['name'] as String?,
+      nameAr: json['name_ar'] as String?,
+      entries: (json['entries'] as List<dynamic>?)
+          ?.map((e) => ResponseEntry.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$ResponseFormToJson(ResponseForm instance) =>
     <String, dynamic>{

@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'QuestionsEvent.dart';
 
@@ -10,25 +12,7 @@ part of 'QuestionsEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$QuestionsEventTearOff {
-  const _$QuestionsEventTearOff();
-
-  LoadQuestions loadQuestions(int fieldSetId) {
-    return LoadQuestions(
-      fieldSetId,
-    );
-  }
-
-  Distract distract() {
-    return const Distract();
-  }
-}
-
-/// @nodoc
-const $QuestionsEvent = _$QuestionsEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$QuestionsEvent {
@@ -36,6 +20,12 @@ mixin _$QuestionsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(int fieldSetId) loadQuestions,
     required TResult Function() distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int fieldSetId)? loadQuestions,
+    TResult? Function()? distract,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -52,6 +42,12 @@ mixin _$QuestionsEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadQuestions value)? loadQuestions,
+    TResult? Function(Distract value)? distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadQuestions value)? loadQuestions,
     TResult Function(Distract value)? distract,
@@ -64,44 +60,44 @@ mixin _$QuestionsEvent {
 abstract class $QuestionsEventCopyWith<$Res> {
   factory $QuestionsEventCopyWith(
           QuestionsEvent value, $Res Function(QuestionsEvent) then) =
-      _$QuestionsEventCopyWithImpl<$Res>;
+      _$QuestionsEventCopyWithImpl<$Res, QuestionsEvent>;
 }
 
 /// @nodoc
-class _$QuestionsEventCopyWithImpl<$Res>
+class _$QuestionsEventCopyWithImpl<$Res, $Val extends QuestionsEvent>
     implements $QuestionsEventCopyWith<$Res> {
   _$QuestionsEventCopyWithImpl(this._value, this._then);
 
-  final QuestionsEvent _value;
   // ignore: unused_field
-  final $Res Function(QuestionsEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $LoadQuestionsCopyWith<$Res> {
-  factory $LoadQuestionsCopyWith(
-          LoadQuestions value, $Res Function(LoadQuestions) then) =
-      _$LoadQuestionsCopyWithImpl<$Res>;
+abstract class _$$LoadQuestionsImplCopyWith<$Res> {
+  factory _$$LoadQuestionsImplCopyWith(
+          _$LoadQuestionsImpl value, $Res Function(_$LoadQuestionsImpl) then) =
+      __$$LoadQuestionsImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({int fieldSetId});
 }
 
 /// @nodoc
-class _$LoadQuestionsCopyWithImpl<$Res>
-    extends _$QuestionsEventCopyWithImpl<$Res>
-    implements $LoadQuestionsCopyWith<$Res> {
-  _$LoadQuestionsCopyWithImpl(
-      LoadQuestions _value, $Res Function(LoadQuestions) _then)
-      : super(_value, (v) => _then(v as LoadQuestions));
+class __$$LoadQuestionsImplCopyWithImpl<$Res>
+    extends _$QuestionsEventCopyWithImpl<$Res, _$LoadQuestionsImpl>
+    implements _$$LoadQuestionsImplCopyWith<$Res> {
+  __$$LoadQuestionsImplCopyWithImpl(
+      _$LoadQuestionsImpl _value, $Res Function(_$LoadQuestionsImpl) _then)
+      : super(_value, _then);
 
-  @override
-  LoadQuestions get _value => super._value as LoadQuestions;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fieldSetId = freezed,
+    Object? fieldSetId = null,
   }) {
-    return _then(LoadQuestions(
-      fieldSetId == freezed
+    return _then(_$LoadQuestionsImpl(
+      null == fieldSetId
           ? _value.fieldSetId
           : fieldSetId // ignore: cast_nullable_to_non_nullable
               as int,
@@ -111,8 +107,10 @@ class _$LoadQuestionsCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadQuestions with DiagnosticableTreeMixin implements LoadQuestions {
-  const _$LoadQuestions(this.fieldSetId);
+class _$LoadQuestionsImpl
+    with DiagnosticableTreeMixin
+    implements LoadQuestions {
+  const _$LoadQuestionsImpl(this.fieldSetId);
 
   @override
   final int fieldSetId;
@@ -131,22 +129,22 @@ class _$LoadQuestions with DiagnosticableTreeMixin implements LoadQuestions {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is LoadQuestions &&
+        (other.runtimeType == runtimeType &&
+            other is _$LoadQuestionsImpl &&
             (identical(other.fieldSetId, fieldSetId) ||
-                const DeepCollectionEquality()
-                    .equals(other.fieldSetId, fieldSetId)));
+                other.fieldSetId == fieldSetId));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(fieldSetId);
+  int get hashCode => Object.hash(runtimeType, fieldSetId);
 
   @JsonKey(ignore: true)
   @override
-  $LoadQuestionsCopyWith<LoadQuestions> get copyWith =>
-      _$LoadQuestionsCopyWithImpl<LoadQuestions>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$LoadQuestionsImplCopyWith<_$LoadQuestionsImpl> get copyWith =>
+      __$$LoadQuestionsImplCopyWithImpl<_$LoadQuestionsImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -155,6 +153,15 @@ class _$LoadQuestions with DiagnosticableTreeMixin implements LoadQuestions {
     required TResult Function() distract,
   }) {
     return loadQuestions(fieldSetId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int fieldSetId)? loadQuestions,
+    TResult? Function()? distract,
+  }) {
+    return loadQuestions?.call(fieldSetId);
   }
 
   @override
@@ -181,6 +188,15 @@ class _$LoadQuestions with DiagnosticableTreeMixin implements LoadQuestions {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadQuestions value)? loadQuestions,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return loadQuestions?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadQuestions value)? loadQuestions,
     TResult Function(Distract value)? distract,
@@ -194,34 +210,34 @@ class _$LoadQuestions with DiagnosticableTreeMixin implements LoadQuestions {
 }
 
 abstract class LoadQuestions implements QuestionsEvent {
-  const factory LoadQuestions(int fieldSetId) = _$LoadQuestions;
+  const factory LoadQuestions(final int fieldSetId) = _$LoadQuestionsImpl;
 
-  int get fieldSetId => throw _privateConstructorUsedError;
+  int get fieldSetId;
   @JsonKey(ignore: true)
-  $LoadQuestionsCopyWith<LoadQuestions> get copyWith =>
+  _$$LoadQuestionsImplCopyWith<_$LoadQuestionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DistractCopyWith<$Res> {
-  factory $DistractCopyWith(Distract value, $Res Function(Distract) then) =
-      _$DistractCopyWithImpl<$Res>;
+abstract class _$$DistractImplCopyWith<$Res> {
+  factory _$$DistractImplCopyWith(
+          _$DistractImpl value, $Res Function(_$DistractImpl) then) =
+      __$$DistractImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DistractCopyWithImpl<$Res> extends _$QuestionsEventCopyWithImpl<$Res>
-    implements $DistractCopyWith<$Res> {
-  _$DistractCopyWithImpl(Distract _value, $Res Function(Distract) _then)
-      : super(_value, (v) => _then(v as Distract));
-
-  @override
-  Distract get _value => super._value as Distract;
+class __$$DistractImplCopyWithImpl<$Res>
+    extends _$QuestionsEventCopyWithImpl<$Res, _$DistractImpl>
+    implements _$$DistractImplCopyWith<$Res> {
+  __$$DistractImplCopyWithImpl(
+      _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Distract with DiagnosticableTreeMixin implements Distract {
-  const _$Distract();
+class _$DistractImpl with DiagnosticableTreeMixin implements Distract {
+  const _$DistractImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -231,12 +247,13 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'QuestionsEvent.distract'));
+    properties.add(DiagnosticsProperty('type', 'QuestionsEvent.distract'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Distract);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DistractImpl);
   }
 
   @override
@@ -249,6 +266,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
     required TResult Function() distract,
   }) {
     return distract();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(int fieldSetId)? loadQuestions,
+    TResult? Function()? distract,
+  }) {
+    return distract?.call();
   }
 
   @override
@@ -275,6 +301,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LoadQuestions value)? loadQuestions,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return distract?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LoadQuestions value)? loadQuestions,
     TResult Function(Distract value)? distract,
@@ -288,5 +323,5 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 }
 
 abstract class Distract implements QuestionsEvent {
-  const factory Distract() = _$Distract;
+  const factory Distract() = _$DistractImpl;
 }

@@ -53,14 +53,12 @@ class ProvinceAdapter extends TypeAdapter<Province> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Province _$ProvinceFromJson(Map<String, dynamic> json) {
-  return Province(
-    json['id'] as String,
-    json['code'] as String,
-    json['name_fr'] as String,
-    json['name_ar'] as String,
-  );
-}
+Province _$ProvinceFromJson(Map<String, dynamic> json) => Province(
+      json['id'] as String,
+      json['code'] as String,
+      json['name_fr'] as String,
+      json['name_ar'] as String,
+    );
 
 Map<String, dynamic> _$ProvinceToJson(Province instance) => <String, dynamic>{
       'id': instance.id,

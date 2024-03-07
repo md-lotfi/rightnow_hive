@@ -53,14 +53,14 @@ class ResponseQuestionHistAdapter extends TypeAdapter<ResponseQuestionHist> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-ResponseQuestionHist _$ResponseQuestionHistFromJson(Map<String, dynamic> json) {
-  return ResponseQuestionHist(
-    id: json['id'] as int?,
-    label: json['label'] as String?,
-    labaleAr: json['label_ar'] as String?,
-    fieldSet: json['field_set'] as int?,
-  );
-}
+ResponseQuestionHist _$ResponseQuestionHistFromJson(
+        Map<String, dynamic> json) =>
+    ResponseQuestionHist(
+      id: json['id'] as int?,
+      label: json['label'] as String?,
+      labaleAr: json['label_ar'] as String?,
+      fieldSet: json['field_set'] as int?,
+    );
 
 Map<String, dynamic> _$ResponseQuestionHistToJson(
         ResponseQuestionHist instance) =>

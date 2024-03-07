@@ -1,4 +1,4 @@
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -50,7 +50,7 @@ class _FCMCounterWidgetState extends State<FCMCounterWidget> {
         future: getDataBase<FCMNotificationsDao>().fetchFCMNotification(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return Badge(
+            return badges.Badge(
               badgeContent: Text(
                 (snapshot.data?.length ?? 0).toString(),
                 style: TextStyle(

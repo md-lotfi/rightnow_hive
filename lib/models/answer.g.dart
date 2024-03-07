@@ -67,24 +67,22 @@ class AnswerAdapter extends TypeAdapter<Answer> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Answer _$AnswerFromJson(Map<String, dynamic> json) {
-  return Answer(
-    json['id'] as int?,
-    json['question_id'] as int?,
-    json['fieldSetId'] as int?,
-    json['value'] as String?,
-    json['valueExtra'] as String?,
-    json['createdAt'] as String?,
-    json['resourcetype'] as String?,
-    json['answerHolderId'] as int?,
-  )
-    ..fileKey = json['fileKey'] as int?
-    ..choices =
-        (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList()
-    ..multiSelectAnswer = (json['multiSelectAnswer'] as List<dynamic>?)
-        ?.map((e) => MultiSelectAnswer.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+Answer _$AnswerFromJson(Map<String, dynamic> json) => Answer(
+      json['id'] as int?,
+      json['question_id'] as int?,
+      json['fieldSetId'] as int?,
+      json['value'] as String?,
+      json['valueExtra'] as String?,
+      json['createdAt'] as String?,
+      json['resourcetype'] as String?,
+      json['answerHolderId'] as int?,
+    )
+      ..fileKey = json['fileKey'] as int?
+      ..choices =
+          (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList()
+      ..multiSelectAnswer = (json['multiSelectAnswer'] as List<dynamic>?)
+          ?.map((e) => MultiSelectAnswer.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$AnswerToJson(Answer instance) => <String, dynamic>{
       'id': instance.id,

@@ -7,13 +7,23 @@
          FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/><!--to be removed in playstore-->
+
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <!--<uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>--><!--to be removed in playstore-->
+    <queries>
+      <intent>
+        <action android:name="android.intent.action.VIEW" />
+        <data android:scheme="xlsx" />
+      </intent>
+    </queries>
     <application
-        android:name="io.flutter.app.FlutterApplication"
-        android:label="Startup-dz"
+        android:name="${applicationName}"
+        android:label="Rightnow"
         android:screenOrientation="portrait"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/launcher_icon">

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
@@ -106,6 +107,13 @@ class FormFields {
   @HiveField(17)
   @JsonKey(ignore: true)
   int? superCategoryId;
+
+  String formatCreatedAt() {
+    if (createdAt == null) return Jiffy.now().yMMMMEEEEd;
+    String x = createdAt!;
+    if (createdAt!.contains("+")) x = createdAt!.substring(0, createdAt!.indexOf("+"));
+    return Jiffy.parse(x).yMMMMEEEEd;
+  }
 
   String getName(String? lang) {
     return (lang == LANGUAGE_FR ? name : nameAr) ?? "";

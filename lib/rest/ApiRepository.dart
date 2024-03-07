@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
@@ -70,15 +71,28 @@ class ApiRepository {
 
   Future<File?> download(String url, Function(int count, int total) progress) async {
     try {
-      var tempDir = await getExternalStorageDirectory();
+      String? tempDir;
+      if (kIsWeb) {
+        tempDir = await FilePicker.platform.saveFile(dialogTitle: "Save file");
+      } else {
+        var d = await getExternalStorageDirectory();
+        tempDir = d?.path;
+      }
       if (tempDir == null) return null;
-      Uuid uid = Uuid();
-      final fullPath = tempDir.path + '/' + p.basename(url); //uid.v1() + p.extension(url);
+      //Uuid uid = Uuid();
+      final fullPath = tempDir + '/' + p.basename(url); //uid.v1() + p.extension(url);
 
       //"/storage/emulated/0/Documents/"
       log('full path $fullPath, from url $url');
-      await Dio().download(
-        url, //'https://app.rightnow-by-brenco.com/media/Qst1_Scope3.xlsx',
+      await Dio(BaseOptions(
+        baseUrl: BASE_URL,
+        contentType: Headers.jsonContentType,
+        validateStatus: (int? status) {
+          return status != null;
+          // return status != null && status >= 200 && status < 300;
+        },
+      )).download(
+        url, //'http://apptest.rightnow-by-brenco.com/media/profile_2kbySzE.xlsx', //url, //'https://app.rightnow-by-brenco.com/media/Qst1_Scope3.xlsx',
         fullPath,
         onReceiveProgress: (count, total) {
           progress(count, total);
@@ -114,12 +128,18 @@ class ApiRepository {
     }
   }*/
 
-  Future<Map<String, dynamic>?> uploadProfilePicture(File file, Function(int received, int total) progress) async {
+  Future<Map<String, dynamic>?> uploadProfilePicture(XFile file, Function(int received, int total) progress) async {
     try {
       LocalUser? u = await getDataBase<LocalUserDao>().fetchUser();
       if (u != null) {
         String fileName = file.path.split('/').last;
-        FormData formData = FormData.fromMap({"picture": await MultipartFile.fromFile(file.path, filename: fileName), "pk": u.user});
+        log("filename is $fileName");
+        FormData formData;
+        if (!kIsWeb) {
+          formData = FormData.fromMap({"picture": await MultipartFile.fromFile(file.path, filename: fileName), "pk": u.user});
+        } else {
+          formData = FormData.fromMap({"picture": MultipartFile.fromBytes(await file.readAsBytes(), filename: fileName), "pk": u.user});
+        }
 
         final response = await apiClient.post("api/accounts/profiles/change_picture/", data: formData, onSendProgress: progress);
         print("response received " + response.toString());
@@ -459,18 +479,22 @@ class ApiRepository {
   Future<int> currentUserRaw() async {
     try {
       final response = await apiClient.get("api/accounts/current_user/"); //, queryParameters: {"api_key": _apiKey}
+      log("user login response $response");
       if (response is Map) {
         if (response.containsKey("email")) {
           LocalUser l = LocalUser.fromJson({
             'user': response['id'],
             'username': response['username'],
             'email': response['email'],
+            'organization': response['org_key'],
+            'groups': response['groups'],
           });
           await getDataBase<LocalUserDao>().setLocalUser(l);
         }
       }
       return response["id"];
     } catch (e) {
+      log('error registering user profile ${e.toString()}');
       return -1;
     }
   }
@@ -584,9 +608,19 @@ class ApiRepository {
       final response = await apiClient
           .post("login/", data: {"username": localUser.username, "password": localUser.password, "organization": localUser.organization}); //organization, queryParameters: {"api_key": _apiKey}
       return response['token'] as String;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print("error when processing data response ${e.response?.data}");
       return LoginError.fromJson(e.response?.data ?? {}); //e.response?.statusCode ?? 403;
+    }
+  }
+
+  Future<bool> logout() async {
+    try {
+      await apiClient.post("logout/");
+      return true;
+    } on DioError catch (e) {
+      print("error when processing data response ${e.response?.data}");
+      return false;
     }
   }
 

@@ -53,14 +53,13 @@ class FormFieldsStateAdapter extends TypeAdapter<FormFieldsState> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FormFieldsState _$FormFieldsStateFromJson(Map<String, dynamic> json) {
-  return FormFieldsState(
-    json['id'] as int?,
-    json['name'] as String?,
-    json['name_ar'] as String?,
-    json['created_at'] as String?,
-  );
-}
+FormFieldsState _$FormFieldsStateFromJson(Map<String, dynamic> json) =>
+    FormFieldsState(
+      json['id'] as int?,
+      json['name'] as String?,
+      json['name_ar'] as String?,
+      json['created_at'] as String?,
+    );
 
 Map<String, dynamic> _$FormFieldsStateToJson(FormFieldsState instance) =>
     <String, dynamic>{

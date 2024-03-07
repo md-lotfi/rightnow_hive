@@ -91,7 +91,7 @@ class HealthProfileWidget extends StatelessWidget {
                 right: 0,
                 bottom: 70,
                 child: RawScrollbar(
-                  isAlwaysShown: true,
+                  trackVisibility: true,
                   thumbColor: COLOR_PRIMARY,
                   child: Container(
                     padding: EdgeInsets.only(bottom: 25, left: 30, right: 30),

@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/models/user_group.dart';
 
 part 'local_user.g.dart';
 
@@ -20,6 +21,9 @@ class LocalUser {
 
   @HiveField(5)
   String? organization;
+
+  @HiveField(6)
+  List<UserGroup>? groups;
 
   //int user;
 

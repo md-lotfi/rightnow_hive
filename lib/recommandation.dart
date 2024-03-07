@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/shims/dart_ui_real.dart';
 import 'package:rightnow/components/adaptative_text_size.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -22,12 +21,13 @@ class RecommandationPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("AI Réponse".tr()), // Résultat
         centerTitle: true,
+        backgroundColor: Colors.white,
         elevation: 1,
       ),
       body: Container(
         //margin:
         child: Scrollbar(
-          isAlwaysShown: true,
+          trackVisibility: true,
           child: ScrollTouchWidget(
             listChild: Stack(
               children: [
@@ -84,10 +84,11 @@ class RecommandationPage extends StatelessWidget {
                                 textAlign: TextAlign.justify,
                               ),
                             },
-                            onLinkTap: (url, _, __, ___) async {
+                            onLinkTap: (url, attributes, element) async {
                               print("Opening $url...");
-                              bool b = await canLaunch(url ?? "");
-                              if (b) launch(url ?? "");
+                              var uri = Uri.parse(url ?? "");
+                              bool b = await canLaunchUrl(uri);
+                              if (b) launchUrl(uri);
                             },
                           ),
                         ),

@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'UpdateProfileEvent.dart';
 
@@ -10,25 +12,7 @@ part of 'UpdateProfileEvent.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$UpdateProfileEventTearOff {
-  const _$UpdateProfileEventTearOff();
-
-  SaveProfile saveProfile(Map<String, dynamic> profile) {
-    return SaveProfile(
-      profile,
-    );
-  }
-
-  Distract distract() {
-    return const Distract();
-  }
-}
-
-/// @nodoc
-const $UpdateProfileEvent = _$UpdateProfileEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$UpdateProfileEvent {
@@ -36,6 +20,12 @@ mixin _$UpdateProfileEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(Map<String, dynamic> profile) saveProfile,
     required TResult Function() distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(Map<String, dynamic> profile)? saveProfile,
+    TResult? Function()? distract,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -52,6 +42,12 @@ mixin _$UpdateProfileEvent {
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SaveProfile value)? saveProfile,
+    TResult? Function(Distract value)? distract,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(SaveProfile value)? saveProfile,
     TResult Function(Distract value)? distract,
@@ -64,45 +60,45 @@ mixin _$UpdateProfileEvent {
 abstract class $UpdateProfileEventCopyWith<$Res> {
   factory $UpdateProfileEventCopyWith(
           UpdateProfileEvent value, $Res Function(UpdateProfileEvent) then) =
-      _$UpdateProfileEventCopyWithImpl<$Res>;
+      _$UpdateProfileEventCopyWithImpl<$Res, UpdateProfileEvent>;
 }
 
 /// @nodoc
-class _$UpdateProfileEventCopyWithImpl<$Res>
+class _$UpdateProfileEventCopyWithImpl<$Res, $Val extends UpdateProfileEvent>
     implements $UpdateProfileEventCopyWith<$Res> {
   _$UpdateProfileEventCopyWithImpl(this._value, this._then);
 
-  final UpdateProfileEvent _value;
   // ignore: unused_field
-  final $Res Function(UpdateProfileEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $SaveProfileCopyWith<$Res> {
-  factory $SaveProfileCopyWith(
-          SaveProfile value, $Res Function(SaveProfile) then) =
-      _$SaveProfileCopyWithImpl<$Res>;
+abstract class _$$SaveProfileImplCopyWith<$Res> {
+  factory _$$SaveProfileImplCopyWith(
+          _$SaveProfileImpl value, $Res Function(_$SaveProfileImpl) then) =
+      __$$SaveProfileImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({Map<String, dynamic> profile});
 }
 
 /// @nodoc
-class _$SaveProfileCopyWithImpl<$Res>
-    extends _$UpdateProfileEventCopyWithImpl<$Res>
-    implements $SaveProfileCopyWith<$Res> {
-  _$SaveProfileCopyWithImpl(
-      SaveProfile _value, $Res Function(SaveProfile) _then)
-      : super(_value, (v) => _then(v as SaveProfile));
+class __$$SaveProfileImplCopyWithImpl<$Res>
+    extends _$UpdateProfileEventCopyWithImpl<$Res, _$SaveProfileImpl>
+    implements _$$SaveProfileImplCopyWith<$Res> {
+  __$$SaveProfileImplCopyWithImpl(
+      _$SaveProfileImpl _value, $Res Function(_$SaveProfileImpl) _then)
+      : super(_value, _then);
 
-  @override
-  SaveProfile get _value => super._value as SaveProfile;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? profile = freezed,
+    Object? profile = null,
   }) {
-    return _then(SaveProfile(
-      profile == freezed
-          ? _value.profile
+    return _then(_$SaveProfileImpl(
+      null == profile
+          ? _value._profile
           : profile // ignore: cast_nullable_to_non_nullable
               as Map<String, dynamic>,
     ));
@@ -111,11 +107,17 @@ class _$SaveProfileCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SaveProfile with DiagnosticableTreeMixin implements SaveProfile {
-  const _$SaveProfile(this.profile);
+class _$SaveProfileImpl with DiagnosticableTreeMixin implements SaveProfile {
+  const _$SaveProfileImpl(final Map<String, dynamic> profile)
+      : _profile = profile;
 
+  final Map<String, dynamic> _profile;
   @override
-  final Map<String, dynamic> profile;
+  Map<String, dynamic> get profile {
+    if (_profile is EqualUnmodifiableMapView) return _profile;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_profile);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -131,21 +133,22 @@ class _$SaveProfile with DiagnosticableTreeMixin implements SaveProfile {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
-        (other is SaveProfile &&
-            (identical(other.profile, profile) ||
-                const DeepCollectionEquality().equals(other.profile, profile)));
+        (other.runtimeType == runtimeType &&
+            other is _$SaveProfileImpl &&
+            const DeepCollectionEquality().equals(other._profile, _profile));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(profile);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_profile));
 
   @JsonKey(ignore: true)
   @override
-  $SaveProfileCopyWith<SaveProfile> get copyWith =>
-      _$SaveProfileCopyWithImpl<SaveProfile>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$SaveProfileImplCopyWith<_$SaveProfileImpl> get copyWith =>
+      __$$SaveProfileImplCopyWithImpl<_$SaveProfileImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -154,6 +157,15 @@ class _$SaveProfile with DiagnosticableTreeMixin implements SaveProfile {
     required TResult Function() distract,
   }) {
     return saveProfile(profile);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(Map<String, dynamic> profile)? saveProfile,
+    TResult? Function()? distract,
+  }) {
+    return saveProfile?.call(profile);
   }
 
   @override
@@ -180,6 +192,15 @@ class _$SaveProfile with DiagnosticableTreeMixin implements SaveProfile {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SaveProfile value)? saveProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return saveProfile?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(SaveProfile value)? saveProfile,
     TResult Function(Distract value)? distract,
@@ -193,35 +214,35 @@ class _$SaveProfile with DiagnosticableTreeMixin implements SaveProfile {
 }
 
 abstract class SaveProfile implements UpdateProfileEvent {
-  const factory SaveProfile(Map<String, dynamic> profile) = _$SaveProfile;
+  const factory SaveProfile(final Map<String, dynamic> profile) =
+      _$SaveProfileImpl;
 
-  Map<String, dynamic> get profile => throw _privateConstructorUsedError;
+  Map<String, dynamic> get profile;
   @JsonKey(ignore: true)
-  $SaveProfileCopyWith<SaveProfile> get copyWith =>
+  _$$SaveProfileImplCopyWith<_$SaveProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DistractCopyWith<$Res> {
-  factory $DistractCopyWith(Distract value, $Res Function(Distract) then) =
-      _$DistractCopyWithImpl<$Res>;
+abstract class _$$DistractImplCopyWith<$Res> {
+  factory _$$DistractImplCopyWith(
+          _$DistractImpl value, $Res Function(_$DistractImpl) then) =
+      __$$DistractImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$DistractCopyWithImpl<$Res>
-    extends _$UpdateProfileEventCopyWithImpl<$Res>
-    implements $DistractCopyWith<$Res> {
-  _$DistractCopyWithImpl(Distract _value, $Res Function(Distract) _then)
-      : super(_value, (v) => _then(v as Distract));
-
-  @override
-  Distract get _value => super._value as Distract;
+class __$$DistractImplCopyWithImpl<$Res>
+    extends _$UpdateProfileEventCopyWithImpl<$Res, _$DistractImpl>
+    implements _$$DistractImplCopyWith<$Res> {
+  __$$DistractImplCopyWithImpl(
+      _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$Distract with DiagnosticableTreeMixin implements Distract {
-  const _$Distract();
+class _$DistractImpl with DiagnosticableTreeMixin implements Distract {
+  const _$DistractImpl();
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
@@ -231,12 +252,13 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties..add(DiagnosticsProperty('type', 'UpdateProfileEvent.distract'));
+    properties.add(DiagnosticsProperty('type', 'UpdateProfileEvent.distract'));
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) || (other is Distract);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$DistractImpl);
   }
 
   @override
@@ -249,6 +271,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
     required TResult Function() distract,
   }) {
     return distract();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(Map<String, dynamic> profile)? saveProfile,
+    TResult? Function()? distract,
+  }) {
+    return distract?.call();
   }
 
   @override
@@ -275,6 +306,15 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 
   @override
   @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SaveProfile value)? saveProfile,
+    TResult? Function(Distract value)? distract,
+  }) {
+    return distract?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(SaveProfile value)? saveProfile,
     TResult Function(Distract value)? distract,
@@ -288,5 +328,5 @@ class _$Distract with DiagnosticableTreeMixin implements Distract {
 }
 
 abstract class Distract implements UpdateProfileEvent {
-  const factory Distract() = _$Distract;
+  const factory Distract() = _$DistractImpl;
 }

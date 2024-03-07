@@ -21,7 +21,7 @@ class LienUtilesDetails extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Container(
         child: RawScrollbar(
-          isAlwaysShown: true,
+          trackVisibility: true,
           thumbColor: COLOR_PRIMARY,
           child: ScrollTouchWidget(
               listChild: ListView(

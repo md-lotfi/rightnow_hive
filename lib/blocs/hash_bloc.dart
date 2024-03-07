@@ -21,9 +21,40 @@ class HashTypeHolder {
 class HashBloc extends Bloc<HashEvent, ResultState<HashTypeHolder>> {
   final ApiRepository apiRepository = ApiRepository();
 
-  HashBloc() : super(Idle());
+  HashBloc() : super(const Idle()) {
+    on<Distract>((event, emit) => emit(const ResultState.idle()));
+    on<GetCategoriesHash>((event, emit) async => await _mapGetCategoriesHash(event, emit));
+    on<LoadCategories>((event, emit) async => await _mapGetCategories(event, emit));
+  }
 
-  @override
+  Future<void> _mapGetCategoriesHash(GetCategoriesHash event, Emitter<ResultState<HashTypeHolder>> emit) async {
+    emit(const ResultState.loading());
+
+    ApiResult<Hashes> apiResult = await apiRepository.fetchHash(type: HASH_TYPE_CATEGORIES);
+
+    await apiResult.when(
+      success: (data) async => emit(ResultState.data(data: new HashTypeHolder(hashes: data, type: HASH_TYPE_CATEGORIES))),
+      failure: (error) async => emit(ResultState.error(error: error)),
+    );
+  }
+
+  Future<void> _mapGetCategories(LoadCategories event, Emitter<ResultState<HashTypeHolder>> emit) async {
+    emit(const ResultState.loading());
+
+    ApiResult<List<FormFields>> apiResult = await apiRepository.fetchFormFields();
+
+    await apiResult.when(
+      success: (data) async {
+        await getDataBase<FormFieldsDao>().setForms(data!, new Hashes.fill(event.currentHash, HASH_TYPE_CATEGORIES));
+        emit(ResultState.data(data: HashTypeHolder(type: HASH_TYPE_CATEGORIES_LOADED, hashes: Hashes.fill("", HASH_TYPE_CATEGORIES_LOADED))));
+      },
+      failure: (error) async => emit(ResultState.error(error: error)),
+    );
+  }
+
+  //HashBloc() : super(Idle());
+
+  /*@override
   Stream<ResultState<HashTypeHolder>> mapEventToState(HashEvent event) async* {
     yield ResultState.loading();
 
@@ -49,5 +80,5 @@ class HashBloc extends Bloc<HashEvent, ResultState<HashTypeHolder>> {
         yield ResultState.error(error: error);
       });
     }
-  }
+  }*/
 }

@@ -9,8 +9,8 @@ const _defaultConnectTimeout = Duration.millisecondsPerMinute;
 const _defaultReceiveTimeout = Duration.millisecondsPerMinute;
 
 const BASE_URL = "https://app.rightnow-by-brenco.com/";
-/*"https://apptest.rightnow-by-brenco.com/";*/ /*"https://197.140.16.96/apoc/"; //"https://apoce-vi.herokuapp.com/apoc/"; //"https://197.140.16.54/apoc/";//'https://197.140.16.96/apoc/';*/
-const IMG_BASE_URL = "https://app.rightnow-by-brenco.com"; /*"https://apptest.rightnow-by-brenco.com";*/
+//"https://apptest.rightnow-by-brenco.com/";
+const IMG_BASE_URL = "https://app.rightnow-by-brenco.com"; // "https://apptest.rightnow-by-brenco.com";
 
 class ApiClient {
   Dio? _dio;
@@ -32,8 +32,8 @@ class ApiClient {
     _dio = Dio();
     _dio!
       ..options.baseUrl = BASE_URL
-      ..options.connectTimeout = _defaultConnectTimeout
-      ..options.receiveTimeout = _defaultReceiveTimeout
+      //..options.connectTimeout = _defaultConnectTimeout
+      //..options.receiveTimeout = _defaultReceiveTimeout
       ..httpClientAdapter
       ..options.headers = {
         'Content-Type': 'application/json; charset=UTF-8',

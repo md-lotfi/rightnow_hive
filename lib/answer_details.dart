@@ -21,7 +21,8 @@ class AnswerDetailsPage extends StatelessWidget {
       backgroundColor: Colors.grey.shade100,
       //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: COLOR_PRIMARY,
+        foregroundColor: Colors.white,
         title: Text(answerHolder.formFields?.getName(context.locale.languageCode) ?? ""),
         centerTitle: true,
       ),

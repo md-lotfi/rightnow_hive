@@ -30,7 +30,7 @@ class UserNotificationsDao {
     var r = await getUserNotificationDb();
     List<UserNotification> n = r.values.toList();
     n.sort((a, b) {
-      return Jiffy(b.createdAt).dateTime.compareTo(Jiffy(a.createdAt).dateTime);
+      return Jiffy.parse(b.createdAt ?? Jiffy.now().format()).dateTime.compareTo(Jiffy.parse(a.createdAt ?? Jiffy.now().format()).dateTime);
     });
     return n;
   }
@@ -63,7 +63,7 @@ class UserNotificationsDao {
     }
     List<UserNotification> n = r.values.toList();
     n.sort((a, b) {
-      return Jiffy(b.createdAt).dateTime.compareTo(Jiffy(a.createdAt).dateTime);
+      return Jiffy.parse(b.createdAt ?? Jiffy.now().format()).dateTime.compareTo(Jiffy.parse(a.createdAt ?? Jiffy.now().format()).dateTime);
     });
     return n;
     /*if (ids.length > 0) {

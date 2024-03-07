@@ -5,7 +5,9 @@ import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/upload_dialog.dart';
 import 'package:rightnow/constants/constants.dart';
+import 'package:rightnow/db/LocalUserDao.dart';
 import 'package:rightnow/home_screen.dart';
+import 'package:rightnow/models/local_user.dart';
 import 'package:rightnow/models/profile.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:rightnow/settings_screen.dart';
@@ -26,8 +28,8 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Scaffold(
           bottomNavigationBar: HomeNavBarComp(NavState.NAV_PROFILE),
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            foregroundColor: COLOR_PRIMARY,
+            backgroundColor: COLOR_PRIMARY,
+            foregroundColor: Colors.white,
             elevation: 0,
             title: Text(
               "Profile".tr(),
@@ -93,11 +95,12 @@ class _ProfilePageState extends State<ProfilePage> {
       color: Colors.white,
       child: Column(
         children: [
-          Container(
-            height: HEADER_HEIGHT,
+          const SizedBox(height: 15),
+          IntrinsicHeight(
+            //height: HEADER_HEIGHT,
             child: Column(
               children: [
-                if (kIsWeb)
+                /*if (kIsWeb)
                   Center(
                     child: CircleAvatar(
                       backgroundImage: NetworkImage(
@@ -106,41 +109,41 @@ class _ProfilePageState extends State<ProfilePage> {
                       radius: 60,
                     ),
                   ),
-                if (!kIsWeb)
-                  UploadDialogWidget(
-                    key: UniqueKey(),
-                    renderer: Center(
-                        child: Stack(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            data.picture ?? "", //"assets/axa-logo.png"
-                          ),
-                          radius: 60,
+                if (!kIsWeb)*/
+                UploadDialogWidget(
+                  key: UniqueKey(),
+                  renderer: Center(
+                      child: Stack(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          data.picture ?? "", //"assets/axa-logo.png"
                         ),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.edit,
-                                  color: COLOR_PRIMARY,
-                                ),
-                              ],
-                            ),
+                        radius: 60,
+                      ),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                color: COLOR_PRIMARY,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    )),
-                    onImageSaved: (image) {
-                      print("image saved, reloading ....");
-                      setState(() {});
-                    },
-                  ),
+                      ),
+                    ],
+                  )),
+                  onImageSaved: (image) {
+                    print("image saved, reloading ....");
+                    setState(() {});
+                  },
+                ),
                 SizedBox(height: 20),
                 Container(
                   alignment: Alignment.center,
@@ -158,10 +161,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                   ),
-                  /*Text(
-                              snapshot.data?.name ?? "",
-                              style: TextStyle(fontSize: 20),
-                            ),*/
+                ),
+                SizedBox(height: 20),
+                Container(
+                  alignment: Alignment.center,
+                  child: FutureBuilder<LocalUser?>(
+                    future: getDataBase<LocalUserDao>().fetchUser(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        /*return Wrap(
+                          children: snapshot.data?.groups?.map((e) => Chip(label: Text(e.name ?? ""))).toList() ?? [],
+                        );*/
+                        return Text(snapshot.data?.organization ?? "", style: TextStyle(fontSize: 25));
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    },
+                  ),
                 ),
               ],
             ),

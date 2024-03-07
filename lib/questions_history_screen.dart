@@ -105,7 +105,7 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
           right: 0,
           bottom: 80,
           child: RawScrollbar(
-            isAlwaysShown: true,
+            trackVisibility: true,
             thumbColor: COLOR_PRIMARY,
             child: ScrollTouchWidget(listChild: dataWidget(responseform.entries ?? [])),
           ),

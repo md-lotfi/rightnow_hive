@@ -74,24 +74,22 @@ class FieldSetAdapter extends TypeAdapter<FieldSet> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FieldSet _$FieldSetFromJson(Map<String, dynamic> json) {
-  return FieldSet(
-    json['id'] as int?,
-    json['form'] as int?,
-    json['questions_count'] as int?,
-    json['flag'] as int?,
-    json['title'] as String?,
-    json['title_ar'] as String?,
-  )
-    ..required = json['required'] as int?
-    ..qCounts = json['qCounts'] as int?
-    ..qAnswered = json['qAnswered'] as int?
-    ..description = json['description'] as String?
-    ..descriptionAr = json['description_ar'] as String?
-    ..questions = (json['questions'] as List<dynamic>?)
-        ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+FieldSet _$FieldSetFromJson(Map<String, dynamic> json) => FieldSet(
+      json['id'] as int?,
+      json['form'] as int?,
+      json['questions_count'] as int?,
+      json['flag'] as int?,
+      json['title'] as String?,
+      json['title_ar'] as String?,
+    )
+      ..required = json['required'] as int?
+      ..qCounts = json['qCounts'] as int?
+      ..qAnswered = json['qAnswered'] as int?
+      ..description = json['description'] as String?
+      ..descriptionAr = json['description_ar'] as String?
+      ..questions = (json['questions'] as List<dynamic>?)
+          ?.map((e) => Question.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$FieldSetToJson(FieldSet instance) => <String, dynamic>{
       'id': instance.id,

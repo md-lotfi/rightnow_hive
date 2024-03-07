@@ -65,25 +65,23 @@ class SubCategoryAdapter extends TypeAdapter<SubCategory> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SubCategory _$SubCategoryFromJson(Map<String, dynamic> json) {
-  return SubCategory(
-    json['id'] as int?,
-    json['name_ar'] as String?,
-    json['name'] as String?,
-    json['icon'] as String?,
-    json['created_at'] as String?,
-  )
-    ..tags = (json['tags'] as List<dynamic>?)
-        ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..belongsTo = json['belongs_to'] == null
-        ? null
-        : Category.fromJson(json['belongs_to'] as Map<String, dynamic>)
-    ..categoryId = json['categoryId'] as int?
-    ..subcategories = (json['subcategories'] as List<dynamic>?)
-        ?.map((e) => CategoryForms.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+SubCategory _$SubCategoryFromJson(Map<String, dynamic> json) => SubCategory(
+      json['id'] as int?,
+      json['name_ar'] as String?,
+      json['name'] as String?,
+      json['icon'] as String?,
+      json['created_at'] as String?,
+    )
+      ..tags = (json['tags'] as List<dynamic>?)
+          ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..belongsTo = json['belongs_to'] == null
+          ? null
+          : Category.fromJson(json['belongs_to'] as Map<String, dynamic>)
+      ..categoryId = json['categoryId'] as int?
+      ..subcategories = (json['subcategories'] as List<dynamic>?)
+          ?.map((e) => CategoryForms.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$SubCategoryToJson(SubCategory instance) =>
     <String, dynamic>{

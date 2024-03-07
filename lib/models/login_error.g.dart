@@ -6,13 +6,11 @@ part of 'login_error.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginError _$LoginErrorFromJson(Map<String, dynamic> json) {
-  return LoginError(
-    status: json['status'] as int?,
-    message: json['message'] as String?,
-    error: json['error'] as String?,
-  );
-}
+LoginError _$LoginErrorFromJson(Map<String, dynamic> json) => LoginError(
+      status: json['status'] as int?,
+      message: json['message'] as String?,
+      error: json['error'] as String?,
+    );
 
 Map<String, dynamic> _$LoginErrorToJson(LoginError instance) =>
     <String, dynamic>{

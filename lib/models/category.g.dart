@@ -58,24 +58,22 @@ class CategoryAdapter extends TypeAdapter<Category> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Category _$CategoryFromJson(Map<String, dynamic> json) {
-  return Category(
-    json['id'] as int?,
-    json['name_ar'] as String?,
-    json['name'] as String?,
-    json['icon'] as String?,
-    json['created_at'] as String?,
-  )
-    ..belongsTo = json['belongs_to'] == null
-        ? null
-        : SuperCategory.fromJson(json['belongs_to'] as Map<String, dynamic>)
-    ..tags = (json['tags'] as List<dynamic>?)
-        ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
-        .toList()
-    ..subcategories = (json['subcategories'] as List<dynamic>?)
-        ?.map((e) => CategoryForms.fromJson(e as Map<String, dynamic>))
-        .toList();
-}
+Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
+      json['id'] as int?,
+      json['name_ar'] as String?,
+      json['name'] as String?,
+      json['icon'] as String?,
+      json['created_at'] as String?,
+    )
+      ..belongsTo = json['belongs_to'] == null
+          ? null
+          : SuperCategory.fromJson(json['belongs_to'] as Map<String, dynamic>)
+      ..tags = (json['tags'] as List<dynamic>?)
+          ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
+          .toList()
+      ..subcategories = (json['subcategories'] as List<dynamic>?)
+          ?.map((e) => CategoryForms.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
       'id': instance.id,
