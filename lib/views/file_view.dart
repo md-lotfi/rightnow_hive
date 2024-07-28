@@ -4,8 +4,10 @@ import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -224,13 +226,19 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                                         log("file question $_file");
                                         if (_file != null) {
                                           print("saving file path in answer ${file.lengthInBytes}");
-                                          await FileSaver.set(FileSaver(questionId: question!.id!, answerHolderId: answerHolder!.id!, name: _file!, path: result.files.single.path ?? "", file: file));
+                                          await FileSaver.set(FileSaver(
+                                              questionId: question!.id!,
+                                              answerHolderId: answerHolder!.id!,
+                                              name: _file!,
+                                              path: !kIsWeb ? result.files.single.path! : result.files.single.name,
+                                              file: file,
+                                              extension: p.extension(!kIsWeb ? result.files.single.path! : result.files.single.name)));
                                           FileSaver? f = await FileSaver.getLastItem();
                                           if (f != null) {
                                             log("file question f is njot null");
                                             onSelectedValue!(
-                                              Answer.fill(question!.id, question!.fieldSet, _file, result.files.single.path, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!),
-                                                  answerHolder!.id, null,
+                                              Answer.fill(question!.id, question!.fieldSet, _file, !kIsWeb ? result.files.single.path! : result.files.single.name, DateTime.now().toString(),
+                                                  transtypeResourceType(question!.resourcetype!), answerHolder!.id, null,
                                                   fileKey: f.key),
                                             );
                                           }

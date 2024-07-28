@@ -10,7 +10,7 @@ const _defaultReceiveTimeout = Duration.millisecondsPerMinute;
 
 const BASE_URL = "https://app.rightnow-by-brenco.com/";
 //"https://apptest.rightnow-by-brenco.com/";
-const IMG_BASE_URL = "https://app.rightnow-by-brenco.com"; // "https://apptest.rightnow-by-brenco.com";
+const IMG_BASE_URL = "https://app.rightnow-by-brenco.com"; //"https://apptest.rightnow-by-brenco.com";
 
 class ApiClient {
   Dio? _dio;

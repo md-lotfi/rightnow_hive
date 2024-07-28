@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
@@ -19,6 +21,7 @@ class FormsDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("je suis forms display widget");
     AnswersCount answersCount = countAnswersForm(formsFields);
     /*int totalQuestions = 0;
         int realTotalQuestions = 0;

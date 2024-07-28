@@ -8,6 +8,7 @@ import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/header_bar.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
+import 'package:rightnow/components/send_form.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FormFieldsDao.dart';
@@ -178,7 +179,11 @@ class _FieldSetState extends State<FieldsSetPage> {
                 bottom: 20,
                 left: 0,
                 right: 0,
-                child: FutureBuilder(
+                child: SendFormWidget(
+                    formFields: form,
+                    onFinished: () {
+                      setState(() {});
+                    }), /*FutureBuilder(
                   future: getDataBase<AnswerHolderDao>().fetchAnswerHolderOne(form.id!, HOLDER_NOT_COMPLETED),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
@@ -199,7 +204,7 @@ class _FieldSetState extends State<FieldsSetPage> {
                     }
                     return Center(child: CircularProgressIndicator());
                   },
-                ),
+                ),*/
               ),
             ],
           ),

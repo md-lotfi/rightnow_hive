@@ -30,6 +30,7 @@ class CategoriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log("je suis dans categories");
     return ScreenViewerWidget(
         page: Scaffold(
       appBar: AppBar(

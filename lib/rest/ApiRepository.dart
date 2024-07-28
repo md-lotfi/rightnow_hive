@@ -603,10 +603,9 @@ class ApiRepository {
 
   Future<dynamic> loginUserRaw(LocalUser localUser) async {
     try {
-      var m = {"username": localUser.username, "password": localUser.password, "organization": localUser.organization};
+      var m = {"username": localUser.username?.trim(), "password": localUser.password?.trim(), "organization": localUser.organization?.trim()};
       print("before login $m");
-      final response = await apiClient
-          .post("login/", data: {"username": localUser.username, "password": localUser.password, "organization": localUser.organization}); //organization, queryParameters: {"api_key": _apiKey}
+      final response = await apiClient.post("login/", data: m); //organization, queryParameters: {"api_key": _apiKey}
       return response['token'] as String;
     } on DioException catch (e) {
       print("error when processing data response ${e.response?.data}");
@@ -636,9 +635,9 @@ class ApiRepository {
 
   Future<Map<String, dynamic>> uploadFile(int questionId, Uint8List file, String? ext, Function(int received, int total) progress, {bool asByte = false, Uint8List? i}) async {
     try {
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString() + (ext != null ? ".$ext" : "");
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString() + (ext != null ? "$ext" : "");
       //late List<int> l;
-      print("data 1 ******************");
+      print("data 1 ****************** $fileName");
       /*if (!asByte)
         fileName = file.path.split('/').last;
       else {
@@ -787,6 +786,7 @@ class AnswerPostObject {
         f.extension = p.extension(file.path);
         log('forcing local file upload from ${file.path}, with extension ${f.extension}');
       }*/
+      //log("file is ${f.name}")
       ApiRepository apiRepository = ApiRepository();
       Map<String, dynamic> result = await apiRepository.uploadFile(answer.qustionId!, f.file, f.extension, (r, t) {
         print("total sending $r | $t ");
