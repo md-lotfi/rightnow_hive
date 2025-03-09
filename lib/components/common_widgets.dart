@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -40,7 +39,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
 
-List<Widget> showWidgetList(List<Widget> widgets, List<Widget> elseWidgets, bool show) {
+List<Widget> showWidgetList(
+    List<Widget> widgets, List<Widget> elseWidgets, bool show) {
   if (show) {
     return widgets;
   } else {
@@ -61,7 +61,8 @@ dynamic getFirstOrNull(Iterable i) {
   return i.first;
 }
 
-InlineSpan showInlineSpan(InlineSpan widgets, InlineSpan elseWidgets, bool show) {
+InlineSpan showInlineSpan(
+    InlineSpan widgets, InlineSpan elseWidgets, bool show) {
   if (show) {
     return widgets;
   } else {
@@ -79,7 +80,8 @@ bool isDate(String? str) {
   }
 }
 
-Widget widgetQuestionTitle(Question? question, String lang, ResponseSet? responseSet) {
+Widget widgetQuestionTitle(
+    Question? question, String lang, ResponseSet? responseSet) {
   return Padding(
     padding: EdgeInsets.only(top: 10, left: 10, bottom: 10, right: 10),
     child: RichText(
@@ -90,7 +92,12 @@ Widget widgetQuestionTitle(Question? question, String lang, ResponseSet? respons
           fontWeight: FontWeight.bold,
         ),
         children: [
-          TextSpan(text: question != null ? question.getName(lang) : (responseSet != null ? responseSet.questionHist?.getName(lang) ?? "" : "")),
+          TextSpan(
+              text: question != null
+                  ? question.getName(lang)
+                  : (responseSet != null
+                      ? responseSet.questionHist?.getName(lang) ?? ""
+                      : "")),
           showInlineSpan(
             WidgetSpan(
               child: Container(
@@ -128,13 +135,15 @@ bool isRequiredForValidate(Question? q) {
 }
 
 bool isEmail(String em) {
-  String p = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+";
+  String p =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9-]+\.[a-zA-Z]+";
   RegExp regExp = new RegExp(p);
   return regExp.hasMatch(em);
 }
 
 Future<bool> hasRequiredFields(int fieldSetId) async {
-  List<Question> qs = await getDataBase<QuestionsDao>().fetchQuestion(fieldSetId);
+  List<Question> qs =
+      await getDataBase<QuestionsDao>().fetchQuestion(fieldSetId);
   for (var q in qs) {
     if (isRequired(q)) return true;
   }
@@ -161,7 +170,14 @@ bool areValidAnswers(List<FieldSet>? form, AnswerHolder? _answerHolder) {
             }) ??
             [];
         if (containsAnswer.isEmpty) {
-          print("missing answer " + q.id.toString() + ", " + q.resourcetype! + ", " + (q.branchedConditions?.length.toString() ?? "0") + ", " + (q.depandantConditions?.length.toString() ?? "0"));
+          print("missing answer " +
+              q.id.toString() +
+              ", " +
+              q.resourcetype! +
+              ", " +
+              (q.branchedConditions?.length.toString() ?? "0") +
+              ", " +
+              (q.depandantConditions?.length.toString() ?? "0"));
           c = false;
           break;
         }
@@ -177,7 +193,8 @@ Widget fieldTitle(BuildContext context, String title) {
     alignment: isFrench(context) ? Alignment.centerLeft : Alignment.centerRight,
     child: Text(
       title.tr(),
-      style: TextStyle(fontSize: 18, color: COLOR_PRIMARY, fontWeight: FontWeight.w600),
+      style: TextStyle(
+          fontSize: 18, color: COLOR_PRIMARY, fontWeight: FontWeight.w600),
     ),
   );
 }
@@ -188,7 +205,9 @@ showLoaderDialog(BuildContext context, {String? title}) {
       children: [
         CircularProgressIndicator(),
         Expanded(
-          child: Container(margin: EdgeInsets.only(left: 7), child: Text(title == null ? "Sending data".tr() : title)),
+          child: Container(
+              margin: EdgeInsets.only(left: 7),
+              child: Text(title == null ? "Sending data".tr() : title)),
         )
       ],
     ),
@@ -215,35 +234,61 @@ redirectUser(Function() userLogged, Function() userNotLogged) async {
   userNotLogged();
 }
 
-Widget addSetting(BuildContext context, {String title = "", Function()? action, Icon? icon, Color? color, Color? titleColor, bool vertical = true}) {
+Widget addSetting(BuildContext context,
+    {String title = "",
+    Function()? action,
+    Icon? icon,
+    Color? color,
+    Color? titleColor,
+    bool vertical = true}) {
   if (action != null) {
     return InkWell(
       onTap: () {
         action();
       },
-      child: _addSettingContent(context, title: title, icon: icon, color: color, titleColor: titleColor, vertical: vertical),
+      child: _addSettingContent(context,
+          title: title,
+          icon: icon,
+          color: color,
+          titleColor: titleColor,
+          vertical: vertical),
     );
   } else {
-    return _addSettingContent(context, title: title, icon: icon, color: color, titleColor: titleColor, vertical: vertical);
+    return _addSettingContent(context,
+        title: title,
+        icon: icon,
+        color: color,
+        titleColor: titleColor,
+        vertical: vertical);
   }
 }
 
-Widget _addSettingContent(BuildContext context, {String title = "", Icon? icon, Color? color, Color? titleColor, bool vertical = true}) {
+Widget _addSettingContent(BuildContext context,
+    {String title = "",
+    Icon? icon,
+    Color? color,
+    Color? titleColor,
+    bool vertical = true}) {
   return Container(
-    decoration: BoxDecoration(color: color == null ? Colors.white : color, borderRadius: BorderRadius.all(Radius.circular(10.0))),
+    decoration: BoxDecoration(
+        color: color == null ? Colors.white : color,
+        borderRadius: BorderRadius.all(Radius.circular(10.0))),
     padding: EdgeInsets.all(10),
     margin: EdgeInsets.only(left: 15, top: 15),
     child: vertical
         ? Column(
-            children: settingsContentElemV(context, title: title, icon: icon, titleColor: titleColor),
+            children: settingsContentElemV(context,
+                title: title, icon: icon, titleColor: titleColor),
           )
         : Row(
-            children: settingsContentElemH(context, title: title, icon: icon, titleColor: titleColor),
+            children: settingsContentElemH(context,
+                title: title, icon: icon, titleColor: titleColor),
           ),
   );
 }
 
-List<Widget> settingsContentElemH(BuildContext context, {String title = "", Icon? icon, Color? titleColor}) {
+List<Widget> settingsContentElemH(BuildContext context,
+    {String title = "", Icon? icon, Color? titleColor}) {
   return [
     Expanded(
       flex: 1,
@@ -271,7 +316,8 @@ List<Widget> settingsContentElemH(BuildContext context, {String title = "", Icon
   ];
 }
 
-List<Widget> settingsContentElemV(BuildContext context, {String title = "", Icon? icon, Color? titleColor}) {
+List<Widget> settingsContentElemV(BuildContext context,
+    {String title = "", Icon? icon, Color? titleColor}) {
   return [
     Expanded(
       child: FittedBox(
@@ -298,7 +344,8 @@ List<Widget> settingsContentElemV(BuildContext context, {String title = "", Icon
   ];
 }
 
-showResponseDialog(BuildContext context, DecisionResponse? decision, Function() onClose) {
+showResponseDialog(
+    BuildContext context, DecisionResponse? decision, Function() onClose) {
   if (decision == null) return;
   Navigator.push(
       context,
@@ -310,7 +357,8 @@ showResponseDialog(BuildContext context, DecisionResponse? decision, Function() 
 Future<int> countAnswersOpenHolder(int? formId) async {
   if (formId == null) return 0;
   int c = 0;
-  AnswerHolder? a = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, HOLDER_NOT_COMPLETED);
+  AnswerHolder? a = await getDataBase<AnswerHolderDao>()
+      .fetchAnswerHolderWithChildren(formId, HOLDER_NOT_COMPLETED);
   if (a != null) {
     for (var answer in a.answers ?? []) {
       c++;
@@ -322,7 +370,8 @@ Future<int> countAnswersOpenHolder(int? formId) async {
 Future<int> countAnswers(int? formId, {bool any = false}) async {
   if (formId == null) return 0;
   int c = 0;
-  AnswerHolder? a = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, HOLDER_NOT_COMPLETED, any: any);
+  AnswerHolder? a = await getDataBase<AnswerHolderDao>()
+      .fetchAnswerHolderWithChildren(formId, HOLDER_NOT_COMPLETED, any: any);
   if (a != null) {
     for (var answer in a.answers ?? []) {
       c++;
@@ -355,7 +404,8 @@ Future<int> countAnswers(int? formId, {bool any = false}) async {
   return c;
 }*/
 
-Future<int> countFieldSetAnswers(/*AnswerHolder? answerHolder,*/ int? fieldSetId) async {
+Future<int> countFieldSetAnswers(
+    /*AnswerHolder? answerHolder,*/ int? fieldSetId) async {
   return 0;
   /*if (answerHolder == null) return 0;
   int c = 0;
@@ -416,7 +466,9 @@ void fieldsAnswersAlreadyExists(BuildContext context, FormFields formFields) {
     builder: (BuildContext context) {
       return QuestionsValidateDialog(
         title: "Confirmation".tr(),
-        descriptions: "Un formulaire est déja ouvert, voulez-vous continuer ou rejeter ce formulaire et crée un nouveau?".tr(),
+        descriptions:
+            "Un formulaire est déja ouvert, voulez-vous continuer ou rejeter ce formulaire et crée un nouveau?"
+                .tr(),
         textPositive: "Continuer".tr(),
         textNegative: "Rejeter".tr(),
         onButtonClicked: (int which) async {
@@ -432,7 +484,9 @@ void fieldsAnswersAlreadyExists(BuildContext context, FormFields formFields) {
               });
               break;
             case -1:
-              await getDataBase<AnswerHolderDao>().deleteUnclosedAnswerHolder(formFields.id!).then((value) {
+              await getDataBase<AnswerHolderDao>()
+                  .deleteUnclosedAnswerHolder(formFields.id!)
+                  .then((value) {
                 SchedulerBinding.instance!.addPostFrameCallback((_) {
                   Navigator.push(
                       context,
@@ -455,7 +509,8 @@ void fieldsAnswersAlreadyExists(BuildContext context, FormFields formFields) {
   });
 }
 
-Widget loadImage(String? src, {Widget? defaultImg, double? width, double? height, BoxFit? fit}) {
+Widget loadImage(String? src,
+    {Widget? defaultImg, double? width, double? height, BoxFit? fit}) {
   if (src != null) {
     if (src != "") {
       return FadeInImage.assetNetwork(
@@ -483,7 +538,8 @@ Widget loadImage(String? src, {Widget? defaultImg, double? width, double? height
   );
 }
 
-Widget addBlocHandlerSpinner<T extends BlocBase<S>, S extends ResultState<dynamic>>({
+Widget addBlocHandlerSpinner<T extends BlocBase<S>,
+    S extends ResultState<dynamic>>({
   Function(dynamic data)? onFinish,
   Function(NetworkExceptions? error)? onError,
   bool Function(S prev, S state)? buildWhen,
@@ -526,7 +582,8 @@ Widget addBlocHandlerSpinner<T extends BlocBase<S>, S extends ResultState<dynami
   );
 }
 
-Widget addBlocProviderHandlerSpinner<T extends BlocBase<S>, S extends ResultState<dynamic>>({
+Widget addBlocProviderHandlerSpinner<T extends BlocBase<S>,
+    S extends ResultState<dynamic>>({
   Function(dynamic data)? onFinish,
   Function(dynamic error)? onError,
   Function()? onUnAuthorized,
@@ -618,7 +675,13 @@ Widget addBlocProviderHandlerSpinner<T extends BlocBase<S>, S extends ResultStat
   }
 }*/
 
-Future<void> showActionMessage(BuildContext context, {String title = "Apoce", List<Widget>? messages, String? positiveBtn, String? negativeBtn, Function(String)? whichTaped, dissmiss = true}) {
+Future<void> showActionMessage(BuildContext context,
+    {String title = "Apoce",
+    List<Widget>? messages,
+    String? positiveBtn,
+    String? negativeBtn,
+    Function(String)? whichTaped,
+    dissmiss = true}) {
   String result = "";
   return showDialog<void>(
       context: context,
@@ -656,7 +719,8 @@ Future<void> showActionMessage(BuildContext context, {String title = "Apoce", Li
                     onPressed: () async {
                       print("positive btn pushed .....");
                       if (dissmiss) {
-                        WidgetsBinding.instance!.addPostFrameCallback((_) async {
+                        WidgetsBinding.instance!
+                            .addPostFrameCallback((_) async {
                           Navigator.of(context).pop();
                         });
                       }
@@ -820,11 +884,16 @@ Widget articlaHeaderColumn(BuildContext context, Actualite actualite) {
         Text(
           actualite.getTitle(context.locale.languageCode),
           textAlign: TextAlign.start,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 20)), //28
+          style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize:
+                  AdaptiveTextSize().getadaptiveTextSize(context, 20)), //28
         ),
         SizedBox(height: 10),
         Text(
-          Jiffy.parse(actualite.createdAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy . HH:mm"),
+          Jiffy.parse(actualite.createdAt ?? Jiffy.now().format())
+              .format(pattern: "dd MMMM yyyy . HH:mm"),
           textAlign: TextAlign.end,
           style: TextStyle(color: Colors.grey.shade400),
         ),
@@ -842,7 +911,8 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
           width: double.infinity,
           height: MediaQuery.of(context).size.height / 2,
           fit: BoxFit.fill,
-          defaultImg: Image.asset('assets/welcome.png', width: double.infinity, fit: BoxFit.fill),
+          defaultImg: Image.asset('assets/welcome.png',
+              width: double.infinity, fit: BoxFit.fill),
         ),
         /*Image.network(
           actualite.thumbnail ?? "",
@@ -868,7 +938,8 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+                  padding:
+                      EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                     color: Colors.red,
@@ -881,11 +952,15 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
                 SizedBox(height: 5),
                 Text(
                   actualite.getTitle(context.locale.languageCode),
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22),
                 ),
                 SizedBox(height: 5),
                 Text(
-                  Jiffy.parse(actualite.createdAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy . HH:mm"),
+                  Jiffy.parse(actualite.createdAt ?? Jiffy.now().format())
+                      .format(pattern: "dd MMMM yyyy . HH:mm"),
                   textAlign: TextAlign.start,
                   style: TextStyle(color: Colors.grey.shade400),
                 ),
@@ -899,7 +974,8 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
 }
 
 bool isFrench(BuildContext context) {
-  return context.locale.languageCode == 'fr' || context.locale.languageCode == 'en';
+  return context.locale.languageCode == 'fr' ||
+      context.locale.languageCode == 'en';
 }
 
 Widget errorMessage(BuildContext context, String msg, Function() onClose) {
@@ -917,7 +993,8 @@ Widget errorMessage(BuildContext context, String msg, Function() onClose) {
       //contentPadding: const EdgeInsets.only(left: 0, right: 0),
       title: Text(
         msg,
-        style: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 12)),
+        style: TextStyle(
+            fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 12)),
       ),
 
       leading: InkWell(
@@ -932,11 +1009,14 @@ Widget errorMessage(BuildContext context, String msg, Function() onClose) {
 
 int countQuestions(FieldSet fieldSet) {
   int i = 0;
-  print("questions count depandant count ${fieldSet.questions?.length}, ${fieldSet.questionsCount}");
+  print(
+      "questions count depandant count ${fieldSet.questions?.length}, ${fieldSet.questionsCount}");
   for (Question item in fieldSet.questions ?? []) {
     if (!isActive(item)) continue;
-    if (item.depandantConditions != null) if (item.depandantConditions!.length > 0) {
-      print("questions count depandant ${item.depandantConditions!.length}, ${item.id}, $i");
+    if (item.depandantConditions != null) if (item.depandantConditions!.length >
+        0) {
+      print(
+          "questions count depandant ${item.depandantConditions!.length}, ${item.id}, $i");
       continue;
     }
     //print("questions count depandant increment ${item.depandantConditions!.length}, ${item.id}, $i");
@@ -976,7 +1056,7 @@ String getFilename(String file) {
   return basename(f.path);
 }
 
-Future<bool> saveUint8ListFile(Uint8List f, String filename) async {
+/*Future<bool> saveUint8ListFile(Uint8List f, String filename) async {
   print("saving file to disk");
   if (!kIsWeb) {
     final dir = await getExternalStorageDirectory();
@@ -995,11 +1075,12 @@ Future<bool> saveUint8ListFile(Uint8List f, String filename) async {
     }
   } else {
     MimeType type = MimeType.jpeg;
-    String path = await FileSaver.instance.saveFile(name: filename, bytes: f, ext: "jpeg", mimeType: type);
+    String path = await FileSaver.instance
+        .saveFile(name: filename, bytes: f, ext: "jpeg", mimeType: type);
     print(path);
   }
   return false;
-}
+}*/
 
 Future<Uint8List?> getUint8ListFile(String filename) async {
   print("getting saved file from disk");
@@ -1018,7 +1099,8 @@ Future<Uint8List?> getUint8ListFile(String filename) async {
   return null;
 }
 
-String? checkValueValid({String? value, String? maxValue, String? minValue, bool? required}) {
+String? checkValueValid(
+    {String? value, String? maxValue, String? minValue, bool? required}) {
   if (value?.isNotEmpty ?? false) {
     if (isNumeric(value)) {
       double? max;
@@ -1072,7 +1154,8 @@ Widget fieldData(String? content) {
   );
 }
 
-Widget fieldDataEdit(TextEditingController controller, {bool readOnly = false}) {
+Widget fieldDataEdit(TextEditingController controller,
+    {bool readOnly = false}) {
   return TextFormField(
     controller: controller,
     readOnly: readOnly,
@@ -1112,7 +1195,9 @@ void noInternetDialog(BuildContext context) {
     context: context,
     type: AlertType.warning,
     title: "Pas d'internet".tr(),
-    desc: "Impossible d’envoyer le formulaire! Veuillez vérifier votre connexion à internet puis réessayer. Cependant, le formulaire sera enregistré sur votre historique!".tr(),
+    desc:
+        "Impossible d’envoyer le formulaire! Veuillez vérifier votre connexion à internet puis réessayer. Cependant, le formulaire sera enregistré sur votre historique!"
+            .tr(),
     buttons: [
       DialogButton(
         child: Text(
@@ -1135,20 +1220,27 @@ Future<void> postWaitingForms(BuildContext context) async {
     noInternetDialog(context);
     return;
   }
-  List<FormFields> forms = await getDataBase<FormFieldsDao>().fetchFormsAny(context);
+  List<FormFields> forms =
+      await getDataBase<FormFieldsDao>().fetchFormsAny(context);
 
   for (var form in forms) {
-    AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_COMPLETED, null);
+    AnswerHolder? waitingUploadAnswerHolder =
+        await getDataBase<AnswerHolderDao>()
+            .fetchAnswerHolderNotClosedWithChildren(
+                form.id!, HOLDER_COMPLETED, null);
     if (waitingUploadAnswerHolder != null) {
       if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
         LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
         showLoaderDialog(context);
-        DecisionResponse? sent = await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
+        DecisionResponse? sent =
+            await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
         Navigator.pop(context);
         if (sent != null) {
           print("terminating answer holder ....");
-          await getDataBase<AnswerHolderDao>().closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
-          await getDataBase<AnswerHolderDao>().terminateAnswerHolder(waitingUploadAnswerHolder.id!);
+          await getDataBase<AnswerHolderDao>()
+              .closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
+          await getDataBase<AnswerHolderDao>()
+              .terminateAnswerHolder(waitingUploadAnswerHolder.id!);
           sent.answerHolderId = waitingUploadAnswerHolder.id;
           await getDataBase<DecisionResponseDao>().insertDecisionResponse(sent);
           showResponseDialog(context, sent, () {
@@ -1180,7 +1272,9 @@ Future<void> postWaitingForms(BuildContext context) async {
           context: context,
           type: AlertType.warning,
           title: "Attention".tr(),
-          desc: "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses".tr(),
+          desc:
+              "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses"
+                  .tr(),
           buttons: [
             DialogButton(
               child: Text(
@@ -1205,7 +1299,8 @@ AnswersCount countAnswersForm(FormFields form) {
     a.realTotalQuestions += countActiveQuestions(item);
     a.totalQuestions += countQuestions(item);
   }
-  a.progress = ((form.answerHolder?.answers?.length ?? 0).toDouble()) / a.totalQuestions;
+  a.progress =
+      ((form.answerHolder?.answers?.length ?? 0).toDouble()) / a.totalQuestions;
   return a;
 }
 
@@ -1220,7 +1315,9 @@ AnswersCount countAnswersHolder(AnswerHolder holder) {
   return a;
 }
 
-Future<void> checkSend(BuildContext context, FormFields form, Function() onFinish, {bool showResult = true, bool checkInternet = true}) async {
+Future<void> checkSend(
+    BuildContext context, FormFields form, Function() onFinish,
+    {bool showResult = true, bool checkInternet = true}) async {
   ApiRepository api = ApiRepository();
   if (checkInternet) {
     bool connected = await api.hasInternetConnection();
@@ -1229,18 +1326,24 @@ Future<void> checkSend(BuildContext context, FormFields form, Function() onFinis
       return;
     }
   }
-  AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderNotClosedWithChildren(form.id!, HOLDER_NOT_COMPLETED, null);
+  AnswerHolder? waitingUploadAnswerHolder = await getDataBase<AnswerHolderDao>()
+      .fetchAnswerHolderNotClosedWithChildren(
+          form.id!, HOLDER_NOT_COMPLETED, null);
   if (waitingUploadAnswerHolder != null) {
     if (areValidAnswers(form.fieldSets, waitingUploadAnswerHolder)) {
       LocalUser? lu = await getDataBase<LocalUserDao>().fetchUser();
       if (showResult) showLoaderDialog(context);
-      DecisionResponse? sent = await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
+      DecisionResponse? sent =
+          await api.postAnswerHolder(lu!.user!, waitingUploadAnswerHolder);
       if (showResult) Navigator.pop(context);
       if (sent != null) {
         print("terminating answer holder ....");
-        await getDataBase<AnswerHolderDao>().completeAnswerHolder(waitingUploadAnswerHolder.id!);
-        await getDataBase<AnswerHolderDao>().closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
-        await getDataBase<AnswerHolderDao>().terminateAnswerHolder(waitingUploadAnswerHolder.id!);
+        await getDataBase<AnswerHolderDao>()
+            .completeAnswerHolder(waitingUploadAnswerHolder.id!);
+        await getDataBase<AnswerHolderDao>()
+            .closeAnswerHolderAndSetCompletedTime(waitingUploadAnswerHolder);
+        await getDataBase<AnswerHolderDao>()
+            .terminateAnswerHolder(waitingUploadAnswerHolder.id!);
         sent.answerHolderId = waitingUploadAnswerHolder.id;
         await getDataBase<DecisionResponseDao>().insertDecisionResponse(sent);
         if (showResult) {
@@ -1279,7 +1382,9 @@ Future<void> checkSend(BuildContext context, FormFields form, Function() onFinis
           context: context,
           type: AlertType.warning,
           title: "Attention".tr(),
-          desc: "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses".tr(),
+          desc:
+              "Vous devez répondre à toutes les questions obligatoire afin de pouvoir envoyer vos réponses"
+                  .tr(),
           buttons: [
             DialogButton(
               child: Text(

@@ -1,14 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:rightnow/components/adaptative_text_size.dart';
-import 'package:rightnow/components/bottom_nav_home.dart';
-import 'package:rightnow/components/scroll_touch_widget.dart';
-import 'package:rightnow/constants/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:rightnow/models/about.dart';
-import 'package:rightnow/models/social_links.dart';
-import 'package:rightnow/rest/ApiRepository.dart';
 import 'package:rightnow/screen_viewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,9 +38,9 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenViewerWidget(
       page: Scaffold(
-        bottomNavigationBar: HomeNavBarComp(
+        /*bottomNavigationBar: HomeNavBarComp(
           NavState.NAV_CHAT,
-        ),
+        ),*/
         appBar: AppBar(
           //backgroundColor: Colors.grey.shade50,
           title: Text('Chat with us'.tr()),

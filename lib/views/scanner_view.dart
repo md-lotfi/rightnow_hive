@@ -1,6 +1,8 @@
+import 'dart:developer';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:rightnow/components/barcode_scanner_page.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -27,7 +29,8 @@ class ScannerWidget extends StatefulWidget {
   _ScannerWidgetState createState() => _ScannerWidgetState();
 }
 
-class _ScannerWidgetState extends State<ScannerWidget> with AutomaticKeepAliveClientMixin {
+class _ScannerWidgetState extends State<ScannerWidget>
+    with AutomaticKeepAliveClientMixin {
   String? selectedBarCode;
 
   @override
@@ -60,7 +63,8 @@ class _ScannerWidgetState extends State<ScannerWidget> with AutomaticKeepAliveCl
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (selectedBarCode != null)
               Container(
                 margin: EdgeInsets.only(top: 5, bottom: 10),
@@ -100,23 +104,60 @@ class _ScannerWidgetState extends State<ScannerWidget> with AutomaticKeepAliveCl
                               : Icon(Icons.qr_code),
                           label: Text("Scanner un QR Code".tr()),
                           onPressed: () async {
-                            selectedBarCode = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Annuler", true, ScanMode.QR);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BarcodeScannerPage(
+                                  onResult: (value) async {
+                                    log("qr codde value is $value");
+                                    selectedBarCode = value;
+                                    widget.onSelectedValue!(
+                                      Answer.fill(
+                                          widget.question!.id,
+                                          widget.question!.fieldSet,
+                                          selectedBarCode,
+                                          null,
+                                          DateTime.now().toString(),
+                                          transtypeResourceType(
+                                              widget.question!.resourcetype!),
+                                          widget.answerHolder!.id,
+                                          null),
+                                    );
+                                    state.didChange(selectedBarCode);
+                                    setState(() {});
+                                  },
+                                ),
+                              ),
+                            );
+                            /*selectedBarCode =
+                                await FlutterBarcodeScanner.scanBarcode(
+                                    "#ff6666", "Annuler", true, ScanMode.QR);
                             widget.onSelectedValue!(
-                              Answer.fill(widget.question!.id, widget.question!.fieldSet, selectedBarCode, null, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!),
-                                  widget.answerHolder!.id, null),
+                              Answer.fill(
+                                  widget.question!.id,
+                                  widget.question!.fieldSet,
+                                  selectedBarCode,
+                                  null,
+                                  DateTime.now().toString(),
+                                  transtypeResourceType(
+                                      widget.question!.resourcetype!),
+                                  widget.answerHolder!.id,
+                                  null),
                             );
                             state.didChange(selectedBarCode);
-                            setState(() {});
-                            //setState(() {});
+                            setState(() {});*/
                           },
                         ),
                       ),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (value) {
-                  if (isRequired(widget.question)) if (selectedBarCode == null) return FORM_SELECT_QR;
+                  if (isRequired(widget.question)) if (selectedBarCode == null)
+                    return FORM_SELECT_QR;
                   return null;
                 },
               ),

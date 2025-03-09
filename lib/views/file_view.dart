@@ -6,7 +6,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -36,10 +35,12 @@ class FileWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  FileWidgetState createState() => FileWidgetState(this.question, this.answerHolder, this.onSelectedValue);
+  FileWidgetState createState() =>
+      FileWidgetState(this.question, this.answerHolder, this.onSelectedValue);
 }
 
-class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMixin {
+class FileWidgetState extends State<FileWidget>
+    with AutomaticKeepAliveClientMixin {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -128,7 +129,8 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (widget.viewOnly && widget.responseSet != null)
               Center(
                   child: Image.asset(
@@ -188,9 +190,17 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                             SizedBox(
                               width: double.infinity,
                               child: TextButton.icon(
-                                icon: showWidget(Icon(Icons.file_upload), _fileState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green),
+                                icon: showWidget(
+                                    Icon(Icons.file_upload),
+                                    _fileState == -1
+                                        ? Icon(Icons.error_outline,
+                                            color: Colors.red)
+                                        : Icon(Icons.check,
+                                            color: Colors.green),
                                     _fileState == 0), //Icon(Icons.file_upload),
-                                label: _fileState == 0 ? Text("Charger un fichier".tr()) : Text("Charger un nouveau fichier".tr()),
+                                label: _fileState == 0
+                                    ? Text("Charger un fichier".tr())
+                                    : Text("Charger un nouveau fichier".tr()),
                                 onPressed: () async {
                                   selectFile().then((result) async {
                                     log("file question $result");
@@ -201,9 +211,11 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                                       });
                                       log("file question 1");
                                       //File file = File(result.files.single.path ?? "");
-                                      Uint8List? file = result.files.first.bytes;
+                                      Uint8List? file =
+                                          result.files.first.bytes;
                                       if (file != null) {
-                                        double fileSize = (file.lengthInBytes) / 1024;
+                                        double fileSize =
+                                            (file.lengthInBytes) / 1024;
                                         if (question?.maxSizeKb != null) {
                                           if (fileSize > question!.maxSizeKb!) {
                                             state.didChange(3);
@@ -225,20 +237,38 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                                         _file = result.files.single.name;
                                         log("file question $_file");
                                         if (_file != null) {
-                                          print("saving file path in answer ${file.lengthInBytes}");
+                                          print(
+                                              "saving file path in answer ${file.lengthInBytes}");
                                           await FileSaver.set(FileSaver(
                                               questionId: question!.id!,
                                               answerHolderId: answerHolder!.id!,
                                               name: _file!,
-                                              path: !kIsWeb ? result.files.single.path! : result.files.single.name,
+                                              path: !kIsWeb
+                                                  ? result.files.single.path!
+                                                  : result.files.single.name,
                                               file: file,
-                                              extension: p.extension(!kIsWeb ? result.files.single.path! : result.files.single.name)));
-                                          FileSaver? f = await FileSaver.getLastItem();
+                                              extension: p.extension(!kIsWeb
+                                                  ? result.files.single.path!
+                                                  : result.files.single.name)));
+                                          FileSaver? f =
+                                              await FileSaver.getLastItem();
                                           if (f != null) {
                                             log("file question f is njot null");
                                             onSelectedValue!(
-                                              Answer.fill(question!.id, question!.fieldSet, _file, !kIsWeb ? result.files.single.path! : result.files.single.name, DateTime.now().toString(),
-                                                  transtypeResourceType(question!.resourcetype!), answerHolder!.id, null,
+                                              Answer.fill(
+                                                  question!.id,
+                                                  question!.fieldSet,
+                                                  _file,
+                                                  !kIsWeb
+                                                      ? result
+                                                          .files.single.path!
+                                                      : result
+                                                          .files.single.name,
+                                                  DateTime.now().toString(),
+                                                  transtypeResourceType(
+                                                      question!.resourcetype!),
+                                                  answerHolder!.id,
+                                                  null,
                                                   fileKey: f.key),
                                             );
                                           }
@@ -253,8 +283,13 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                               ),
                             ),
                             _setProgressBar(),
-                            (_fileState == 0 || _fileState == 1 || _fileState == -1)),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                            (_fileState == 0 ||
+                                _fileState == 1 ||
+                                _fileState == -1)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
@@ -264,16 +299,26 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
                       if (value == -1)
                         return FORM_SELECT_FILE_NOT_UPLOADED;
                       else if (value == 3)
-                        return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
-                      else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                        return FORM_SELECT_FILE_GRETAER +
+                            (widget.question?.maxSizeKb ?? 0).toString() +
+                            " Kb";
+                      else if (value == 4)
+                        return FORM_SELECT_FILE_LESS +
+                            (widget.question?.minSizeKb ?? 0).toString() +
+                            " Kb";
                       return FORM_SELECT_FILE;
                     }
                   } else {
                     if (value == -1)
                       return FORM_SELECT_FILE_NOT_UPLOADED;
                     else if (value == 3)
-                      return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
-                    else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                      return FORM_SELECT_FILE_GRETAER +
+                          (widget.question?.maxSizeKb ?? 0).toString() +
+                          " Kb";
+                    else if (value == 4)
+                      return FORM_SELECT_FILE_LESS +
+                          (widget.question?.minSizeKb ?? 0).toString() +
+                          " Kb";
                   }
                   return null;
                 },
@@ -288,7 +333,7 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
 
   Future<void> downloadOrOpenAttahment() async {
     ApiRepository api = ApiRepository();
-    if (_attachment != null) {
+    /*if (_attachment != null) {
       log("trying to open file ${_attachment!.path}");
       await OpenFile.open(_attachment!.path);
     } else {
@@ -313,7 +358,7 @@ class FileWidgetState extends State<FileWidget> with AutomaticKeepAliveClientMix
       /*} else if (r == PermissionStatus.permanentlyDenied) {
         openAppSettings();
       }*/
-    }
+    }*/
     return;
   }
 

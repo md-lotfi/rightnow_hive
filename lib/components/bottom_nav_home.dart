@@ -1,6 +1,3 @@
-import 'package:rightnow/categories.dart';
-import 'package:rightnow/chat_page.dart';
-import 'package:rightnow/components/db_service.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/history_screen.dart';
 import 'package:rightnow/home_screen.dart';
@@ -17,7 +14,7 @@ const int NAV_PROFILE = 2;
 const int NAV_SETTINGS = 3;
 const int NAV_CHAT = 4;
 
-enum NavState { NAV_HOME, NAV_HISTORY, NAV_PROFILE, NAV_SETTINGS, NAV_CHAT }
+enum NavState { NAV_HOME, NAV_HISTORY, NAV_PROFILE, NAV_SETTINGS } //, NAV_CHAT
 
 class HomeNavBarComp extends StatelessWidget {
   final NavState currentIndex;
@@ -67,7 +64,10 @@ class HomeNavBarComp extends StatelessWidget {
             );
             break;
           case NAV_CHAT:
-            launch("https://tawk.to/startupdzsupport", forceWebView: true, enableJavaScript: true, enableDomStorage: true);
+            launch("https://tawk.to/startupdzsupport",
+                forceWebView: true,
+                enableJavaScript: true,
+                enableDomStorage: true);
             break;
         }
       },
@@ -92,10 +92,10 @@ class HomeNavBarComp extends StatelessWidget {
           icon: Icon(Icons.settings),
           label: "Configuration".tr(),
         ),
-        BottomNavigationBarItem(
+        /*BottomNavigationBarItem(
           icon: Icon(Icons.chat),
           label: "Chat".tr(),
-        ),
+        ),*/
       ],
     );
   }

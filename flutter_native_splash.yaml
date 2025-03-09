@@ -64,3 +64,5 @@ flutter_native_splash:
   #info_plist_files:
   #  - 'ios/Runner/Info-Debug.plist'
   #  - 'ios/Runner/Info-Release.plist'
+  android_12:
+    color: "#FFFFFF"

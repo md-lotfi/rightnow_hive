@@ -61,7 +61,8 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
           context: context,
           title: "Choose image / take picture".tr(),
           style: AlertStyle(
-            titleStyle: TextStyle(fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 15)),
+            titleStyle: TextStyle(
+                fontSize: AdaptiveTextSize().getadaptiveTextSize(context, 15)),
           ),
           content: Container(
             child: Column(
@@ -109,12 +110,17 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
                           ? Container(
                               child: Text("Select an image to upload".tr()),
                             )
-                          : showWidget(_setProgressBar(setState), _getImage(_image!), _imageState == FILE_UPLOADING),
+                          : showWidget(
+                              _setProgressBar(setState),
+                              _getImage(_image!),
+                              _imageState == FILE_UPLOADING),
                       SizedBox(
                         height: 20,
                       ),
                       Row(
-                        mainAxisAlignment: kIsWeb ? MainAxisAlignment.center : MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: kIsWeb
+                            ? MainAxisAlignment.center
+                            : MainAxisAlignment.spaceAround,
                         children: [
                           if (!kIsWeb)
                             IconButton(
@@ -152,14 +158,18 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
                     ],
                   ),
                   Container(),
-                  _imageState == FILE_ADDED || _imageState == FILE_UPLOADED || _imageState == FILE_CROPPED || _imageState == FILE_UPLOADING,
+                  _imageState == FILE_ADDED ||
+                      _imageState == FILE_UPLOADED ||
+                      _imageState == FILE_CROPPED ||
+                      _imageState == FILE_UPLOADING,
                 ),
               ],
             ),
           ),
           buttons: [
             DialogButton(
-                child: Text("Enregistrer".tr(), style: TextStyle(color: Colors.white)),
+                child: Text("Enregistrer".tr(),
+                    style: TextStyle(color: Colors.white)),
                 color: COLOR_PRIMARY,
                 onPressed: () {
                   _upload(context);
@@ -196,13 +206,8 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
     if (_image != null) {
       log('calling cropImage *******************');
       //if (!kIsWeb) {
-      var imageCropped = await ImageCropper().cropImage(sourcePath: _image!.path, aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ], uiSettings: [
+      var imageCropped =
+          await ImageCropper().cropImage(sourcePath: _image!.path, uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Cropper'.tr(),
           toolbarColor: Colors.deepOrange,
@@ -215,11 +220,9 @@ class _UploadDialogWidgetState extends State<UploadDialogWidget> {
         ),
         WebUiSettings(
           context: context,
-          enableResize: true,
-          enableExif: true,
-          enableOrientation: true,
-          enableZoom: true,
-          enforceBoundary: true,
+          cropBoxResizable: true,
+          checkOrientation: true,
+          zoomable: true,
         ),
       ]);
       if (imageCropped != null) {
