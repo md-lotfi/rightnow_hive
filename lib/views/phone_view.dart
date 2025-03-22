@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/inherits/field_controller.dart';
@@ -24,10 +25,12 @@ class PhoneWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _PhoneWidgetState createState() => _PhoneWidgetState(this.question, this.answerHolder, this.onSelectedValue);
+  _PhoneWidgetState createState() =>
+      _PhoneWidgetState(this.question, this.answerHolder, this.onSelectedValue);
 }
 
-class _PhoneWidgetState extends State<PhoneWidget> with AutomaticKeepAliveClientMixin, FiledController {
+class _PhoneWidgetState extends State<PhoneWidget>
+    with AutomaticKeepAliveClientMixin, FiledController {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -60,7 +63,15 @@ class _PhoneWidgetState extends State<PhoneWidget> with AutomaticKeepAliveClient
   _dataChanged() {
     print("phone text changed " + fieldDataController.text);
     onSelectedValue!(
-      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
+      Answer.fill(
+          question?.id,
+          question?.fieldSet,
+          fieldDataController.text,
+          null,
+          Jiffy.now(),
+          transtypeResourceType(question?.resourcetype),
+          answerHolder?.id,
+          null),
     );
   }
 
@@ -72,18 +83,27 @@ class _PhoneWidgetState extends State<PhoneWidget> with AutomaticKeepAliveClient
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,
                 controller: fieldDataController,
                 validator: (value) {
                   if (!isRequired(question)) {
-                    if (!(value?.isEmpty ?? true)) if (!(value?.startsWith("+") ?? false) || !(((value?.length ?? 0) >= 11))) return FORM_PHONE_ERROR;
+                    if (!(value?.isEmpty ?? true)) if (!(value
+                                ?.startsWith("+") ??
+                            false) ||
+                        !(((value?.length ?? 0) >= 11)))
+                      return FORM_PHONE_ERROR;
                     return null;
                   }
                   if (value?.isNotEmpty ?? false) {
-                    if (!(value?.isEmpty ?? true)) if (!(value?.startsWith("+") ?? false) || !(((value?.length ?? 0) >= 11))) return FORM_PHONE_ERROR;
+                    if (!(value?.isEmpty ?? true)) if (!(value
+                                ?.startsWith("+") ??
+                            false) ||
+                        !(((value?.length ?? 0) >= 11)))
+                      return FORM_PHONE_ERROR;
                     return null;
                   } else {
                     return FORM_MESSAGES_REQUIRED;

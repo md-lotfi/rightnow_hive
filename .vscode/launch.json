@@ -8,7 +8,6 @@
             "name": "rightnow",
             "request": "launch",
             "type": "dart",
-            "args": ["--web-renderer", "html"]
         }
     ]
 }

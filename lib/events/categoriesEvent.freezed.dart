@@ -59,7 +59,9 @@ mixin _$CategoriesEvent {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoriesEventCopyWith<CategoriesEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -83,6 +85,8 @@ class _$CategoriesEventCopyWithImpl<$Res, $Val extends CategoriesEvent>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -116,6 +120,8 @@ class __$$FetchLocalCategoriesImplCopyWithImpl<$Res>
       $Res Function(_$FetchLocalCategoriesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -155,7 +161,9 @@ class _$FetchLocalCategoriesImpl implements FetchLocalCategories {
   @override
   int get hashCode => Object.hash(runtimeType, belongsTo);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FetchLocalCategoriesImplCopyWith<_$FetchLocalCategoriesImpl>
@@ -235,8 +243,11 @@ abstract class FetchLocalCategories implements CategoriesEvent {
 
   @override
   int get belongsTo;
+
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FetchLocalCategoriesImplCopyWith<_$FetchLocalCategoriesImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -263,6 +274,8 @@ class __$$FetchLocalMiddleCategoriesImplCopyWithImpl<$Res>
       $Res Function(_$FetchLocalMiddleCategoriesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -302,7 +315,9 @@ class _$FetchLocalMiddleCategoriesImpl implements FetchLocalMiddleCategories {
   @override
   int get hashCode => Object.hash(runtimeType, belongsTo);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FetchLocalMiddleCategoriesImplCopyWith<_$FetchLocalMiddleCategoriesImpl>
@@ -381,8 +396,11 @@ abstract class FetchLocalMiddleCategories implements CategoriesEvent {
 
   @override
   int get belongsTo;
+
+  /// Create a copy of CategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FetchLocalMiddleCategoriesImplCopyWith<_$FetchLocalMiddleCategoriesImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

@@ -69,10 +69,10 @@ class ResponseSetAdapter extends TypeAdapter<ResponseSet> {
 // **************************************************************************
 
 ResponseSet _$ResponseSetFromJson(Map<String, dynamic> json) => ResponseSet(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       value: json['value'],
       entry: json['entry'] as Map<String, dynamic>?,
-      question: json['question'] as int?,
+      question: (json['question'] as num?)?.toInt(),
       resourcetype: json['resourcetype'] as String?,
       questionHist: json['question_hist'] == null
           ? null

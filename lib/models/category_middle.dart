@@ -1,3 +1,5 @@
+import 'package:jiffy/jiffy.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/category_forms.dart';
 import 'package:rightnow/models/tag.dart';
@@ -8,6 +10,7 @@ import 'package:rightnow/views/language_switch.dart';
 part 'category_middle.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 7)
 class CategoryMiddle {
   @HiveField(0)
@@ -34,7 +37,7 @@ class CategoryMiddle {
 
   @HiveField(6)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   List<Tag>? tags;
 
@@ -45,9 +48,11 @@ class CategoryMiddle {
     return (lang == LANGUAGE_FR ? name : nameAr) ?? name ?? "";
   }
 
-  CategoryMiddle(this.id, this.name, this.nameAr, this.nameFr, this.icon, this.belongsTo, this.createdAt);
+  CategoryMiddle(this.id, this.name, this.nameAr, this.nameFr, this.icon,
+      this.belongsTo, this.createdAt);
 
-  factory CategoryMiddle.fromJson(Map<String, dynamic> json) => _$CategoryMiddleFromJson(json);
+  factory CategoryMiddle.fromJson(Map<String, dynamic> json) =>
+      _$CategoryMiddleFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryMiddleToJson(this);
 }

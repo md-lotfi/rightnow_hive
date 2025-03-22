@@ -22,7 +22,7 @@ class ReclamationsAdapter extends TypeAdapter<Reclamations> {
       formEntry: fields[5] as FormEntry?,
       deviceId: fields[3] as String?,
       user: fields[4] as int?,
-      createdAt: fields[6] as String?,
+      createdAt: fields[6] as Jiffy?,
       formId: fields[2] as int?,
       form: fields[7] as String?,
       formAr: fields[8] as String?,
@@ -75,15 +75,16 @@ class ReclamationsAdapter extends TypeAdapter<Reclamations> {
 // **************************************************************************
 
 Reclamations _$ReclamationsFromJson(Map<String, dynamic> json) => Reclamations(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       state: json['state'] == null
           ? null
           : ReclamationState.fromJson(json['state'] as Map<String, dynamic>),
       formEntry: json['form_entry'] == null
           ? null
           : FormEntry.fromJson(json['form_entry'] as Map<String, dynamic>),
-      user: json['user'] as int?,
-      createdAt: json['created_at'] as String?,
+      user: (json['user'] as num?)?.toInt(),
+      createdAt:
+          const JiffySecondsConverter().fromJson(json['created_at'] as String?),
       form: json['form'] as String?,
       formAr: json['form_ar'] as String?,
       formDescription: json['form_description'] as String?,
@@ -96,7 +97,7 @@ Map<String, dynamic> _$ReclamationsToJson(Reclamations instance) =>
       'state': instance.state,
       'user': instance.user,
       'form_entry': instance.formEntry,
-      'created_at': instance.createdAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
       'form': instance.form,
       'form_ar': instance.formAr,
       'form_description': instance.formDescription,

@@ -48,7 +48,7 @@ class UserGroupAdapter extends TypeAdapter<UserGroup> {
 // **************************************************************************
 
 UserGroup _$UserGroupFromJson(Map<String, dynamic> json) => UserGroup(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
     );
 

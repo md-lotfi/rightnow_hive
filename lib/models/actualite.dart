@@ -1,10 +1,12 @@
 import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/views/language_switch.dart';
 
 part 'actualite.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 class Actualite {
   int? id;
 
@@ -42,10 +44,10 @@ class Actualite {
   String? descriptionAr;
 
   @JsonKey(name: "created_at")
-  String? createdAt;
+  Jiffy? createdAt;
 
   @JsonKey(name: "updated_at")
-  String? updatedAt;
+  Jiffy? updatedAt;
 
   @JsonKey(name: "content")
   String? content;
@@ -72,7 +74,7 @@ class Actualite {
   }
 
   int createdAtTimeStamp() {
-    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
+    return (createdAt ?? Jiffy.now()).microsecondsSinceEpoch;
   }
 
   Actualite({
@@ -96,7 +98,8 @@ class Actualite {
     this.titleAr,
   });
 
-  factory Actualite.fromJson(Map<String, dynamic> json) => _$ActualiteFromJson(json);
+  factory Actualite.fromJson(Map<String, dynamic> json) =>
+      _$ActualiteFromJson(json);
 
   Map<String, dynamic> toJson() => _$ActualiteToJson(this);
 }

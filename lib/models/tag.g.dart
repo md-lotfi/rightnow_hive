@@ -19,7 +19,7 @@ class TagAdapter extends TypeAdapter<Tag> {
     return Tag(
       fields[0] as int?,
       fields[1] as String?,
-      fields[2] as String?,
+      fields[2] as Jiffy?,
     );
   }
 
@@ -45,3 +45,19 @@ class TagAdapter extends TypeAdapter<Tag> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Tag _$TagFromJson(Map<String, dynamic> json) => Tag(
+      (json['id'] as num?)?.toInt(),
+      json['name'] as String?,
+      const JiffySecondsConverter().fromJson(json['createdAt'] as String?),
+    );
+
+Map<String, dynamic> _$TagToJson(Tag instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'createdAt': const JiffySecondsConverter().toJson(instance.createdAt),
+    };

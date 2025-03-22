@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/inherits/field_controller.dart';
@@ -24,10 +25,12 @@ class DecimalWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _DecimalWidgetState createState() => _DecimalWidgetState(this.question, this.answerHolder, this.onSelectedValue);
+  _DecimalWidgetState createState() => _DecimalWidgetState(
+      this.question, this.answerHolder, this.onSelectedValue);
 }
 
-class _DecimalWidgetState extends State<DecimalWidget> with AutomaticKeepAliveClientMixin, FiledController {
+class _DecimalWidgetState extends State<DecimalWidget>
+    with AutomaticKeepAliveClientMixin, FiledController {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -59,7 +62,8 @@ class _DecimalWidgetState extends State<DecimalWidget> with AutomaticKeepAliveCl
           for (var answer in answerHolder!.answers!) {
             if (answer.qustionId == question!.id) {
               fieldDataController.text = answer.answerValue!;
-              _hasData = isRequired(question) ? (checkValueValid() == null) : true;
+              _hasData =
+                  isRequired(question) ? (checkValueValid() == null) : true;
             }
           }
         }
@@ -83,7 +87,15 @@ class _DecimalWidgetState extends State<DecimalWidget> with AutomaticKeepAliveCl
         : true;
     print("is decimal valid $_hasData ...");
     onSelectedValue!(
-      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
+      Answer.fill(
+          question?.id,
+          question?.fieldSet,
+          fieldDataController.text,
+          null,
+          Jiffy.now(),
+          transtypeResourceType(question?.resourcetype),
+          answerHolder?.id,
+          null),
     );
   }
 
@@ -95,7 +107,8 @@ class _DecimalWidgetState extends State<DecimalWidget> with AutomaticKeepAliveCl
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 //focusNode: ,
@@ -121,7 +134,9 @@ class _DecimalWidgetState extends State<DecimalWidget> with AutomaticKeepAliveCl
                         onTap: () {
                           if (fieldDataController.text.isNotEmpty) {
                             if (isNumeric(fieldDataController.text)) {
-                              double i = double.tryParse(fieldDataController.text) ?? 0;
+                              double i =
+                                  double.tryParse(fieldDataController.text) ??
+                                      0;
                               fieldDataController.text = (i + 1).toString();
                             }
                           } else {
@@ -134,7 +149,9 @@ class _DecimalWidgetState extends State<DecimalWidget> with AutomaticKeepAliveCl
                         onTap: () {
                           if (fieldDataController.text.isNotEmpty) {
                             if (isNumeric(fieldDataController.text)) {
-                              double i = double.tryParse(fieldDataController.text) ?? 0;
+                              double i =
+                                  double.tryParse(fieldDataController.text) ??
+                                      0;
                               fieldDataController.text = (i - 1).toString();
                             }
                           } else {

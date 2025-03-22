@@ -1,6 +1,8 @@
 import 'package:hive/hive.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/form_entry.dart';
 import 'package:rightnow/models/form_state.dart';
@@ -10,6 +12,7 @@ import 'package:rightnow/views/language_switch.dart';
 part 'reclamations.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 22)
 class Reclamations {
   @HiveField(0)
@@ -40,7 +43,7 @@ class Reclamations {
 
   @HiveField(6)
   @JsonKey(name: "created_at")
-  String? createdAt;
+  Jiffy? createdAt;
 
   @HiveField(7)
   @JsonKey(name: "form")
@@ -66,7 +69,10 @@ class Reclamations {
   }
 
   String getDescription(String? lang) {
-    var r = (lang == LANGUAGE_FR ? formDescription : (lang == null ? formDescription : formDescriptionAr)) ?? "";
+    var r = (lang == LANGUAGE_FR
+            ? formDescription
+            : (lang == null ? formDescription : formDescriptionAr)) ??
+        "";
     return r;
   }
 
@@ -85,7 +91,8 @@ class Reclamations {
     this.localAnswerHolder,
   });
 
-  factory Reclamations.fromJson(Map<String, dynamic> json) => _$ReclamationsFromJson(json);
+  factory Reclamations.fromJson(Map<String, dynamic> json) =>
+      _$ReclamationsFromJson(json);
 
   Map<String, dynamic> toJson() => _$ReclamationsToJson(this);
 }

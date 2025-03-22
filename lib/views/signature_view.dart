@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/signature_widget.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -32,7 +33,8 @@ class SignatureView extends StatefulWidget {
   _SignatureViewState createState() => _SignatureViewState();
 }
 
-class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveClientMixin {
+class _SignatureViewState extends State<SignatureView>
+    with AutomaticKeepAliveClientMixin {
   double progress = 0;
   int imageState = 0;
 
@@ -65,7 +67,9 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
   }
 
   String getSignatureFilename() {
-    return SIGNATURE_FILENAME + (widget.answerHolder?.id?.toString() ?? "0") + SIGNATURE_FILENAME_EXT;
+    return SIGNATURE_FILENAME +
+        (widget.answerHolder?.id?.toString() ?? "0") +
+        SIGNATURE_FILENAME_EXT;
   }
 
   Widget load() {
@@ -76,7 +80,8 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (widget.viewOnly && widget.responseSet != null)
               Container(
                 alignment: Alignment.center,
@@ -87,9 +92,13 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
                   height: 180,
                 ),
               ),
-            if (!widget.viewOnly || (widget.viewOnly && widget.answerHolder != null && widget.responseSet == null))
+            if (!widget.viewOnly ||
+                (widget.viewOnly &&
+                    widget.answerHolder != null &&
+                    widget.responseSet == null))
               FutureBuilder<FileSaver?>(
-                future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getSignatureFilename()),
+                future: FileSaver.getBykey(
+                    _fileKey), //getUint8ListFile(getSignatureFilename()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     log("checking image exists ?? $imageState");
@@ -136,7 +145,8 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
                                     fit: BoxFit.scaleDown,
                                   ),
                                   imageState == -1
-                                      ? Icon(Icons.error_outline, color: Colors.red)
+                                      ? Icon(Icons.error_outline,
+                                          color: Colors.red)
                                       : Icon(
                                           Icons.check,
                                           color: Colors.green,
@@ -155,15 +165,21 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
                                     builder: (context) => SignatureWidget(),
                                   ),
                                 );
-                                SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+                                SchedulerBinding.instance!
+                                    .addPostFrameCallback((timeStamp) {
                                   _setSignature(state);
                                 });
                               },
                             ),
                           ),
                           _setProgressBar(),
-                          (imageState == 0 || imageState == 1 || imageState == -1)),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                          (imageState == 0 ||
+                              imageState == 1 ||
+                              imageState == -1)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
@@ -186,7 +202,12 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
     if (_image != null) {
       //await saveUint8ListFile(_image!, getSignatureFilename());
       String n = getSignatureFilename();
-      await FileSaver.set(FileSaver(name: n, file: _image!, path: "", questionId: widget.question!.id!, answerHolderId: widget.answerHolder!.id!));
+      await FileSaver.set(FileSaver(
+          name: n,
+          file: _image!,
+          path: "",
+          questionId: widget.question!.id!,
+          answerHolderId: widget.answerHolder!.id!));
 
       print("signature filename $n ...........");
       FileSaver? f = await FileSaver.getLastItem();
@@ -194,7 +215,15 @@ class _SignatureViewState extends State<SignatureView> with AutomaticKeepAliveCl
         log("signature question add to key ${f.name}");
         _fileKey = f.key;
         widget.onSelectedValue!(
-          Answer.fill(widget.question!.id, widget.question!.fieldSet, n, n, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!), widget.answerHolder?.id, null,
+          Answer.fill(
+              widget.question!.id,
+              widget.question!.fieldSet,
+              n,
+              n,
+              Jiffy.now(),
+              transtypeResourceType(widget.question!.resourcetype!),
+              widget.answerHolder?.id,
+              null,
               fileKey: f.key),
         );
         progress = 0;

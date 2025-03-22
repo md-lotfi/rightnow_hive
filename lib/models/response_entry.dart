@@ -1,11 +1,14 @@
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 
 import 'package:rightnow/models/response_set.dart';
 
 part 'response_entry.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 101)
 class ResponseEntry extends HiveObject {
   @HiveField(0)
@@ -13,11 +16,11 @@ class ResponseEntry extends HiveObject {
 
   @HiveField(1)
   @JsonKey(name: 'uploaded_at')
-  String? uploadedAt;
+  Jiffy? uploadedAt;
 
   @HiveField(2)
   @JsonKey(name: 'completed_at')
-  String? completedAt;
+  Jiffy? completedAt;
 
   @HiveField(3)
   @JsonKey(name: 'device_id')
@@ -45,7 +48,8 @@ class ResponseEntry extends HiveObject {
     this.responseSet,
   });
 
-  factory ResponseEntry.fromJson(Map<String, dynamic> json) => _$ResponseEntryFromJson(json);
+  factory ResponseEntry.fromJson(Map<String, dynamic> json) =>
+      _$ResponseEntryFromJson(json);
 
   Map<String, dynamic> toJson() => _$ResponseEntryToJson(this);
 }

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/inherits/field_controller.dart';
@@ -24,10 +25,12 @@ class EmailWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _EmailWidgetState createState() => _EmailWidgetState(this.question, this.onSelectedValue, this.answerHolder);
+  _EmailWidgetState createState() =>
+      _EmailWidgetState(this.question, this.onSelectedValue, this.answerHolder);
 }
 
-class _EmailWidgetState extends State<EmailWidget> with AutomaticKeepAliveClientMixin, FiledController {
+class _EmailWidgetState extends State<EmailWidget>
+    with AutomaticKeepAliveClientMixin, FiledController {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -54,7 +57,15 @@ class _EmailWidgetState extends State<EmailWidget> with AutomaticKeepAliveClient
   _dataChanged() {
     print("email text changed " + fieldDataController.text);
     onSelectedValue!(
-      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
+      Answer.fill(
+          question?.id,
+          question?.fieldSet,
+          fieldDataController.text,
+          null,
+          Jiffy.now(),
+          transtypeResourceType(question?.resourcetype),
+          answerHolder?.id,
+          null),
     );
   }
 
@@ -72,12 +83,14 @@ class _EmailWidgetState extends State<EmailWidget> with AutomaticKeepAliveClient
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,
                 validator: (value) {
-                  return checkEmailValueValid(required: isRequired(question), value: value);
+                  return checkEmailValueValid(
+                      required: isRequired(question), value: value);
                 },
                 controller: fieldDataController,
                 keyboardType: TextInputType.emailAddress,

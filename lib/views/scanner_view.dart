@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/barcode_scanner_page.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -116,7 +117,7 @@ class _ScannerWidgetState extends State<ScannerWidget>
                                           widget.question!.fieldSet,
                                           selectedBarCode,
                                           null,
-                                          DateTime.now().toString(),
+                                          Jiffy.now(),
                                           transtypeResourceType(
                                               widget.question!.resourcetype!),
                                           widget.answerHolder!.id,

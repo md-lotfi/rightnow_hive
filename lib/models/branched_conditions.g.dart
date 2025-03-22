@@ -76,17 +76,19 @@ class BranchedConditionsAdapter extends TypeAdapter<BranchedConditions> {
 
 BranchedConditions _$BranchedConditionsFromJson(Map<String, dynamic> json) =>
     BranchedConditions(
-      json['id'] as int?,
-      json['condition'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['condition'] as num?)?.toInt(),
       json['is_active'] as bool?,
-      json['polymorphic_ctype'] as int?,
-      json['dependant_question'] as int?,
-      json['branch_question'] as int?,
+      (json['polymorphic_ctype'] as num?)?.toInt(),
+      (json['dependant_question'] as num?)?.toInt(),
+      (json['branch_question'] as num?)?.toInt(),
       BranchedConditions._allToString(json['value']),
-      json['questionId'] as int?,
+      (json['questionId'] as num?)?.toInt(),
       json['condition_name'] as String?,
-      json['preceded_by'] as int?,
-      (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList(),
+      (json['preceded_by'] as num?)?.toInt(),
+      (json['choices'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
     );
 
 Map<String, dynamic> _$BranchedConditionsToJson(BranchedConditions instance) =>

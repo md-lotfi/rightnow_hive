@@ -70,17 +70,18 @@ class DependentConditionAdapter extends TypeAdapter<DependentCondition> {
 
 DependentCondition _$DependentConditionFromJson(Map<String, dynamic> json) =>
     DependentCondition(
-      json['id'] as int?,
-      json['condition'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['condition'] as num?)?.toInt(),
       json['is_active'] as bool?,
-      json['polymorphic_ctype'] as int?,
-      json['dependant_question'] as int?,
-      json['branch_question'] as int?,
+      (json['polymorphic_ctype'] as num?)?.toInt(),
+      (json['dependant_question'] as num?)?.toInt(),
+      (json['branch_question'] as num?)?.toInt(),
       DependentCondition._allToString(json['value']),
       json['resourcetype'] as String?,
-      json['questionId'] as int?,
-    )..choices =
-        (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList();
+      (json['questionId'] as num?)?.toInt(),
+    )..choices = (json['choices'] as List<dynamic>?)
+        ?.map((e) => (e as num).toInt())
+        .toList();
 
 Map<String, dynamic> _$DependentConditionToJson(DependentCondition instance) =>
     <String, dynamic>{

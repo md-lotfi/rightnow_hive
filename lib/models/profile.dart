@@ -1,5 +1,7 @@
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/blood_group.dart';
 import 'package:rightnow/models/disease.dart';
 import 'package:rightnow/models/province.dart';
@@ -7,6 +9,7 @@ import 'package:rightnow/models/province.dart';
 part 'profile.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 30)
 class Profile {
   @HiveField(0)
@@ -48,10 +51,10 @@ class Profile {
   String? birthDate;
 
   @HiveField(8)
-  String? createdAt;
+  Jiffy? createdAt;
 
   @HiveField(9)
-  String? updatedAt;
+  Jiffy? updatedAt;
 
   @HiveField(10)
   int? user;
@@ -120,9 +123,11 @@ class Profile {
     this.updatedMobile,
   );
 
-  Profile.fill(this.name, this.fname, this.email, this.gender, this.birthDate, this.createdAt, this.updatedAt, this.user, this.town);
+  Profile.fill(this.name, this.fname, this.email, this.gender, this.birthDate,
+      this.createdAt, this.updatedAt, this.user, this.town);
 
-  factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProfileToJson(this);
 }

@@ -37,12 +37,13 @@ class ActualitePage extends StatelessWidget {
           IconButton(onPressed: () {}, icon: Icon(Icons.settings_outlined)),
         ],*/
       ),
-      body: Container(
+      body: SafeArea(
           //padding: EdgeInsets.all(15),
           child: RefreshIndicator(
         child: _builder(context),
         onRefresh: () async {
-          BlocProvider.of<ActualiteBloc>(context).add(ActualiteEvent.getActualite());
+          BlocProvider.of<ActualiteBloc>(context)
+              .add(ActualiteEvent.getActualite());
           return await Future.delayed(
             Duration(seconds: 3),
           );
@@ -72,7 +73,8 @@ class ActualitePage extends StatelessWidget {
   }
 
   Widget _getLeading(Actualite actualite) {
-    return loadImage(actualite.thumbnail, defaultImg: Icon(Icons.article_outlined, size: 40));
+    return loadImage(actualite.thumbnail,
+        defaultImg: Icon(Icons.article_outlined, size: 40));
     /*if (actualite.thumbnail != null)
     /*return Image.network(
         actualite.thumbnail!,
@@ -183,17 +185,23 @@ class ActualitePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          Jiffy.parse(ac.createdAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy"),
+                          (ac.createdAt ?? Jiffy.now())
+                              .format(pattern: "dd MMMM yyyy"),
                           textAlign: TextAlign.start,
                           style: TextStyle(color: Colors.grey.shade400),
                         ),
                         SizedBox(height: 5),
                         Text(
                           ac.getTitle(context.locale.languageCode),
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                         Text(
-                          ac.resourceType == RESSOURCE_ARTICLE_ACTU ? "Article".tr() : (ac.resourceType == RESSOURCE_VIDEO_ACTU ? "Video".tr() : "Lien".tr()),
+                          ac.resourceType == RESSOURCE_ARTICLE_ACTU
+                              ? "Article".tr()
+                              : (ac.resourceType == RESSOURCE_VIDEO_ACTU
+                                  ? "Video".tr()
+                                  : "Lien".tr()),
                           textAlign: TextAlign.end,
                           style: TextStyle(color: Colors.grey.shade400),
                         ),

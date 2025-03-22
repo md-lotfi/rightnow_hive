@@ -56,10 +56,10 @@ class ResponseQuestionHistAdapter extends TypeAdapter<ResponseQuestionHist> {
 ResponseQuestionHist _$ResponseQuestionHistFromJson(
         Map<String, dynamic> json) =>
     ResponseQuestionHist(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       label: json['label'] as String?,
       labaleAr: json['label_ar'] as String?,
-      fieldSet: json['field_set'] as int?,
+      fieldSet: (json['field_set'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ResponseQuestionHistToJson(

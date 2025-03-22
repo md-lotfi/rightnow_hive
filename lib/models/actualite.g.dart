@@ -7,14 +7,16 @@ part of 'actualite.dart';
 // **************************************************************************
 
 Actualite _$ActualiteFromJson(Map<String, dynamic> json) => Actualite(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       stateName: json['state_name'] as String?,
       typeName: json['type_name'] as String?,
-      state: json['state'] as int?,
-      type: json['type'] as int?,
+      state: (json['state'] as num?)?.toInt(),
+      type: (json['type'] as num?)?.toInt(),
       title: json['title'] as String?,
-      createdAt: json['created_at'] as String?,
-      updatedAt: json['updated_at'] as String?,
+      createdAt:
+          const JiffySecondsConverter().fromJson(json['created_at'] as String?),
+      updatedAt:
+          const JiffySecondsConverter().fromJson(json['updated_at'] as String?),
       content: json['content'] as String?,
       image: json['image'] as String?,
       resourceType: json['resourcetype'] as String?,
@@ -40,8 +42,8 @@ Map<String, dynamic> _$ActualiteToJson(Actualite instance) => <String, dynamic>{
       'link': instance.link,
       'description': instance.description,
       'description_ar': instance.descriptionAr,
-      'created_at': instance.createdAt,
-      'updated_at': instance.updatedAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
+      'updated_at': const JiffySecondsConverter().toJson(instance.updatedAt),
       'content': instance.content,
       'content_ar': instance.contentAr,
       'image': instance.image,

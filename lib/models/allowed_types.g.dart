@@ -57,11 +57,11 @@ class AllowedTypesAdapter extends TypeAdapter<AllowedTypes> {
 // **************************************************************************
 
 AllowedTypes _$AllowedTypesFromJson(Map<String, dynamic> json) => AllowedTypes(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
       json['extension'] as String?,
       json['mime_type'] as String?,
-      json['questionId'] as int?,
+      (json['questionId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$AllowedTypesToJson(AllowedTypes instance) =>

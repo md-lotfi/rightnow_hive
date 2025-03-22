@@ -72,6 +72,9 @@ class _$AnswersEventCopyWithImpl<$Res, $Val extends AnswersEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of AnswersEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -88,6 +91,9 @@ class __$$UploadAnswerHolderImplCopyWithImpl<$Res>
   __$$UploadAnswerHolderImplCopyWithImpl(_$UploadAnswerHolderImpl _value,
       $Res Function(_$UploadAnswerHolderImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of AnswersEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -199,6 +205,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of AnswersEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rightnow/components/common_widgets.dart';
@@ -159,7 +160,7 @@ class FileWidgetState extends State<FileWidget>
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ))),
-                      if (widget.question?.file != null)
+                      /*if (widget.question?.file != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 20),
                           child: ListTile(
@@ -176,7 +177,7 @@ class FileWidgetState extends State<FileWidget>
                                     style: TextStyle(color: Colors.blue),
                                   ),
                           ),
-                        ),
+                        ),*/
                       /*if (!widget.viewOnly  && widget.question?.file != null)
                         ListTile(
                           onTap: () async {
@@ -264,7 +265,7 @@ class FileWidgetState extends State<FileWidget>
                                                           .files.single.path!
                                                       : result
                                                           .files.single.name,
-                                                  DateTime.now().toString(),
+                                                  Jiffy.now(),
                                                   transtypeResourceType(
                                                       question!.resourcetype!),
                                                   answerHolder!.id,

@@ -72,6 +72,9 @@ class _$UpdateProfileEventCopyWithImpl<$Res, $Val extends UpdateProfileEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of UpdateProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -91,6 +94,8 @@ class __$$SaveProfileImplCopyWithImpl<$Res>
       _$SaveProfileImpl _value, $Res Function(_$SaveProfileImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of UpdateProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,7 +149,9 @@ class _$SaveProfileImpl with DiagnosticableTreeMixin implements SaveProfile {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_profile));
 
-  @JsonKey(ignore: true)
+  /// Create a copy of UpdateProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SaveProfileImplCopyWith<_$SaveProfileImpl> get copyWith =>
@@ -218,7 +225,10 @@ abstract class SaveProfile implements UpdateProfileEvent {
       _$SaveProfileImpl;
 
   Map<String, dynamic> get profile;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of UpdateProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SaveProfileImplCopyWith<_$SaveProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -237,6 +247,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of UpdateProfileEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

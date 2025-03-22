@@ -2,6 +2,31 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to pick files.</string>
+<key>NSDocumentsFolderUsageDescription</key>
+<string>We need access to your documents.</string>
+<key>UIBackgroundModes</key>
+<array>
+    <string>fetch</string>
+    <string>remote-notification</string>
+</array>
+<key>FirebaseAppDelegateProxyEnabled</key>
+<true/>
+<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to take photos.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photo library to select photos.</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to show your position on the map.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your location always for certain features.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>We need access to your microphone.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your photos.</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location.</string>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleExecutable</key>

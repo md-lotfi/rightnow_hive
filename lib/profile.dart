@@ -144,24 +144,26 @@ class _ProfilePageState extends State<ProfilePage> {
                     setState(() {});
                   },
                 ),
-                SizedBox(height: 20),
-                Container(
-                  alignment: Alignment.center,
-                  child: RichText(
-                    text: TextSpan(
-                      text: data.name?.toUpperCase() ?? "",
-                      style: TextStyle(color: COLOR_PRIMARY, fontSize: 20),
-                      children: [
-                        TextSpan(
-                          text: " ",
-                        ),
-                        TextSpan(
-                          text: data.fname ?? "",
-                        ),
-                      ],
+                if (data.name?.isNotEmpty ?? false) ...[
+                  SizedBox(height: 7),
+                  Container(
+                    alignment: Alignment.center,
+                    child: RichText(
+                      text: TextSpan(
+                        text: data.name?.toUpperCase() ?? "",
+                        style: TextStyle(color: COLOR_PRIMARY, fontSize: 20),
+                        children: [
+                          TextSpan(
+                            text: " ",
+                          ),
+                          TextSpan(
+                            text: data.fname ?? "",
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
+                ],
                 SizedBox(height: 20),
                 Container(
                   alignment: Alignment.center,
@@ -172,7 +174,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         /*return Wrap(
                           children: snapshot.data?.groups?.map((e) => Chip(label: Text(e.name ?? ""))).toList() ?? [],
                         );*/
-                        return Text(snapshot.data?.organization ?? "", style: TextStyle(fontSize: 25));
+                        return Text(snapshot.data?.organization ?? "",
+                            style: TextStyle(fontSize: 25));
                       }
                       return Center(child: CircularProgressIndicator());
                     },

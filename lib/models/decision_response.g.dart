@@ -88,7 +88,7 @@ class DecisionResponseAdapter extends TypeAdapter<DecisionResponse> {
 
 DecisionResponse _$DecisionResponseFromJson(Map<String, dynamic> json) =>
     DecisionResponse(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       text: json['text'] as String?,
       image: json['image'] as String?,
@@ -99,8 +99,8 @@ DecisionResponse _$DecisionResponseFromJson(Map<String, dynamic> json) =>
       urlActive: json['url_active'] as bool?,
       soundActive: json['sound_active'] as bool?,
       defaultResponse: json['default'] as bool?,
-      algorithme: json['algorithme'] as int?,
-      answerHolderId: json['answerHolderId'] as int?,
+      algorithme: (json['algorithme'] as num?)?.toInt(),
+      answerHolderId: (json['answerHolderId'] as num?)?.toInt(),
       textAr: json['text_ar'] as String?,
       titleAr: json['title_ar'] as String?,
     );

@@ -83,6 +83,9 @@ class _$HashEventCopyWithImpl<$Res, $Val extends HashEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -99,6 +102,9 @@ class __$$GetCategoriesHashImplCopyWithImpl<$Res>
   __$$GetCategoriesHashImplCopyWithImpl(_$GetCategoriesHashImpl _value,
       $Res Function(_$GetCategoriesHashImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -224,6 +230,8 @@ class __$$LoadCategoriesImplCopyWithImpl<$Res>
       _$LoadCategoriesImpl _value, $Res Function(_$LoadCategoriesImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -273,7 +281,9 @@ class _$LoadCategoriesImpl
   @override
   int get hashCode => Object.hash(runtimeType, currentHash);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadCategoriesImplCopyWith<_$LoadCategoriesImpl> get copyWith =>
@@ -359,7 +369,10 @@ abstract class LoadCategories implements HashEvent {
   const factory LoadCategories(final String currentHash) = _$LoadCategoriesImpl;
 
   String get currentHash;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadCategoriesImplCopyWith<_$LoadCategoriesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -378,6 +391,9 @@ class __$$RestoreCategoriesImplCopyWithImpl<$Res>
   __$$RestoreCategoriesImplCopyWithImpl(_$RestoreCategoriesImpl _value,
       $Res Function(_$RestoreCategoriesImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -500,6 +516,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of HashEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

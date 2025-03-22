@@ -30,7 +30,9 @@ class UserNotificationsDao {
     var r = await getUserNotificationDb();
     List<UserNotification> n = r.values.toList();
     n.sort((a, b) {
-      return Jiffy.parse(b.createdAt ?? Jiffy.now().format()).dateTime.compareTo(Jiffy.parse(a.createdAt ?? Jiffy.now().format()).dateTime);
+      return (b.createdAt ?? Jiffy.now())
+          .dateTime
+          .compareTo((a.createdAt ?? Jiffy.now()).dateTime);
     });
     return n;
   }
@@ -45,7 +47,8 @@ class UserNotificationsDao {
     }
   }
 
-  Future<List<UserNotification>> insertUserNotificationsIfNotPresent(List<UserNotification> userNotifications) async {
+  Future<List<UserNotification>> insertUserNotificationsIfNotPresent(
+      List<UserNotification> userNotifications) async {
     var r = await getUserNotificationDb();
     List<int?> ids = r.values.map((e) => e.id).toList();
     for (var item in userNotifications) {
@@ -63,7 +66,9 @@ class UserNotificationsDao {
     }
     List<UserNotification> n = r.values.toList();
     n.sort((a, b) {
-      return Jiffy.parse(b.createdAt ?? Jiffy.now().format()).dateTime.compareTo(Jiffy.parse(a.createdAt ?? Jiffy.now().format()).dateTime);
+      return (b.createdAt ?? Jiffy.now())
+          .dateTime
+          .compareTo((a.createdAt ?? Jiffy.now()).dateTime);
     });
     return n;
     /*if (ids.length > 0) {

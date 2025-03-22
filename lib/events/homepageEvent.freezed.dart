@@ -66,6 +66,9 @@ class _$HomePageEventCopyWithImpl<$Res, $Val extends HomePageEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of HomePageEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -82,6 +85,9 @@ class __$$LoadHomePageButtonsImplCopyWithImpl<$Res>
   __$$LoadHomePageButtonsImplCopyWithImpl(_$LoadHomePageButtonsImpl _value,
       $Res Function(_$LoadHomePageButtonsImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of HomePageEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

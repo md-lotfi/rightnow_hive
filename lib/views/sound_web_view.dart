@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:permission_handler/permission_handler.dart';
 //import 'package:microphone/microphone.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -34,12 +36,13 @@ class SoundWebView extends StatefulWidget {
   _SoundWebViewState createState() => _SoundWebViewState();
 }
 
-class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClientMixin {
+class _SoundWebViewState extends State<SoundWebView>
+    with AutomaticKeepAliveClientMixin {
   Answer? _answer;
 
   double progress = 0;
   FlutterSoundPlayer? _myPlayer = FlutterSoundPlayer();
-  //MicrophoneRecorder? _microphoneRecorder = MicrophoneRecorder()..init();
+  FlutterSoundRecorder? _myRecorder = FlutterSoundRecorder();
   bool _mRecorderIsInited = false;
   bool _mPlayerIsInited = false;
   String? recordPath;
@@ -52,8 +55,31 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
   double btnWidth = 20;
   double btnHeight = 10;
 
+  Future<void> requestMicrophonePermission() async {
+    PermissionStatus status = await Permission.microphone.request();
+
+    if (status.isGranted) {
+      print("Microphone permission granted");
+    } else if (status.isDenied) {
+      print("Microphone permission denied");
+    } else if (status.isPermanentlyDenied) {
+      print("Microphone permission permanently denied. Open settings.");
+      openAppSettings();
+    }
+  }
+
+  Future<void> checkMicrophonePermission() async {
+    if (await Permission.microphone.isGranted) {
+      print("Microphone permission already granted");
+    } else {
+      print("Microphone permission not granted");
+      requestMicrophonePermission();
+    }
+  }
+
   @override
   void initState() {
+    checkMicrophonePermission();
     if (widget.answerHolder != null) {
       if (widget.answerHolder!.answers != null) {
         if (widget.answerHolder!.answers!.length > 0) {
@@ -81,8 +107,8 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
   @override
   void dispose() {
     // Be careful : you must `close` the audio session when you have finished with it.
-    //_microphoneRecorder?.dispose();
-    //_microphoneRecorder = null;
+    _myRecorder?.closeRecorder();
+    _myRecorder = null;
     _myPlayer?.closePlayer();
     _myPlayer = null;
     super.dispose();
@@ -104,12 +130,25 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
       //_recordedBytes = await _microphoneRecorder?.toBytes();
       log("saved record url is $recordPath, ${_recordedBytes?.length}");
       if (_recordedBytes != null) {
-        await FileSaver.set(FileSaver(name: recordPath!, path: "", file: _recordedBytes!, questionId: widget.question!.id!, answerHolderId: widget.answerHolder!.id!));
+        await FileSaver.set(FileSaver(
+            name: recordPath!,
+            path: "",
+            file: _recordedBytes!,
+            questionId: widget.question!.id!,
+            answerHolderId: widget.answerHolder!.id!));
         FileSaver? f = await FileSaver.getLastItem();
         if (f != null) {
           _answer = Answer.fill(
-              widget.question!.id, widget.question!.fieldSet, recordPath, recordPath, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!), widget.answerHolder?.id, null,
-              question: widget.question, fileKey: f.key);
+              widget.question!.id,
+              widget.question!.fieldSet,
+              recordPath,
+              recordPath,
+              Jiffy.now(),
+              transtypeResourceType(widget.question!.resourcetype!),
+              widget.answerHolder?.id,
+              null,
+              question: widget.question,
+              fileKey: f.key);
           widget.onSelectedValue!(
             _answer!,
           );
@@ -179,7 +218,8 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (!widget.viewOnly && _answer == null)
               FormField<bool>(
                 autovalidateMode: AutovalidateMode.always,
@@ -191,10 +231,14 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
                         width: double.infinity,
                         child: TextButton.icon(
                           style: TextButton.styleFrom(
-                            backgroundColor: _isRecording ? Colors.red : COLOR_PRIMARY,
+                            backgroundColor:
+                                _isRecording ? Colors.red : COLOR_PRIMARY,
                           ),
-                          icon: _isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
-                          label: _isRecording ? Text("Stop recording".tr()) : Text("Enregistrer un audio".tr()),
+                          icon:
+                              _isRecording ? Icon(Icons.stop) : Icon(Icons.mic),
+                          label: _isRecording
+                              ? Text("Stop recording".tr())
+                              : Text("Enregistrer un audio".tr()),
                           onPressed: () async {
                             if (!_isRecording) {
                               await _record(state);
@@ -204,12 +248,17 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
                           },
                         ),
                       ),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (value) {
-                  if (isRequired(widget.question)) if (!(value == null ? false : value)) return FORM_RECORD_SOUND;
+                  if (isRequired(widget.question)) if (!(value == null
+                      ? false
+                      : value)) return FORM_RECORD_SOUND;
                   return null;
                 },
               ),
@@ -244,14 +293,19 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
               _pausePlayer();
           },
           child: Container(
-              padding: EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
+              padding: EdgeInsets.symmetric(
+                  horizontal: btnWidth, vertical: btnHeight),
               decoration: BoxDecoration(
                 color: COLOR_PRIMARY,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(8),
+                    topLeft: Radius.circular(8)),
               ),
               child: Row(
                 children: [
-                  _isPlaying() ? Icon(Icons.pause, color: Colors.white) : Icon(Icons.play_arrow, color: Colors.white),
+                  _isPlaying()
+                      ? Icon(Icons.pause, color: Colors.white)
+                      : Icon(Icons.play_arrow, color: Colors.white),
                   Text(
                     "Play".tr(),
                     style: TextStyle(color: Colors.white),
@@ -270,10 +324,14 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
           _stopRecorder();
       },
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
+          padding:
+              EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
           decoration: BoxDecoration(
             color: COLOR_PRIMARY,
-            borderRadius: _isRecording ? BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)) : null,
+            borderRadius: _isRecording
+                ? BorderRadius.only(
+                    bottomLeft: Radius.circular(8), topLeft: Radius.circular(8))
+                : null,
 
             //borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)),
           ),
@@ -295,14 +353,18 @@ class _SoundWebViewState extends State<SoundWebView> with AutomaticKeepAliveClie
         if (!_isRecording) _record(null);
       },
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
+          padding:
+              EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
           decoration: BoxDecoration(
             color: _isRecording ? Colors.red : Colors.green,
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(8), topRight: Radius.circular(8)),
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(8), topRight: Radius.circular(8)),
           ),
           child: Row(
             children: [
-              _isRecording ? Icon(Icons.fiber_manual_record, color: Colors.white) : Icon(Icons.mic, color: Colors.white),
+              _isRecording
+                  ? Icon(Icons.fiber_manual_record, color: Colors.white)
+                  : Icon(Icons.mic, color: Colors.white),
               Text(
                 _isRecording ? "Recording ..." : "Record".tr(),
                 style: TextStyle(color: Colors.white),

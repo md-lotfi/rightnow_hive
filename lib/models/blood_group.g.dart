@@ -48,7 +48,7 @@ class BloodGroupAdapter extends TypeAdapter<BloodGroup> {
 // **************************************************************************
 
 BloodGroup _$BloodGroupFromJson(Map<String, dynamic> json) => BloodGroup(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

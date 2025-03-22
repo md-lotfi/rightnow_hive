@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -33,7 +34,8 @@ class CheckboxWidget extends StatefulWidget {
   _CheckboxWidgetState createState() => _CheckboxWidgetState();
 }
 
-class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAliveClientMixin {
+class _CheckboxWidgetState extends State<CheckboxWidget>
+    with AutomaticKeepAliveClientMixin {
   Map<int, bool> _values = {};
 
   Choice? _selectedAnswer;
@@ -45,7 +47,8 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
     if (choice == null) return false;
     if (_values.containsKey(choice.id)) {
       bool x = _values[choice.id] ?? false;
-      print("multiselect length checking choice ${choice.id}, ${_values[choice.id]}, ${_values.containsKey(choice.id)}, $x");
+      print(
+          "multiselect length checking choice ${choice.id}, ${_values[choice.id]}, ${_values.containsKey(choice.id)}, $x");
       return x;
     }
     return false;
@@ -103,7 +106,9 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        unselectedWidgetColor: (widget.answerHolder?.answers?.length ?? 0) == 0 ? null : (_values.values.contains(true) ? null : Colors.red),
+        unselectedWidgetColor: (widget.answerHolder?.answers?.length ?? 0) == 0
+            ? null
+            : (_values.values.contains(true) ? null : Colors.red),
       ),
       child: load(),
     );
@@ -116,7 +121,8 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (!widget.viewOnly)
               FormField<Map<int, bool>>(
                 autovalidateMode: AutovalidateMode.always,
@@ -126,13 +132,17 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ..._checkboxes(state),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (val) {
                   if (isRequired(widget.question)) {
-                    var l = _values.values.firstWhereOrNull((element) => element == true);
+                    var l = _values.values
+                        .firstWhereOrNull((element) => element == true);
                     if (l == null) return FORM_CHECKBOX_NOT_SELECTED;
                     return null;
                   }
@@ -140,7 +150,11 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
               ),
             //if (widget.viewOnly) Text("ceheck box view"),
             //if (widget.viewOnly) fieldData(_selectedAnswer?.getName(context.locale.languageCode)),
-            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
+            if (widget.viewOnly)
+              fieldData(widget.responseSet
+                      ?.getChoice()
+                      ?.getName(context.locale.languageCode) ??
+                  ""),
             Divider(),
           ],
         ),
@@ -153,13 +167,22 @@ class _CheckboxWidgetState extends State<CheckboxWidget> with AutomaticKeepAlive
     List<MultiSelectAnswer> m = [];
     for (var v in widget.question!.choices!) {
       if (_values[v.id] != null) {
-        if (_values[v.id] == true) m.add(MultiSelectAnswer.fill(widget.answerHolder?.id, v.id, v.label));
+        if (_values[v.id] == true)
+          m.add(MultiSelectAnswer.fill(widget.answerHolder?.id, v.id, v.label));
       }
     }
     if (widget.onSelectedValue != null) {
       print("multiselect length result ${m.length}");
       widget.onSelectedValue!(
-        Answer.fill(widget.question?.id, widget.question?.fieldSet, "", null, DateTime.now().toString(), transtypeResourceType(widget.question?.resourcetype), widget.answerHolder?.id, m),
+        Answer.fill(
+            widget.question?.id,
+            widget.question?.fieldSet,
+            "",
+            null,
+            Jiffy.now(),
+            transtypeResourceType(widget.question?.resourcetype),
+            widget.answerHolder?.id,
+            m),
       );
     }
   }

@@ -96,6 +96,9 @@ class _$RegistrationEventCopyWithImpl<$Res, $Val extends RegistrationEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -115,6 +118,8 @@ class __$$RegisterUserImplCopyWithImpl<$Res>
       _$RegisterUserImpl _value, $Res Function(_$RegisterUserImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -162,7 +167,9 @@ class _$RegisterUserImpl with DiagnosticableTreeMixin implements RegisterUser {
   @override
   int get hashCode => Object.hash(runtimeType, localUser);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$RegisterUserImplCopyWith<_$RegisterUserImpl> get copyWith =>
@@ -259,7 +266,10 @@ abstract class RegisterUser implements RegistrationEvent {
   const factory RegisterUser(final LocalUser localUser) = _$RegisterUserImpl;
 
   LocalUser get localUser;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RegisterUserImplCopyWith<_$RegisterUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -281,6 +291,8 @@ class __$$LoginUserImplCopyWithImpl<$Res>
       _$LoginUserImpl _value, $Res Function(_$LoginUserImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -328,7 +340,9 @@ class _$LoginUserImpl with DiagnosticableTreeMixin implements LoginUser {
   @override
   int get hashCode => Object.hash(runtimeType, localUser);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoginUserImplCopyWith<_$LoginUserImpl> get copyWith =>
@@ -425,7 +439,10 @@ abstract class LoginUser implements RegistrationEvent {
   const factory LoginUser(final LocalUser localUser) = _$LoginUserImpl;
 
   LocalUser get localUser;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoginUserImplCopyWith<_$LoginUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -444,6 +461,9 @@ class __$$GetUserImplCopyWithImpl<$Res>
   __$$GetUserImplCopyWithImpl(
       _$GetUserImpl _value, $Res Function(_$GetUserImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -576,6 +596,9 @@ class __$$GetUserProfileImplCopyWithImpl<$Res>
   __$$GetUserProfileImplCopyWithImpl(
       _$GetUserProfileImpl _value, $Res Function(_$GetUserProfileImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -714,6 +737,8 @@ class __$$SetUserProfileImplCopyWithImpl<$Res>
       _$SetUserProfileImpl _value, $Res Function(_$SetUserProfileImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -762,7 +787,9 @@ class _$SetUserProfileImpl
   @override
   int get hashCode => Object.hash(runtimeType, profile);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SetUserProfileImplCopyWith<_$SetUserProfileImpl> get copyWith =>
@@ -860,7 +887,10 @@ abstract class SetUserProfile implements RegistrationEvent {
   const factory SetUserProfile(final Profile profile) = _$SetUserProfileImpl;
 
   Profile get profile;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SetUserProfileImplCopyWith<_$SetUserProfileImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -879,6 +909,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of RegistrationEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

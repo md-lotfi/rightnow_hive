@@ -18,8 +18,8 @@ class ResponseEntryAdapter extends TypeAdapter<ResponseEntry> {
     };
     return ResponseEntry(
       id: fields[0] as int?,
-      uploadedAt: fields[1] as String?,
-      completedAt: fields[2] as String?,
+      uploadedAt: fields[1] as Jiffy?,
+      completedAt: fields[2] as Jiffy?,
       deviceId: fields[3] as String?,
       form: fields[4] as int?,
       user: fields[5] as int?,
@@ -64,12 +64,14 @@ class ResponseEntryAdapter extends TypeAdapter<ResponseEntry> {
 
 ResponseEntry _$ResponseEntryFromJson(Map<String, dynamic> json) =>
     ResponseEntry(
-      id: json['id'] as int?,
-      uploadedAt: json['uploaded_at'] as String?,
-      completedAt: json['completed_at'] as String?,
+      id: (json['id'] as num?)?.toInt(),
+      uploadedAt: const JiffySecondsConverter()
+          .fromJson(json['uploaded_at'] as String?),
+      completedAt: const JiffySecondsConverter()
+          .fromJson(json['completed_at'] as String?),
       deviceId: json['device_id'] as String?,
-      form: json['form'] as int?,
-      user: json['user'] as int?,
+      form: (json['form'] as num?)?.toInt(),
+      user: (json['user'] as num?)?.toInt(),
       responseSet: (json['response_set'] as List<dynamic>?)
           ?.map((e) => ResponseSet.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -78,8 +80,9 @@ ResponseEntry _$ResponseEntryFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ResponseEntryToJson(ResponseEntry instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'uploaded_at': instance.uploadedAt,
-      'completed_at': instance.completedAt,
+      'uploaded_at': const JiffySecondsConverter().toJson(instance.uploadedAt),
+      'completed_at':
+          const JiffySecondsConverter().toJson(instance.completedAt),
       'device_id': instance.deviceId,
       'form': instance.form,
       'user': instance.user,

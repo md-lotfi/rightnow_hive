@@ -4,7 +4,6 @@ import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/db/AnswerHolderDao.dart';
 import 'package:rightnow/db/FieldSetsDao.dart';
-import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/category.dart';
 import 'package:rightnow/models/hash.dart';
@@ -26,22 +25,35 @@ class FormFieldsDao extends FieldSetsDao {
   //@Query("select * from FormFields where nameFr like :keyword")
   Future<List<FormFields>> searchForms(String keyword) async {
     var f = await getFormFieldsDb();
-    return f.values.where((element) => element.name?.contains(keyword) ?? false).toList();
+    return f.values
+        .where((element) => element.name?.contains(keyword) ?? false)
+        .toList();
   }
 
   //@Query("select * from FormFields where categoryId = :categoryId")
-  Future<List<FormFields>> fetchFormsCategory(int categoryId, BuildContext? context, {String? searchFormText}) async {
+  Future<List<FormFields>> fetchFormsCategory(
+      int categoryId, BuildContext? context,
+      {String? searchFormText}) async {
     var f = await getFormFieldsDb();
     return f.values
         .where((element) => element.categoryId == categoryId)
-        .where(
-            (element) => (searchFormText?.isEmpty ?? true) ? true : (context != null ? element.getName(context.locale.languageCode).toLowerCase().contains(searchFormText?.toLowerCase() ?? "") : true))
-        .sorted((a, b) => b.createdAtTimeStamp?.compareTo(a.createdAtTimeStamp ?? 0) ?? 0)
+        .where((element) => (searchFormText?.isEmpty ?? true)
+            ? true
+            : (context != null
+                ? element
+                    .getName(context.locale.languageCode)
+                    .toLowerCase()
+                    .contains(searchFormText?.toLowerCase() ?? "")
+                : true))
+        .sorted((a, b) =>
+            b.createdAtTimeStamp?.compareTo(a.createdAtTimeStamp ?? 0) ?? 0)
         .toList();
   }
 
   //int subCategoryId
-  Future<List<FormFields>> fetchFormsAnyCategory(dynamic category, BuildContext? context, {String? searchFormText}) async {
+  Future<List<FormFields>> fetchFormsAnyCategory(
+      dynamic category, BuildContext? context,
+      {String? searchFormText}) async {
     var f = await getFormFieldsDb();
     return f.values
         .where((element) => ((category is SuperCategory)
@@ -49,20 +61,36 @@ class FormFieldsDao extends FieldSetsDao {
             : (category is Category)
                 ? element.categoryId == category.id
                 : element.subCategoryId == category.id))
-        .where(
-            (element) => (searchFormText?.isEmpty ?? true) ? true : (context != null ? element.getName(context.locale.languageCode).toLowerCase().contains(searchFormText?.toLowerCase() ?? "") : true))
-        .sorted((a, b) => b.createdAtTimeStamp?.compareTo(a.createdAtTimeStamp ?? 0) ?? 0)
+        .where((element) => (searchFormText?.isEmpty ?? true)
+            ? true
+            : (context != null
+                ? element
+                    .getName(context.locale.languageCode)
+                    .toLowerCase()
+                    .contains(searchFormText?.toLowerCase() ?? "")
+                : true))
+        .sorted((a, b) =>
+            b.createdAtTimeStamp?.compareTo(a.createdAtTimeStamp ?? 0) ?? 0)
         .toList();
   }
 
   //@Query("select * from FormFields")
-  Future<List<FormFields>> fetchFormsAny(BuildContext? context, {String? searchFormText, int? completed}) async {
+  Future<List<FormFields>> fetchFormsAny(BuildContext? context,
+      {String? searchFormText, int? completed}) async {
     var f = await getFormFieldsDb();
     return f.values
         .where((element) {
-          return (searchFormText?.isEmpty ?? true) ? true : (context != null ? element.getName(context.locale.languageCode).toLowerCase().contains(searchFormText?.toLowerCase() ?? "") : true);
+          return (searchFormText?.isEmpty ?? true)
+              ? true
+              : (context != null
+                  ? element
+                      .getName(context.locale.languageCode)
+                      .toLowerCase()
+                      .contains(searchFormText?.toLowerCase() ?? "")
+                  : true);
         })
-        .sorted((a, b) => a.createdAtTimeStamp?.compareTo(b.createdAtTimeStamp ?? 0) ?? 0)
+        .sorted((a, b) =>
+            a.createdAtTimeStamp?.compareTo(b.createdAtTimeStamp ?? 0) ?? 0)
         .toList();
   }
 
@@ -74,24 +102,32 @@ class FormFieldsDao extends FieldSetsDao {
   Future<void> insertForms(List<FormFields> forms) async {
     var f = await getFormFieldsDb();
     for (FormFields form in forms) {
-      if (f.values.firstWhereOrNull((element) => element.id == form.id) == null) await f.add(form);
+      if (f.values.firstWhereOrNull((element) => element.id == form.id) == null)
+        await f.add(form);
     }
   }
 
-  Future<List<FormFields>> loadFormsCategoryId(BuildContext? context, int? categoryId, int completed, {String? searchFormTitle}) async {
+  Future<List<FormFields>> loadFormsCategoryId(
+      BuildContext? context, int? categoryId, int completed,
+      {String? searchFormTitle}) async {
     late List<FormFields> forms;
     if (categoryId == null)
       forms = await fetchFormsAny(context, searchFormText: searchFormTitle);
     else
-      forms = await fetchFormsCategory(categoryId, context, searchFormText: searchFormTitle);
+      forms = await fetchFormsCategory(categoryId, context,
+          searchFormText: searchFormTitle);
     List<FormFields> tmp = [];
     for (var form in forms) {
       var d = await fetchFields(form.id!);
-      form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(form.id!, completed);
-      if (((form.answerHolder?.completed ?? false) && completed == HOLDER_COMPLETED) ||
-          (!(form.answerHolder?.completed ?? false) && completed == HOLDER_NOT_COMPLETED) ||
+      form.answerHolder = await getDataBase<AnswerHolderDao>()
+          .fetchAnswerHolderWithChildren(form.id!, completed);
+      if (((form.answerHolder?.completed ?? false) &&
+              completed == HOLDER_COMPLETED) ||
+          (!(form.answerHolder?.completed ?? false) &&
+              completed == HOLDER_NOT_COMPLETED) ||
           completed == HOLDER_ANY_COMPLETED) {
-        form.reclamations = await fetchReclamations(form.id ?? -1); //fetchReclamations(form.id!);
+        form.reclamations = await fetchReclamations(
+            form.id ?? -1); //fetchReclamations(form.id!);
         form.category = await getCategory(form.categoryId ?? -1);
         form.fieldSets = [];
         for (var field in d) {
@@ -126,7 +162,8 @@ class FormFieldsDao extends FieldSetsDao {
       form.reclamations = await fetchReclamations(form.id ?? -1);
       print("getting category ${form.categoryId}, ${form.id}");
       form.category = await getCategory(form.categoryId ?? -1);
-      form.answerHolder = await getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(formId, completed);
+      form.answerHolder = await getDataBase<AnswerHolderDao>()
+          .fetchAnswerHolderWithChildren(formId, completed);
       form.fieldSets = [];
       var d = await getFieldSetWithQuestions(form.id ?? -1);
       for (var field in d) {
@@ -153,7 +190,8 @@ class FormFieldsDao extends FieldSetsDao {
     //await setHash(hash)
     List<FormFields> f = [];
     for (var form in formFields) {
-      form.createdAtTimeStamp = Jiffy.parse(form.createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
+      form.createdAtTimeStamp =
+          (form.createdAt ?? Jiffy.now()).microsecondsSinceEpoch;
       f.add(form);
       if (form.superCategory != null) {
         await insertSuperCategory(form.superCategory!);

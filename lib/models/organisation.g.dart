@@ -8,7 +8,7 @@ part of 'organisation.dart';
 
 class OrganisationAdapter extends TypeAdapter<Organisation> {
   @override
-  final int typeId = 36;
+  final int typeId = 35;
 
   @override
   Organisation read(BinaryReader reader) {

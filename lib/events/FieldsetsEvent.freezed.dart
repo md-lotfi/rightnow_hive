@@ -50,7 +50,9 @@ mixin _$FieldsetsEvent {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FieldsetsEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FieldsetsEventCopyWith<FieldsetsEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,6 +76,8 @@ class _$FieldsetsEventCopyWithImpl<$Res, $Val extends FieldsetsEvent>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FieldsetsEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -107,6 +111,8 @@ class __$$LoadLocalFieldSetsImplCopyWithImpl<$Res>
       $Res Function(_$LoadLocalFieldSetsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of FieldsetsEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -155,7 +161,9 @@ class _$LoadLocalFieldSetsImpl
   @override
   int get hashCode => Object.hash(runtimeType, formId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FieldsetsEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadLocalFieldSetsImplCopyWith<_$LoadLocalFieldSetsImpl> get copyWith =>
@@ -224,8 +232,11 @@ abstract class LoadLocalFieldSets implements FieldsetsEvent {
 
   @override
   int get formId;
+
+  /// Create a copy of FieldsetsEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadLocalFieldSetsImplCopyWith<_$LoadLocalFieldSetsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

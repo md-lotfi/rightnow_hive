@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/inherits/field_controller.dart';
@@ -24,10 +25,12 @@ class ShortTextWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _ShortTextWidgetState createState() => _ShortTextWidgetState(this.question, this.onSelectedValue, this.answerHolder);
+  _ShortTextWidgetState createState() => _ShortTextWidgetState(
+      this.question, this.onSelectedValue, this.answerHolder);
 }
 
-class _ShortTextWidgetState extends State<ShortTextWidget> with AutomaticKeepAliveClientMixin, FiledController {
+class _ShortTextWidgetState extends State<ShortTextWidget>
+    with AutomaticKeepAliveClientMixin, FiledController {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -56,7 +59,15 @@ class _ShortTextWidgetState extends State<ShortTextWidget> with AutomaticKeepAli
   _dataChanged() {
     print("short text changed " + fieldDataController.text);
     onSelectedValue!(
-      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
+      Answer.fill(
+          question?.id,
+          question?.fieldSet,
+          fieldDataController.text,
+          null,
+          Jiffy.now(),
+          transtypeResourceType(question?.resourcetype),
+          answerHolder?.id,
+          null),
     );
     /*if (question.branchedConditions != null) {
       for (var item in question.branchedConditions) {
@@ -80,7 +91,8 @@ class _ShortTextWidgetState extends State<ShortTextWidget> with AutomaticKeepAli
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,

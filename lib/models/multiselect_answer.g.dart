@@ -61,10 +61,10 @@ class MultiSelectAnswerAdapter extends TypeAdapter<MultiSelectAnswer> {
 
 MultiSelectAnswer _$MultiSelectAnswerFromJson(Map<String, dynamic> json) =>
     MultiSelectAnswer(
-      json['id'] as int?,
-      json['answerId'] as int?,
-      json['answerHolderId'] as int?,
-      json['selectedId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['answerId'] as num?)?.toInt(),
+      (json['answerHolderId'] as num?)?.toInt(),
+      (json['selectedId'] as num?)?.toInt(),
       json['selectedLabel'] as String?,
       (json['geoHolder'] as num?)?.toDouble(),
     );

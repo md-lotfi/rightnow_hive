@@ -24,7 +24,7 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
       contentFr: fields[3] as String?,
       sender: fields[5] as int?,
       targeting: fields[6] as int?,
-      createdAt: fields[7] as String?,
+      createdAt: fields[7] as Jiffy?,
       viewed: fields[8] == null ? 0 : fields[8] as int?,
     );
   }
@@ -70,15 +70,16 @@ class UserNotificationAdapter extends TypeAdapter<UserNotification> {
 
 UserNotification _$UserNotificationFromJson(Map<String, dynamic> json) =>
     UserNotification(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       titleAr: json['title_ar'] as String?,
       titleFr: json['title_fr'] as String?,
       contentAr: json['content_ar'] as String?,
       contentFr: json['content_fr'] as String?,
-      sender: json['sender'] as int?,
-      targeting: json['targeting'] as int?,
-      createdAt: json['created_at'] as String?,
-      viewed: json['viewed'] as int?,
+      sender: (json['sender'] as num?)?.toInt(),
+      targeting: (json['targeting'] as num?)?.toInt(),
+      createdAt:
+          const JiffySecondsConverter().fromJson(json['created_at'] as String?),
+      viewed: (json['viewed'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserNotificationToJson(UserNotification instance) =>
@@ -90,6 +91,6 @@ Map<String, dynamic> _$UserNotificationToJson(UserNotification instance) =>
       'content_ar': instance.contentAr,
       'sender': instance.sender,
       'targeting': instance.targeting,
-      'created_at': instance.createdAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
       'viewed': instance.viewed,
     };

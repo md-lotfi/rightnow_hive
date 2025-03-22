@@ -27,10 +27,12 @@ class TimeWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _TimeWidgetState createState() => _TimeWidgetState(this.question, this.answerHolder, this.onSelectedValue);
+  _TimeWidgetState createState() =>
+      _TimeWidgetState(this.question, this.answerHolder, this.onSelectedValue);
 }
 
-class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMixin {
+class _TimeWidgetState extends State<TimeWidget>
+    with AutomaticKeepAliveClientMixin {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -67,7 +69,9 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
       }
     } else if (widget.responseSet != null) {
       log("response time is ${widget.responseSet?.value}");
-      _currentDateTime = Jiffy.parse(widget.responseSet?.value, pattern: 'HH:mm:ss').dateTime; //DateTime.parse(widget.responseSet?.value);
+      _currentDateTime =
+          Jiffy.parse(widget.responseSet?.value, pattern: 'HH:mm:ss')
+              .dateTime; //DateTime.parse(widget.responseSet?.value);
     }
     super.initState();
   }
@@ -76,11 +80,20 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
     DateFormat df = DateFormat('HH:mm:ss');
     //DateTime? minTime = df.parse(question?.minValue ?? "00:00:00");
     //DateTime? maxTime = df.parse(question?.maxValue ?? "00:00:00");
-    String t = Jiffy.parseFromDateTime(_currentDateTime).format(pattern: "HH:mm");
+    Jiffy t =
+        Jiffy.parseFromDateTime(_currentDateTime); //.format(pattern: "HH:mm");
     _selectedDateTime = _currentDateTime;
     print("selected time: $t");
     onSelectedValue!(
-      Answer.fill(question?.id, question?.fieldSet, t, null, t, transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
+      Answer.fill(
+          question?.id,
+          question?.fieldSet,
+          t.format(pattern: "HH:mm"),
+          null,
+          t,
+          transtypeResourceType(question?.resourcetype),
+          answerHolder?.id,
+          null),
     );
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 15, bottom: 10, right: 15),
@@ -89,7 +102,8 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               FormField<DateTime>(
                 autovalidateMode: AutovalidateMode.always,
@@ -117,26 +131,41 @@ class _TimeWidgetState extends State<TimeWidget> with AutomaticKeepAliveClientMi
                           onDateTimeChanged: (DateTime dateTime) {
                             _hasDate = true;
                             _selectedDateTime = dateTime;
-                            String t = Jiffy.parseFromDateTime(dateTime).format(pattern: "HH:mm");
+                            Jiffy t = Jiffy.parseFromDateTime(dateTime);
                             print("selected time: $t");
                             onSelectedValue!(
-                              Answer.fill(question!.id, question!.fieldSet, t, null, t, transtypeResourceType(question!.resourcetype!), answerHolder!.id, null),
+                              Answer.fill(
+                                  question!.id,
+                                  question!.fieldSet,
+                                  t.format(pattern: "HH:mm"),
+                                  null,
+                                  t,
+                                  transtypeResourceType(
+                                      question!.resourcetype!),
+                                  answerHolder!.id,
+                                  null),
                             );
                             state.didChange(_selectedDateTime);
                             setState(() {});
                           },
                         ),
                       ),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (value) {
-                  if (isRequired(question)) if (_selectedDateTime == null) return FORM_SELECT_TIME;
+                  if (isRequired(question)) if (_selectedDateTime == null)
+                    return FORM_SELECT_TIME;
                   return null;
                 },
               ),
-            if (widget.viewOnly) fieldData(Jiffy.parseFromDateTime(_currentDateTime).format(pattern: "HH:mm")),
+            if (widget.viewOnly)
+              fieldData(Jiffy.parseFromDateTime(_currentDateTime)
+                  .format(pattern: "HH:mm")),
             Divider(),
           ],
         ),

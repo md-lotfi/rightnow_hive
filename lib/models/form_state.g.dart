@@ -20,7 +20,7 @@ class FormFieldsStateAdapter extends TypeAdapter<FormFieldsState> {
       fields[0] as int?,
       fields[1] as String?,
       fields[2] as String?,
-      fields[3] as String?,
+      fields[3] as Jiffy?,
     );
   }
 
@@ -55,10 +55,10 @@ class FormFieldsStateAdapter extends TypeAdapter<FormFieldsState> {
 
 FormFieldsState _$FormFieldsStateFromJson(Map<String, dynamic> json) =>
     FormFieldsState(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
       json['name_ar'] as String?,
-      json['created_at'] as String?,
+      const JiffySecondsConverter().fromJson(json['created_at'] as String?),
     );
 
 Map<String, dynamic> _$FormFieldsStateToJson(FormFieldsState instance) =>
@@ -66,5 +66,5 @@ Map<String, dynamic> _$FormFieldsStateToJson(FormFieldsState instance) =>
       'id': instance.id,
       'name': instance.name,
       'name_ar': instance.nameAr,
-      'created_at': instance.createdAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
     };

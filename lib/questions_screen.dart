@@ -91,7 +91,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
   void initState() {
     //_refreshProgress = ValueNotifier<int>(0);
     _refreshProgress.value = 0;
-    getDataBase<AnswerHolderDao>().fetchAnswerHolderWithChildren(widget.fieldSet.form!, HOLDER_NOT_COMPLETED).then((AnswerHolder? value) {
+    getDataBase<AnswerHolderDao>()
+        .fetchAnswerHolderWithChildren(
+            widget.fieldSet.form!, HOLDER_NOT_COMPLETED)
+        .then((AnswerHolder? value) {
       if (value == null) {
         print("new answer holder");
         _answerHolder = AnswerHolder.fill(
@@ -100,20 +103,25 @@ class _QuestionsPageState extends State<QuestionsPage> {
           false,
           widget.fieldSet.getName(context.locale.languageCode),
           null,
-          DateTime.now().toString(),
+          Jiffy.now(),
           Uuid().v1(),
           LOCAL_ARCHIVED,
         );
-        getDataBase<AnswerHolderDao>().insertAnswerHolder(_answerHolder!).then((int answerHolderId) {
+        getDataBase<AnswerHolderDao>()
+            .insertAnswerHolder(_answerHolder!)
+            .then((int answerHolderId) {
           _answerHolder!.id = answerHolderId;
           _newAnswer = true;
-          BlocProvider.of<QuestionsBloc>(context).add(QuestionsEvent.loadQuestions(widget.fieldSet.id!));
+          BlocProvider.of<QuestionsBloc>(context)
+              .add(QuestionsEvent.loadQuestions(widget.fieldSet.id!));
         });
       } else {
-        print("we already have an answer holder ${value.id}, ${value.answers?.length}, ${widget.fieldSet.id}");
+        print(
+            "we already have an answer holder ${value.id}, ${value.answers?.length}, ${widget.fieldSet.id}");
         _newAnswer = false;
         _answerHolder = value;
-        BlocProvider.of<QuestionsBloc>(context).add(QuestionsEvent.loadQuestions(widget.fieldSet.id!));
+        BlocProvider.of<QuestionsBloc>(context)
+            .add(QuestionsEvent.loadQuestions(widget.fieldSet.id!));
       }
       //_refreshProgress.value = _refreshProgress.value++;
     });
@@ -131,7 +139,14 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 }) ??
                 [];
             if (containsAnswer.isEmpty) {
-              print("missing answer " + q.id.toString() + ", " + q.resourcetype! + ", " + (q.branchedConditions?.length.toString() ?? "0") + ", " + (q.depandantConditions?.length.toString() ?? "0"));
+              print("missing answer " +
+                  q.id.toString() +
+                  ", " +
+                  q.resourcetype! +
+                  ", " +
+                  (q.branchedConditions?.length.toString() ?? "0") +
+                  ", " +
+                  (q.depandantConditions?.length.toString() ?? "0"));
               missing = true;
               break;
             }
@@ -149,7 +164,14 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   _missingFieldsDialog() {
-    showActionMessage(context, title: "Missing Fields".tr(), messages: [Text("You have some missing fields, please complete before validating.".tr())], positiveBtn: "OK".tr(), whichTaped: (w) async {
+    showActionMessage(context,
+        title: "Missing Fields".tr(),
+        messages: [
+          Text(
+              "You have some missing fields, please complete before validating."
+                  .tr())
+        ],
+        positiveBtn: "OK".tr(), whichTaped: (w) async {
       await _onWillPop();
     });
   }
@@ -157,7 +179,11 @@ class _QuestionsPageState extends State<QuestionsPage> {
   _errorFieldsDialog() {
     showActionMessage(context,
         title: "Erreur de données de champs".tr(),
-        messages: [Text("Vous avez quelques champs contenant des erreurs, veuillez vérifier vos données avant de valider".tr())],
+        messages: [
+          Text(
+              "Vous avez quelques champs contenant des erreurs, veuillez vérifier vos données avant de valider"
+                  .tr())
+        ],
         positiveBtn: "OK".tr(), whichTaped: (w) async {
       await _onWillPop();
     });
@@ -177,7 +203,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
       print("saving answer holder " + _answerHolder!.toJson().toString());
 
       await getDataBase<AnswerHolderDao>().setAnswers(_answerHolder!);
-      await getDataBase<FieldSetsDao>().setAnsweredCounts(widget.fieldSet.id!, _answerHolder?.answers?.length ?? 0);
+      await getDataBase<FieldSetsDao>().setAnsweredCounts(
+          widget.fieldSet.id!, _answerHolder?.answers?.length ?? 0);
     }
     Navigator.pop(context);
     BlocProvider.of<QuestionsBloc>(context).add(QuestionsEvent.distract());
@@ -189,7 +216,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
           context: context,
           builder: (context) => AlertDialog(
             title: Text("Quitter le formulaire?".tr()),
-            content: Text("Voulez-vous quitter le formulaire? Vous risquez de perdre les données.".tr()),
+            content: Text(
+                "Voulez-vous quitter le formulaire? Vous risquez de perdre les données."
+                    .tr()),
             actions: <Widget>[
               TextButton(
                 style: TextButton.styleFrom(backgroundColor: Colors.white),
@@ -221,7 +250,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
         if (viewState.containsKey(item.id)) {
           if ((viewState[item.id] ?? false) == false) continue;
         }
-        if (item.depandantConditions != null) if (item.depandantConditions!.length > 0) {
+        if (item.depandantConditions !=
+            null) if (item.depandantConditions!.length > 0) {
           continue;
         }
         i++;
@@ -242,7 +272,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
             foregroundColor: COLOR_PRIMARY,
             title: Text(widget.fieldSet.getName(context.locale.languageCode)),
             actions: [
-              if (widget.anonymous) Image.asset("assets/anonymous.png", width: 25),
+              if (widget.anonymous)
+                Image.asset("assets/anonymous.png", width: 25),
             ],
           ),
           bottomNavigationBar: HomeNavBarComp(NavState.NAV_HOME),
@@ -251,7 +282,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
               ValueListenableBuilder<int>(
                   valueListenable: _refreshProgress,
                   builder: (context, value, child) {
-                    int totalQuestions = _countVisibleQuestion(widget.fieldSet); //widget.fieldSet.questionsCount ?? 0;
+                    int totalQuestions = _countVisibleQuestion(
+                        widget.fieldSet); //widget.fieldSet.questionsCount ?? 0;
                     print("total questions are $totalQuestions");
                     double progress = (_answerHolder?.answers
                             ?.where((el) {
@@ -265,8 +297,14 @@ class _QuestionsPageState extends State<QuestionsPage> {
                       backgroundColor: Colors.grey,
                       color: totalQuestions == 0
                           ? Colors.grey
-                          : ((progress / totalQuestions) != 1 ? ((progress / totalQuestions) > 0.5 && (progress / totalQuestions) < 1 ? Colors.amber : Colors.red) : Colors.green),
-                      value: totalQuestions == 0 ? 0 : (progress / totalQuestions),
+                          : ((progress / totalQuestions) != 1
+                              ? ((progress / totalQuestions) > 0.5 &&
+                                      (progress / totalQuestions) < 1
+                                  ? Colors.amber
+                                  : Colors.red)
+                              : Colors.green),
+                      value:
+                          totalQuestions == 0 ? 0 : (progress / totalQuestions),
                     );
                     //return Container();
                   }),
@@ -358,10 +396,14 @@ class _QuestionsPageState extends State<QuestionsPage> {
       if (viewState[question.id]!) _refreshProgress.value = _refreshProgress.value++;
     });*/
     print("replace question is " + (question.toJson().toString()));
-    ConditionDisplay.branchedConditions(question, answer.answerValue!, answer.multiSelectAnswer, (q, v) {
+    ConditionDisplay.branchedConditions(
+        question, answer.answerValue!, answer.multiSelectAnswer, (q, v) {
       SchedulerBinding.instance!.addPostFrameCallback((_) {
         setState(() {
-          print("conditional branched recieved state " + q.toString() + ", " + v.toString());
+          print("conditional branched recieved state " +
+              q.toString() +
+              ", " +
+              v.toString());
           viewState[q] = v;
         });
       });
@@ -374,15 +416,24 @@ class _QuestionsPageState extends State<QuestionsPage> {
         return;
       }
       for (var i = 0; i < _answerHolder!.answers!.length; i++) {
-        print("replace: answers are not null trying to find ....${_answerHolder!.answers} " + answer.qustionId.toString() + ", " + _answerHolder!.answers![i].qustionId.toString());
+        print(
+            "replace: answers are not null trying to find ....${_answerHolder!.answers} " +
+                answer.qustionId.toString() +
+                ", " +
+                _answerHolder!.answers![i].qustionId.toString());
         if (answer.qustionId == _answerHolder!.answers![i].qustionId) {
           //_answerHolder.answers.removeAt(i);
           _answerHolder!.answers![i] = answer;
-          print("replace: answer found replacing current ${_answerHolder!.answers?[i].answerValue} " + i.toString());
+          print(
+              "replace: answer found replacing current ${_answerHolder!.answers?[i].answerValue} " +
+                  i.toString());
           return;
         }
       }
-      print("answer add is " + answer.resourcetype! + ", " + answer.answerHolderId.toString());
+      print("answer add is " +
+          answer.resourcetype! +
+          ", " +
+          answer.answerHolderId.toString());
       _answerHolder!.answers!.add(answer);
     }
   }
@@ -390,9 +441,13 @@ class _QuestionsPageState extends State<QuestionsPage> {
   bool _initViewVisibility(Question q) {
     if (!isActive(q)) return false;
     //if (widget.errorQuestions?.contains(q.id) == true) return true;
-    print("checking question visibility " + q.id.toString() + ", " + ((q.depandantConditions != null).toString()));
+    print("checking question visibility " +
+        q.id.toString() +
+        ", " +
+        ((q.depandantConditions != null).toString()));
     if (q.depandantConditions != null) if (q.depandantConditions!.length > 0) {
-      print("checking question question has depandant questions " + q.depandantConditions!.length.toString());
+      print("checking question question has depandant questions " +
+          q.depandantConditions!.length.toString());
       return false;
     }
     return true;
@@ -425,13 +480,17 @@ class _QuestionsPageState extends State<QuestionsPage> {
       itemCount: questions.length,
       itemBuilder: (BuildContext context, int index) {
         Question q = questions[index];
-        print("setting question view " + q.id.toString() + ", " + (q.resourcetype ?? ""));
+        print("setting question view " +
+            q.id.toString() +
+            ", " +
+            (q.resourcetype ?? ""));
         if (viewState[q.id] == null) {
           //print("setting question visisbility first time " + q.id.toString());
           viewState[q.id!] = _initViewVisibility(q);
-          print("setting question visisbility AAAA ${q.id} as state ${viewState[q.id!]}");
+          print(
+              "setting question visisbility AAAA ${q.id} as state ${viewState[q.id!]}");
         } else
-          print("quetion state " + Jiffy.parse(q.createdAt ?? Jiffy.now().format()).jms);
+          print("quetion state " + (q.createdAt ?? Jiffy.now()).jms);
         switch (q.resourcetype) {
           case SCANNER_QUESTION:
             return Visibility(
@@ -447,20 +506,20 @@ class _QuestionsPageState extends State<QuestionsPage> {
               visible: viewState[q.id]!,
             );
           case SOUND_QUESTION:
-            if (!kIsWeb) {
-              return Visibility(
-                child: SoundView(
-                  key: Key('__RIKEY__' + q.id!.toString()),
-                  viewOnly: false,
-                  answerHolder: _answerHolder,
-                  onSelectedValue: (Answer answer) {
-                    _replaceAnswerIfExists(q, answer);
-                  },
-                  question: q,
-                ),
-                visible: viewState[q.id]!,
-              );
-            } else {
+            //if (!kIsWeb) {
+            return Visibility(
+              child: SoundView(
+                key: Key('__RIKEY__' + q.id!.toString()),
+                viewOnly: false,
+                answerHolder: _answerHolder,
+                onSelectedValue: (Answer answer) {
+                  _replaceAnswerIfExists(q, answer);
+                },
+                question: q,
+              ),
+              visible: viewState[q.id]!,
+            );
+          /*} else {
               return Visibility(
                 child: SoundWebView(
                   key: Key('__RIKEY__' + q.id!.toString()),
@@ -473,7 +532,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 ),
                 visible: viewState[q.id]!,
               );
-            }
+            }*/
           case SIGNATURE_QUESTION:
             return Visibility(
               child: SignatureView(
@@ -596,7 +655,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 ),
               );
             } else {
-              print("setting question visisbility fot ${q.id} as state ${viewState[q.id!]}");
+              print(
+                  "setting question visisbility fot ${q.id} as state ${viewState[q.id!]}");
               return Visibility(
                 visible: viewState[q.id]!,
                 child: TakePictureWidget(
@@ -639,7 +699,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
                   visible: viewState[q.id]!,
                 );
               case DROPDOWN_UNIQUE_CHOICE:
-                print("select widget " + viewState[questions[index].id].toString());
+                print("select widget " +
+                    viewState[questions[index].id].toString());
                 return Visibility(
                   child: SelectWidget(
                     key: Key('__RIKEY__' + q.id!.toString()),
@@ -653,7 +714,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
                   visible: viewState[q.id]!,
                 );
               case DROPDOWN_MULTIPLE_CHOICE:
-                print("select widget " + viewState[questions[index].id].toString());
+                print("select widget " +
+                    viewState[questions[index].id].toString());
                 return Visibility(
                   child: MultiSelectView(
                     key: Key('__RIKEY__' + q.id!.toString()),
@@ -668,7 +730,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 );
               default:
                 return Container(
-                  child: Text("Select Not implemented: " + q.getName(context.locale.languageCode)),
+                  child: Text("Select Not implemented: " +
+                      q.getName(context.locale.languageCode)),
                 );
             }
           case GEO_QUESTION:
@@ -712,7 +775,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
             );
           default:
             return Container(
-              child: Text("Not implemented: " + q.getName(context.locale.languageCode)),
+              child: Text(
+                  "Not implemented: " + q.getName(context.locale.languageCode)),
             );
         }
       },

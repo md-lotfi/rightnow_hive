@@ -6,7 +6,7 @@ import 'package:rightnow/views/language_switch.dart';
 
 part 'organisation.g.dart';
 
-@HiveType(typeId: 36)
+@HiveType(typeId: 35)
 @JsonSerializable()
 class Organisation {
   @HiveField(0)
@@ -32,7 +32,8 @@ class Organisation {
     this.icon,
   });
 
-  factory Organisation.fromJson(Map<String, dynamic> json) => _$OrganisationFromJson(json);
+  factory Organisation.fromJson(Map<String, dynamic> json) =>
+      _$OrganisationFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrganisationToJson(this);
 }

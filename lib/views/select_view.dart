@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/my_dropdown_widget.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -28,10 +29,12 @@ class SelectWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SelectWidgetState createState() => _SelectWidgetState(this.answerHolder, this.onSelectedValue);
+  _SelectWidgetState createState() =>
+      _SelectWidgetState(this.answerHolder, this.onSelectedValue);
 }
 
-class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClientMixin {
+class _SelectWidgetState extends State<SelectWidget>
+    with AutomaticKeepAliveClientMixin {
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
   _SelectWidgetState(this.answerHolder, this.onSelectedValue);
@@ -53,7 +56,8 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                   if (answer.multiSelectAnswer != null) {
                     if (answer.multiSelectAnswer!.length > 0) {
                       for (var choice in widget.question!.choices!) {
-                        if (choice.id == answer.multiSelectAnswer![0].selectedId) {
+                        if (choice.id ==
+                            answer.multiSelectAnswer![0].selectedId) {
                           _currentChoice = choice;
                           break;
                         }
@@ -89,14 +93,15 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
   _setOnSeletedValue() {
     if (widget.question == null) return;
     List<MultiSelectAnswer> m = [];
-    m.add(MultiSelectAnswer.fill(answerHolder?.id, _currentChoice?.id, _currentChoice?.label));
+    m.add(MultiSelectAnswer.fill(
+        answerHolder?.id, _currentChoice?.id, _currentChoice?.label));
     onSelectedValue!(
       Answer.fill(
         widget.question!.id,
         widget.question!.fieldSet,
         _currentChoice!.label,
         _currentChoice!.id.toString(),
-        DateTime.now().toString(),
+        Jiffy.now(),
         transtypeResourceType(widget.question!.resourcetype!),
         answerHolder?.id,
         m,
@@ -116,7 +121,8 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (!widget.viewOnly)
               FormField<Choice>(
                 autovalidateMode: AutovalidateMode.always,
@@ -132,10 +138,16 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                           border: Border.all(
                               style: BorderStyle.solid,
                               width: 0.80,
-                              color: (answerHolder?.answers?.length ?? 0) == 0 ? Colors.grey.shade300 : (_currentChoice == null ? Colors.red : Colors.grey.shade300)),
+                              color: (answerHolder?.answers?.length ?? 0) == 0
+                                  ? Colors.grey.shade300
+                                  : (_currentChoice == null
+                                      ? Colors.red
+                                      : Colors.grey.shade300)),
                         ),
                         child: MyDropDownWidget<Choice>(
-                          label: _currentChoice?.getName(context.locale.languageCode) ?? "",
+                          label: _currentChoice
+                                  ?.getName(context.locale.languageCode) ??
+                              "",
                           choicesDropdownList: _dropdownItems(state),
                         ),
                         /*DropdownButton(
@@ -150,18 +162,26 @@ class _SelectWidgetState extends State<SelectWidget> with AutomaticKeepAliveClie
                           },
                         ),*/
                       ),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (value) {
-                  if (isRequired(widget.question)) if (_currentChoice == null) return FORM_LIST_NOT_SELECTED;
+                  if (isRequired(widget.question)) if (_currentChoice == null)
+                    return FORM_LIST_NOT_SELECTED;
                   return null;
                 },
               ),
             //if (widget.viewOnly) Text("select view"),
             //if (widget.viewOnly) fieldData(_currentChoice?.getName(context.locale.languageCode) ?? ""),
-            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
+            if (widget.viewOnly)
+              fieldData(widget.responseSet
+                      ?.getChoice()
+                      ?.getName(context.locale.languageCode) ??
+                  ""),
             Divider(),
           ],
         ),

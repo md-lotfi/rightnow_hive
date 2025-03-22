@@ -23,8 +23,8 @@ class AnswerHolderAdapter extends TypeAdapter<AnswerHolder> {
       state: fields[8] as int?,
       closed: fields[3] as bool?,
       formTitle: fields[4] as String?,
-      completedAt: fields[5] as String?,
-      createdAt: fields[6] as String?,
+      completedAt: fields[5] as Jiffy?,
+      createdAt: fields[6] as Jiffy?,
       deviceId: fields[7] as String?,
       webArchived: fields[9] as int?,
     )
@@ -78,13 +78,15 @@ class AnswerHolderAdapter extends TypeAdapter<AnswerHolder> {
 // **************************************************************************
 
 AnswerHolder _$AnswerHolderFromJson(Map<String, dynamic> json) => AnswerHolder(
-      id: json['id'] as int?,
-      formId: json['form'] as int?,
+      id: (json['id'] as num?)?.toInt(),
+      formId: (json['form'] as num?)?.toInt(),
       uploaded: json['uploaded'] as bool?,
       closed: json['closed'] as bool?,
       formTitle: json['formTitle'] as String?,
-      completedAt: json['completed_at'] as String?,
-      createdAt: json['createdAt'] as String?,
+      completedAt: const JiffySecondsConverter()
+          .fromJson(json['completed_at'] as String?),
+      createdAt:
+          const JiffySecondsConverter().fromJson(json['createdAt'] as String?),
       deviceId: json['device_id'] as String?,
     )
       ..completed = json['completed'] as bool?
@@ -108,8 +110,9 @@ Map<String, dynamic> _$AnswerHolderToJson(AnswerHolder instance) =>
       'closed': instance.closed,
       'completed': instance.completed,
       'formTitle': instance.formTitle,
-      'completed_at': instance.completedAt,
-      'createdAt': instance.createdAt,
+      'completed_at':
+          const JiffySecondsConverter().toJson(instance.completedAt),
+      'createdAt': const JiffySecondsConverter().toJson(instance.createdAt),
       'device_id': instance.deviceId,
       'offline': instance.offline,
       'responses': instance.answers,

@@ -50,7 +50,9 @@ mixin _$SearchEvent {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SearchEventCopyWith<SearchEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -74,6 +76,8 @@ class _$SearchEventCopyWithImpl<$Res, $Val extends SearchEvent>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SearchEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -107,6 +111,8 @@ class __$$SearchImplCopyWithImpl<$Res>
       _$SearchImpl _value, $Res Function(_$SearchImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of SearchEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -153,7 +159,9 @@ class _$SearchImpl with DiagnosticableTreeMixin implements Search {
   @override
   int get hashCode => Object.hash(runtimeType, keyword);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SearchEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
@@ -221,8 +229,11 @@ abstract class Search implements SearchEvent {
 
   @override
   String get keyword;
+
+  /// Create a copy of SearchEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

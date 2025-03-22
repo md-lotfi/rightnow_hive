@@ -1,9 +1,12 @@
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 
 part 'form_entry.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 27)
 class FormEntry {
   @HiveField(0)
@@ -19,11 +22,11 @@ class FormEntry {
 
   @HiveField(3)
   @JsonKey(name: "uploaded_at")
-  String? uploadedAt;
+  Jiffy? uploadedAt;
 
   @HiveField(4)
   @JsonKey(name: "completed_at")
-  String? completedAt;
+  Jiffy? completedAt;
 
   @HiveField(5)
   @JsonKey(name: "device_id")
@@ -38,7 +41,8 @@ class FormEntry {
     this.deviceId,
   });
 
-  factory FormEntry.fromJson(Map<String, dynamic> json) => _$FormEntryFromJson(json);
+  factory FormEntry.fromJson(Map<String, dynamic> json) =>
+      _$FormEntryFromJson(json);
 
   Map<String, dynamic> toJson() => _$FormEntryToJson(this);
 }

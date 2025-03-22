@@ -1,4 +1,5 @@
 import 'package:jiffy/jiffy.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/category_forms.dart';
 import 'package:rightnow/models/super_category.dart';
 import 'package:rightnow/models/tag.dart';
@@ -9,6 +10,7 @@ import 'package:rightnow/views/language_switch.dart';
 part 'category.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 8)
 class Category {
   @HiveField(0)
@@ -34,7 +36,7 @@ class Category {
 
   @HiveField(5)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   List<Tag>? tags;
 
@@ -46,12 +48,13 @@ class Category {
   }
 
   int createdAtTimeStamp() {
-    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
+    return (createdAt ?? Jiffy.now()).microsecondsSinceEpoch;
   }
 
   Category(this.id, this.nameAr, this.nameFr, this.icon, this.createdAt);
 
-  factory Category.fromJson(Map<String, dynamic> json) => _$CategoryFromJson(json);
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
 }

@@ -23,7 +23,7 @@ class CategoryMiddleAdapter extends TypeAdapter<CategoryMiddle> {
       fields[2] as String?,
       fields[1] as String?,
       fields[5] as int?,
-      fields[6] as String?,
+      fields[6] as Jiffy?,
     );
   }
 
@@ -64,13 +64,13 @@ class CategoryMiddleAdapter extends TypeAdapter<CategoryMiddle> {
 
 CategoryMiddle _$CategoryMiddleFromJson(Map<String, dynamic> json) =>
     CategoryMiddle(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
       json['name_ar'] as String?,
       json['name_fr'] as String?,
       json['icon'] as String?,
-      json['belongs_to'] as int?,
-      json['created_at'] as String?,
+      (json['belongs_to'] as num?)?.toInt(),
+      const JiffySecondsConverter().fromJson(json['created_at'] as String?),
     )
       ..tags = (json['tags'] as List<dynamic>?)
           ?.map((e) => Tag.fromJson(e as Map<String, dynamic>))
@@ -87,7 +87,7 @@ Map<String, dynamic> _$CategoryMiddleToJson(CategoryMiddle instance) =>
       'name_ar': instance.nameAr,
       'name': instance.name,
       'belongs_to': instance.belongsTo,
-      'created_at': instance.createdAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
       'tags': instance.tags,
       'subcategories': instance.subcategories,
     };

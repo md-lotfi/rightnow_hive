@@ -1,10 +1,13 @@
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/views/language_switch.dart';
 
 part 'user_notification.g.dart';
 
 @HiveType(typeId: 25)
+@JiffySecondsConverter()
 @JsonSerializable()
 class UserNotification extends HiveObject {
   @HiveField(0)
@@ -34,17 +37,23 @@ class UserNotification extends HiveObject {
 
   @HiveField(7)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   @HiveField(8, defaultValue: 0)
   int? viewed;
 
   String getTitle(String? lang) {
-    return (lang == LANGUAGE_FR ? titleFr : (lang == null ? titleFr : titleAr)) ?? "";
+    return (lang == LANGUAGE_FR
+            ? titleFr
+            : (lang == null ? titleFr : titleAr)) ??
+        "";
   }
 
   String getContent(String? lang) {
-    return (lang == LANGUAGE_FR ? contentFr : (lang == null ? contentFr : contentAr)) ?? "";
+    return (lang == LANGUAGE_FR
+            ? contentFr
+            : (lang == null ? contentFr : contentAr)) ??
+        "";
   }
 
   UserNotification({
@@ -59,7 +68,8 @@ class UserNotification extends HiveObject {
     this.viewed,
   });
 
-  factory UserNotification.fromJson(Map<String, dynamic> json) => _$UserNotificationFromJson(json);
+  factory UserNotification.fromJson(Map<String, dynamic> json) =>
+      _$UserNotificationFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserNotificationToJson(this);
 }

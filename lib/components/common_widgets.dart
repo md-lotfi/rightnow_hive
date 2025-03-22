@@ -25,6 +25,7 @@ import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/actualite.dart';
 import 'package:rightnow/models/answers_count.dart';
+import 'package:rightnow/models/current_language.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/local_user.dart';
 import 'package:rightnow/models/profile.dart';
@@ -36,6 +37,7 @@ import 'package:rightnow/states/result_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rightnow/views/language_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path/path.dart';
 
@@ -892,7 +894,7 @@ Widget articlaHeaderColumn(BuildContext context, Actualite actualite) {
         ),
         SizedBox(height: 10),
         Text(
-          Jiffy.parse(actualite.createdAt ?? Jiffy.now().format())
+          (actualite.createdAt ?? Jiffy.now())
               .format(pattern: "dd MMMM yyyy . HH:mm"),
           textAlign: TextAlign.end,
           style: TextStyle(color: Colors.grey.shade400),
@@ -959,7 +961,7 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  Jiffy.parse(actualite.createdAt ?? Jiffy.now().format())
+                  (actualite.createdAt ?? Jiffy.now())
                       .format(pattern: "dd MMMM yyyy . HH:mm"),
                   textAlign: TextAlign.start,
                   style: TextStyle(color: Colors.grey.shade400),
@@ -976,6 +978,21 @@ Widget articleHeader(BuildContext context, Actualite actualite) {
 bool isFrench(BuildContext context) {
   return context.locale.languageCode == 'fr' ||
       context.locale.languageCode == 'en';
+}
+
+Future<void> setJiffyLocal(String local) async {
+  await Jiffy.setLocale(local == LANGUAGE_AR ? "${local}_dz" : local);
+}
+
+Future<void> setLocale(BuildContext context, String local) async {
+  if (local == LANGUAGE_AR) {
+    await context.setLocale(Locale(local, LANGUAGE_AR_CODE));
+  } else {
+    await context.setLocale(Locale(local));
+  }
+  await setJiffyLocal(local);
+  await CurrentLanguage.set(CurrentLanguage(language: local));
+  return;
 }
 
 Widget errorMessage(BuildContext context, String msg, Function() onClose) {
@@ -1081,6 +1098,29 @@ String getFilename(String file) {
   }
   return false;
 }*/
+
+Jiffy dateParser(dynamic ddate,
+    {Unit? startOf, Unit? endOf, String? fromPattern, bool? isUtc}) {
+  Jiffy date = Jiffy.now();
+  if (ddate is DateTime) {
+    date = Jiffy.parseFromDateTime(ddate); //.yMMMMd;
+    //log("date is datetime ${date.dateTime.toString()}");
+  } else if (ddate is Jiffy) {
+    date = Jiffy.parseFromJiffy(ddate); //.yMMMMd;
+  } else if (ddate is String) {
+    date = Jiffy.parse(ddate, pattern: fromPattern, isUtc: isUtc ?? false)
+        .toLocal(); //.yMMMMd;
+  } else if (ddate is Map<Unit, int>) {
+    date =
+        Jiffy.parseFromMap(ddate, isUtc: isUtc ?? false).toLocal(); //.yMMMMd;
+  }
+  if (startOf != null) {
+    return date.startOf(startOf);
+  } else if (endOf != null) {
+    return date.endOf(endOf);
+  }
+  return date;
+}
 
 Future<Uint8List?> getUint8ListFile(String filename) async {
   print("getting saved file from disk");

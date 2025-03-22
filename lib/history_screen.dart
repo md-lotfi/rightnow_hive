@@ -63,7 +63,8 @@ class _HistoryPageState extends State<HistoryPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        child: Icon(Icons.arrow_back_ios, size: 25, color: COLOR_PRIMARY),
+                        child: Icon(Icons.arrow_back_ios,
+                            size: 25, color: COLOR_PRIMARY),
                         onTap: () => Navigator.pop(context),
                       ),
                       Text(
@@ -77,7 +78,8 @@ class _HistoryPageState extends State<HistoryPage> {
                             builder: (context) => HistoryPage(),
                           ),
                         ),
-                        child: Icon(Icons.history, size: 25, color: COLOR_PRIMARY),
+                        child:
+                            Icon(Icons.history, size: 25, color: COLOR_PRIMARY),
                       )
                     ],
                   ),
@@ -97,7 +99,8 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
         Expanded(
           child: FutureBuilder<List<FormFieldsState>>(
-            future: getDataBase<FormStateDao>().fetchFormStates(), //api.fetchFormState(),
+            future: getDataBase<FormStateDao>()
+                .fetchFormStates(), //api.fetchFormState(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
@@ -155,12 +158,14 @@ class _HistoryPageState extends State<HistoryPage> {
           width: double.infinity,
           height: 1,
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
+            border: Border(
+                bottom: BorderSide(color: Colors.grey.shade300, width: 1)),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(top: 15, bottom: 15),
-          child: Text(text, style: TextStyle(backgroundColor: Colors.grey.shade50)),
+          child: Text(text,
+              style: TextStyle(backgroundColor: Colors.grey.shade50)),
         ),
       ],
     );
@@ -175,7 +180,9 @@ class _HistoryPageState extends State<HistoryPage> {
           if (data.length == 0) return SizedBox();
           if ((index + 1) == (data.length + 1)) return SizedBox();
           if (index == 0) return SizedBox();
-          return _listDivider(Jiffy.parse(data[index].formEntry?.completedAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy"));
+          return _listDivider(
+              (data[index].formEntry?.completedAt ?? Jiffy.now())
+                  .format(pattern: "dd MMMM yyyy"));
         },
         itemCount: data.length + 2,
         itemBuilder: (BuildContext context, int index) {
@@ -183,10 +190,14 @@ class _HistoryPageState extends State<HistoryPage> {
           String f = "";
           if ((index + 1) == (data.length + 2)) return SizedBox();
           if (index == 0) {
-            return _listDivider(Jiffy.parse(data[index].formEntry?.completedAt ?? Jiffy.now().format()).format(pattern: "dd MMMM yyyy"));
+            return _listDivider(
+                (data[index].formEntry?.completedAt ?? Jiffy.now())
+                    .format(pattern: "dd MMMM yyyy"));
           }
           if (data[index - 1].formEntry?.completedAt != null) {
-            DateTime d = DateTime.parse(data[index - 1].formEntry?.completedAt ?? "");
+            DateTime d = DateTime.parse(
+                data[index - 1].formEntry?.completedAt?.dateTime.toString() ??
+                    "");
             f = DateFormat('dd/MM/yyyy').format(d);
             print('date is ' + f);
           }
@@ -224,7 +235,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FieldsSetPage(formId: data[index - 1].formId!),
+                          builder: (context) =>
+                              FieldsSetPage(formId: data[index - 1].formId!),
                         ),
                       );
                     }
@@ -254,29 +266,43 @@ class _HistoryPageState extends State<HistoryPage> {
         showWidget(
             Container(
               padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(5)),
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(5)),
               child: Text(
                 "Non envoyé".tr(),
-                style: TextStyle(color: Colors.white, backgroundColor: Colors.red, fontSize: 10),
+                style: TextStyle(
+                    color: Colors.white,
+                    backgroundColor: Colors.red,
+                    fontSize: 10),
               ),
             ),
             Container(
               padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(5)),
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(5)),
               child: Text(
                 "Envoyé".tr(),
-                style: TextStyle(color: Colors.white, backgroundColor: Colors.green, fontSize: 10),
+                style: TextStyle(
+                    color: Colors.white,
+                    backgroundColor: Colors.green,
+                    fontSize: 10),
               ),
             ),
             data.localAnswerHolder?.uploaded == false),
         if (data.state != null)
           Container(
             padding: EdgeInsets.all(5),
-            margin: isFrench(context) ? EdgeInsets.only(left: 8) : EdgeInsets.only(right: 8),
-            decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(5)),
+            margin: isFrench(context)
+                ? EdgeInsets.only(left: 8)
+                : EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(5)),
             child: Text(
               data.state!.getTitle(context.locale.languageCode),
-              style: TextStyle(color: Colors.white, backgroundColor: Colors.blue, fontSize: 10),
+              style: TextStyle(
+                  color: Colors.white,
+                  backgroundColor: Colors.blue,
+                  fontSize: 10),
             ),
           ),
         /*FutureBuilder<FormFieldsState?>(
@@ -335,8 +361,12 @@ class _HistoryPageState extends State<HistoryPage> {
             
           },*/
           title: Text(
-            data.getName(context.locale.languageCode), //data.formFields?.getName(context.locale.languageCode)
-            style: TextStyle(color: COLOR_PRIMARY, fontSize: 20, fontWeight: FontWeight.bold),
+            data.getName(context.locale
+                .languageCode), //data.formFields?.getName(context.locale.languageCode)
+            style: TextStyle(
+                color: COLOR_PRIMARY,
+                fontSize: 20,
+                fontWeight: FontWeight.bold),
           ),
           subtitle: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -344,7 +374,8 @@ class _HistoryPageState extends State<HistoryPage> {
               Text("N° réclamation".tr()),
               const SizedBox(width: 10),
               Text(
-                data.id?.toString() ?? "", //data.formFields?.category?.getName(context.locale.languageCode) ?? "",
+                data.id?.toString() ??
+                    "", //data.formFields?.category?.getName(context.locale.languageCode) ?? "",
                 style: TextStyle(color: Colors.blue),
               )
             ],
@@ -372,7 +403,9 @@ class _HistoryPageState extends State<HistoryPage> {
                         showActionMessage(
                           context,
                           title: "Confirmation".tr(),
-                          messages: [Text("Voulez-vous supprimer cette réponse ?".tr())],
+                          messages: [
+                            Text("Voulez-vous supprimer cette réponse ?".tr())
+                          ],
                           positiveBtn: 'Oui'.tr(),
                           negativeBtn: 'Non'.tr(),
                           whichTaped: (w) async {
@@ -400,7 +433,7 @@ class _HistoryPageState extends State<HistoryPage> {
             children: [
               Expanded(
                 child: Text(
-                  Jiffy.parse(data.formEntry?.completedAt ?? Jiffy.now().format()).Hm,
+                  (data.formEntry?.completedAt ?? Jiffy.now()).Hm,
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -408,7 +441,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: "Consulter ".tr(), style: TextStyle(color: COLOR_PRIMARY)),
+                      TextSpan(
+                          text: "Consulter ".tr(),
+                          style: TextStyle(color: COLOR_PRIMARY)),
                       WidgetSpan(
                         child: Icon(Icons.arrow_forward, size: 14),
                       ),

@@ -48,7 +48,7 @@ class DiseaseAdapter extends TypeAdapter<Disease> {
 // **************************************************************************
 
 Disease _$DiseaseFromJson(Map<String, dynamic> json) => Disease(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
     );
 

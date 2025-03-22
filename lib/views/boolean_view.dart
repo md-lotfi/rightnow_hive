@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -24,10 +25,12 @@ class BooleanWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BooleanWidgetState createState() => _BooleanWidgetState(this.onSelectedValue, this.answerHolder);
+  _BooleanWidgetState createState() =>
+      _BooleanWidgetState(this.onSelectedValue, this.answerHolder);
 }
 
-class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveClientMixin {
+class _BooleanWidgetState extends State<BooleanWidget>
+    with AutomaticKeepAliveClientMixin {
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
   String? _radioValue;
@@ -69,7 +72,8 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
     return Theme(
       data: ThemeData(
         //unselectedWidgetColor: (answerHolder?.answers?.length ?? 0) == 0 ? null : (_radioValue == null ? Colors.red : null),
-        unselectedWidgetColor: _hasData ? null : (_radioValue == null ? Colors.red : null),
+        unselectedWidgetColor:
+            _hasData ? null : (_radioValue == null ? Colors.red : null),
       ),
       child: load(),
     );
@@ -80,7 +84,15 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
   _setSelected() {
     if (onSelectedValue != null && widget.question != null) {
       onSelectedValue!(
-        Answer.fill(widget.question?.id, widget.question?.fieldSet, _radioValue, null, DateTime.now().toString(), transtypeResourceType(widget.question?.resourcetype), answerHolder?.id, null),
+        Answer.fill(
+            widget.question?.id,
+            widget.question?.fieldSet,
+            _radioValue,
+            null,
+            Jiffy.now(),
+            transtypeResourceType(widget.question?.resourcetype),
+            answerHolder?.id,
+            null),
       );
     }
   }
@@ -92,7 +104,8 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (!widget.viewOnly)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -122,7 +135,8 @@ class _BooleanWidgetState extends State<BooleanWidget> with AutomaticKeepAliveCl
                   Text("No".tr()),
                 ],
               ),
-            if (widget.viewOnly) fieldData(_radioValue == 'true' ? "Yes".tr() : "No".tr()),
+            if (widget.viewOnly)
+              fieldData(_radioValue == 'true' ? "Yes".tr() : "No".tr()),
             Divider(),
           ],
         ),

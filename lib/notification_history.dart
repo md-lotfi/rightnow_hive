@@ -17,7 +17,8 @@ class NotificationHistoryPage extends StatefulWidget {
   NotificationHistoryPage({Key? key}) : super(key: key);
 
   @override
-  _NotificationHistoryPageState createState() => _NotificationHistoryPageState();
+  _NotificationHistoryPageState createState() =>
+      _NotificationHistoryPageState();
 }
 
 class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
@@ -25,7 +26,7 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       await getDataBase<FCMNotificationsDao>().removeAllFCMNotification();
     });
     return ScreenViewerWidget(
@@ -51,7 +52,8 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
                         child: Container(
                           //color: Colors.red,
                           child: _notificationBuilder(snapshot.data ?? []),
-                          padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          padding:
+                              EdgeInsets.only(left: 20, right: 20, bottom: 20),
                         ),
                         onRefresh: () async {
                           setState(() {});
@@ -107,13 +109,15 @@ class _NotificationHistoryPageState extends State<NotificationHistoryPage> {
             ),
           ),
         ).then((value) => setState(() {})),
-        title: Text(data.getTitle(context.locale.languageCode), style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(data.getTitle(context.locale.languageCode),
+            style: TextStyle(fontWeight: FontWeight.bold)),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(Jiffy.parse(data.createdAt ?? Jiffy.now().format()).yMMMd, textAlign: TextAlign.center),
+            Text((data.createdAt ?? Jiffy.now()).yMMMd,
+                textAlign: TextAlign.center),
             Text(
-              Jiffy.parse(data.createdAt ?? Jiffy.now().format()).Hm,
+              (data.createdAt ?? Jiffy.now()).Hm,
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.blue),
             ),

@@ -1,4 +1,5 @@
 import 'package:jiffy/jiffy.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/allowed_types.dart';
 import 'package:rightnow/models/branched_conditions.dart';
 import 'package:rightnow/models/branched_links.dart';
@@ -11,6 +12,7 @@ import 'package:rightnow/views/language_switch.dart';
 part 'Question.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 21)
 class Question {
   @HiveField(0)
@@ -33,10 +35,10 @@ class Question {
 
   @HiveField(5)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   @HiveField(6)
-  String? updated;
+  Jiffy? updated;
 
   @HiveField(7)
   @JsonKey(name: 'max_length')
@@ -53,7 +55,7 @@ class Question {
   List<Choice>? choices;
 
   int createdAtTimeStamp() {
-    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
+    return (createdAt ?? Jiffy.now()).microsecondsSinceEpoch;
   }
 
   @JsonKey(name: 'dependant_conditions')
@@ -108,10 +110,30 @@ class Question {
     return (lang == LANGUAGE_FR ? label : labelAr) ?? "";
   }
 
-  Question(this.id, this.label, this.labelAr, this.isActive, this.activeAlways, this.createdAt, this.updated, this.maxLength, this.minValue, this.maxValue, this.polymorphicCtype, this.fieldSet,
-      this.formId, this.file, this.resourcetype, this.type, this.customIdentifiers, this.isRequired, this.maxSizeKb, this.minSizeKb);
+  Question(
+      this.id,
+      this.label,
+      this.labelAr,
+      this.isActive,
+      this.activeAlways,
+      this.createdAt,
+      this.updated,
+      this.maxLength,
+      this.minValue,
+      this.maxValue,
+      this.polymorphicCtype,
+      this.fieldSet,
+      this.formId,
+      this.file,
+      this.resourcetype,
+      this.type,
+      this.customIdentifiers,
+      this.isRequired,
+      this.maxSizeKb,
+      this.minSizeKb);
 
-  factory Question.fromJson(Map<String, dynamic> json) => _$QuestionFromJson(json);
+  factory Question.fromJson(Map<String, dynamic> json) =>
+      _$QuestionFromJson(json);
 
   Map<String, dynamic> toJson() => _$QuestionToJson(this);
 

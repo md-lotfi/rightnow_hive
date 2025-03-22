@@ -7,9 +7,6 @@ import 'package:rightnow/components/bottom_nav_home.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/scroll_touch_widget.dart';
 import 'package:rightnow/constants/constants.dart';
-import 'package:rightnow/events/QuestionsEvent.dart';
-import 'package:rightnow/models/AnswersHolder.dart';
-import 'package:rightnow/models/FieldSet.dart';
 import 'package:rightnow/models/Question.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:rightnow/models/decision_response.dart';
@@ -79,11 +76,15 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text(widget.reclamations.getName(context.locale.languageCode), style: TextStyle(color: COLOR_PRIMARY)), //widget.fieldSet.getName(context.locale.languageCode)
+          title: Text(widget.reclamations.getName(context.locale.languageCode),
+              style: TextStyle(
+                  color:
+                      COLOR_PRIMARY)), //widget.fieldSet.getName(context.locale.languageCode)
         ),
         bottomNavigationBar: HomeNavBarComp(NavState.NAV_HISTORY),
         body: FutureBuilder<ResponseForm?>(
-          future: api.getResponses(widget.reclamations.formEntry?.deviceId ?? ""),
+          future:
+              api.getResponses(widget.reclamations.formEntry?.deviceId ?? ""),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data != null) return _addBuilder(snapshot.data!);
@@ -107,7 +108,8 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
           child: RawScrollbar(
             trackVisibility: true,
             thumbColor: COLOR_PRIMARY,
-            child: ScrollTouchWidget(listChild: dataWidget(responseform.entries ?? [])),
+            child: ScrollTouchWidget(
+                listChild: dataWidget(responseform.entries ?? [])),
           ),
         ),
         Positioned(
@@ -117,7 +119,8 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
           child: TextButton(
             onPressed: () async {
               if (widget.reclamations.deviceId != null) {
-                DecisionResponse? r = await api.fetchAlgoResponse(widget.reclamations.deviceId!);
+                DecisionResponse? r =
+                    await api.fetchAlgoResponse(widget.reclamations.deviceId!);
                 //print("decision response is ${widget.answerHolder.decisionResponse}");
                 showResponseDialog(context, r, () {});
               }
@@ -245,7 +248,9 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
                 );
               default:
                 return Container(
-                  child: Text("Select Not implemented: ${rs.toJson()}, " + (rs.questionHist?.getName(context.locale.languageCode) ?? "")),
+                  child: Text("Select Not implemented: ${rs.toJson()}, " +
+                      (rs.questionHist?.getName(context.locale.languageCode) ??
+                          "")),
                 );
             }
           case GEO_RESPONSE:
@@ -268,11 +273,13 @@ class _QuestionsHistoryPageState extends State<QuestionsHistoryPage> {
             );
           default:
             Container(
-              child: Text(rs.questionHist?.getName(context.locale.languageCode) ?? ""),
+              child: Text(
+                  rs.questionHist?.getName(context.locale.languageCode) ?? ""),
             );
         }
         return Container(
-          child: Text(rs.questionHist?.getName(context.locale.languageCode) ?? ""),
+          child:
+              Text(rs.questionHist?.getName(context.locale.languageCode) ?? ""),
         );
       },
     );

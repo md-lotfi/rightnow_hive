@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:rightnow/constants/constants.dart';
-import 'package:rightnow/db/AnswerHolderDao.dart';
-import 'package:rightnow/db/FormFieldsDao.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FieldSet.dart';
 import 'package:hive/hive.dart';
@@ -18,6 +16,7 @@ import 'package:easy_localization/easy_localization.dart';
 part 'FormFields.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 16)
 class FormFields {
   @HiveField(0)
@@ -66,7 +65,7 @@ class FormFields {
 
   @HiveField(7)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   @HiveField(15)
   @JsonKey(ignore: true)
@@ -110,9 +109,11 @@ class FormFields {
 
   String formatCreatedAt() {
     if (createdAt == null) return Jiffy.now().yMMMMEEEEd;
-    String x = createdAt!;
-    if (createdAt!.contains("+")) x = createdAt!.substring(0, createdAt!.indexOf("+"));
-    return Jiffy.parse(x).yMMMMEEEEd;
+    return createdAt!.yMMMMEEEEd;
+    /*String x = createdAt!;
+    if (createdAt!.contains("+"))
+      x = createdAt!.substring(0, createdAt!.indexOf("+"));
+    return Jiffy.parse(x).yMMMMEEEEd;*/
   }
 
   String getName(String? lang) {
@@ -120,7 +121,10 @@ class FormFields {
   }
 
   String getDescription(String? lang) {
-    var r = (lang == LANGUAGE_FR ? description : (lang == null ? description : descriptionAr)) ?? "";
+    var r = (lang == LANGUAGE_FR
+            ? description
+            : (lang == null ? description : descriptionAr)) ??
+        "";
     return r;
   }
 
@@ -143,7 +147,8 @@ class FormFields {
       this.formInactivePageTitle,
       this.formInactivePageBody});
 
-  factory FormFields.fromJson(Map<String, dynamic> json) => _$FormFieldsFromJson(json);
+  factory FormFields.fromJson(Map<String, dynamic> json) =>
+      _$FormFieldsFromJson(json);
 
   Map<String, dynamic> toJson() => _$FormFieldsToJson(this);
 

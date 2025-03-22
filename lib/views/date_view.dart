@@ -30,7 +30,8 @@ class DateWidget extends StatefulWidget {
   _DateWidgetState createState() => _DateWidgetState();
 }
 
-class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMixin {
+class _DateWidgetState extends State<DateWidget>
+    with AutomaticKeepAliveClientMixin {
   _DateWidgetState();
 
   DateTime? _currentDateTime = DateTime.now();
@@ -47,7 +48,8 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
             if (answer.qustionId == widget.question!.id) {
               if (isDate(answer.answerValue)) {
                 //_hasDate = true;
-                _currentDateTime = DateTime.parse(answer.answerValue ?? Jiffy.now().dateTime.toString());
+                _currentDateTime = DateTime.parse(
+                    answer.answerValue ?? Jiffy.now().dateTime.toString());
                 //_selectedDateTime = _currentDateTime;
               }
             }
@@ -57,11 +59,20 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
 
       log('setting on selected value init ${Jiffy.parseFromDateTime(_currentDateTime ?? Jiffy.now().dateTime).format(pattern: "yyyy-MM-dd")}');
       widget.onSelectedValue!(
-        Answer.fill(widget.question?.id, widget.question?.fieldSet, Jiffy.parseFromDateTime(_currentDateTime ?? Jiffy.now().dateTime).format(pattern: "yyyy-MM-dd"), null, DateTime.now().toString(),
-            transtypeResourceType(widget.question?.resourcetype), widget.answerHolder?.id, null),
+        Answer.fill(
+            widget.question?.id,
+            widget.question?.fieldSet,
+            Jiffy.parseFromDateTime(_currentDateTime ?? Jiffy.now().dateTime)
+                .format(pattern: "yyyy-MM-dd"),
+            null,
+            Jiffy.now(),
+            transtypeResourceType(widget.question?.resourcetype),
+            widget.answerHolder?.id,
+            null),
       );
     } else if (widget.responseSet != null) {
-      _currentDateTime = DateTime.parse(widget.responseSet?.value ?? Jiffy.now().dateTime.toString());
+      _currentDateTime = DateTime.parse(
+          widget.responseSet?.value ?? Jiffy.now().dateTime.toString());
     }
     super.initState();
   }
@@ -73,8 +84,10 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
   }
 
   Widget load() {
-    DateTime? minDate = Jiffy.parse(widget.question?.minValue ?? Jiffy.now().format()).dateTime;
-    DateTime? maxDate = Jiffy.parse(widget.question?.maxValue ?? Jiffy.now().format()).dateTime;
+    DateTime? minDate =
+        Jiffy.parse(widget.question?.minValue ?? Jiffy.now().format()).dateTime;
+    DateTime? maxDate =
+        Jiffy.parse(widget.question?.maxValue ?? Jiffy.now().format()).dateTime;
     if (widget.question?.minValue == null) {
       minDate = null;
     }
@@ -87,8 +100,16 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
     //log('setting on selected value ${Jiffy(_currentDateTime).format("yyyy-MM-dd")}');
     if (widget.onSelectedValue != null && widget.question != null) {
       widget.onSelectedValue!(
-        Answer.fill(widget.question!.id, widget.question!.fieldSet, Jiffy.parseFromDateTime(_currentDateTime ?? Jiffy.now().dateTime).format(pattern: "yyyy-MM-dd"), null, DateTime.now().toString(),
-            transtypeResourceType(widget.question?.resourcetype), widget.answerHolder!.id, null),
+        Answer.fill(
+            widget.question!.id,
+            widget.question!.fieldSet,
+            Jiffy.parseFromDateTime(_currentDateTime ?? Jiffy.now().dateTime)
+                .format(pattern: "yyyy-MM-dd"),
+            null,
+            Jiffy.now(),
+            transtypeResourceType(widget.question?.resourcetype),
+            widget.answerHolder!.id,
+            null),
       );
     }
 
@@ -102,7 +123,8 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+                widgetQuestionTitle(widget.question,
+                    context.locale.languageCode, widget.responseSet),
                 if (!widget.viewOnly)
                   Container(
                     height: MediaQuery.of(context).size.height / 4,
@@ -119,28 +141,46 @@ class _DateWidgetState extends State<DateWidget> with AutomaticKeepAliveClientMi
                       maximumDate: maxDate,
                       initialDateTime: _currentDateTime,
                       onDateTimeChanged: (DateTime dateTime) {
-                        print("dateTime: " + Jiffy.parseFromDateTime(dateTime).format(pattern: "yyyy-MM-dd"));
+                        print("dateTime: " +
+                            Jiffy.parseFromDateTime(dateTime)
+                                .format(pattern: "yyyy-MM-dd"));
                         //_hasDate = true;
                         //_selectedDateTime = dateTime;
                         _currentDateTime = dateTime;
                         log("date widget view answer value is ${Jiffy.parseFromDateTime(dateTime).format(pattern: "yyyy-MM-dd")}");
                         widget.onSelectedValue!(
-                          Answer.fill(widget.question!.id, widget.question!.fieldSet, Jiffy.parseFromDateTime(dateTime).format(pattern: "yyyy-MM-dd"), null, DateTime.now().toString(),
-                              transtypeResourceType(widget.question!.resourcetype!), widget.answerHolder!.id, null),
+                          Answer.fill(
+                              widget.question!.id,
+                              widget.question!.fieldSet,
+                              Jiffy.parseFromDateTime(dateTime)
+                                  .format(pattern: "yyyy-MM-dd"),
+                              null,
+                              Jiffy.now(),
+                              transtypeResourceType(
+                                  widget.question!.resourcetype!),
+                              widget.answerHolder!.id,
+                              null),
                         );
                         state.didChange(_currentDateTime);
                         setState(() {});
                       },
                     ),
                   ),
-                if (widget.viewOnly) fieldData(Jiffy.parseFromDateTime(_currentDateTime ?? Jiffy.now().dateTime).format(pattern: "dd/MM/yyyy")),
+                if (widget.viewOnly)
+                  fieldData(Jiffy.parseFromDateTime(
+                          _currentDateTime ?? Jiffy.now().dateTime)
+                      .format(pattern: "dd/MM/yyyy")),
                 Divider(),
-                state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                state.errorText == null
+                    ? Text("")
+                    : Text(state.errorText ?? "",
+                        style: TextStyle(color: Colors.red)),
               ],
             );
           },
           validator: (value) {
-            if (isRequired(widget.question)) if (_currentDateTime == null) return FORM_SELECT_DATE;
+            if (isRequired(widget.question)) if (_currentDateTime == null)
+              return FORM_SELECT_DATE;
             return null;
           },
         ),

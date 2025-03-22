@@ -72,6 +72,9 @@ class _$FormsEventCopyWithImpl<$Res, $Val extends FormsEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of FormsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -88,6 +91,9 @@ class __$$LoadLocalFormsImplCopyWithImpl<$Res>
   __$$LoadLocalFormsImplCopyWithImpl(
       _$LoadLocalFormsImpl _value, $Res Function(_$LoadLocalFormsImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FormsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -198,6 +204,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of FormsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

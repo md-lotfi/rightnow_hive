@@ -75,16 +75,16 @@ class FieldSetAdapter extends TypeAdapter<FieldSet> {
 // **************************************************************************
 
 FieldSet _$FieldSetFromJson(Map<String, dynamic> json) => FieldSet(
-      json['id'] as int?,
-      json['form'] as int?,
-      json['questions_count'] as int?,
-      json['flag'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['form'] as num?)?.toInt(),
+      (json['questions_count'] as num?)?.toInt(),
+      (json['flag'] as num?)?.toInt(),
       json['title'] as String?,
       json['title_ar'] as String?,
     )
-      ..required = json['required'] as int?
-      ..qCounts = json['qCounts'] as int?
-      ..qAnswered = json['qAnswered'] as int?
+      ..required = (json['required'] as num?)?.toInt()
+      ..qCounts = (json['qCounts'] as num?)?.toInt()
+      ..qAnswered = (json['qAnswered'] as num?)?.toInt()
       ..description = json['description'] as String?
       ..descriptionAr = json['description_ar'] as String?
       ..questions = (json['questions'] as List<dynamic>?)

@@ -21,7 +21,7 @@ class CategoryAdapter extends TypeAdapter<Category> {
       fields[3] as String?,
       fields[2] as String?,
       fields[1] as String?,
-      fields[5] as String?,
+      fields[5] as Jiffy?,
     )..superCategoryId = fields[4] as int?;
   }
 
@@ -59,11 +59,11 @@ class CategoryAdapter extends TypeAdapter<Category> {
 // **************************************************************************
 
 Category _$CategoryFromJson(Map<String, dynamic> json) => Category(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name_ar'] as String?,
       json['name'] as String?,
       json['icon'] as String?,
-      json['created_at'] as String?,
+      const JiffySecondsConverter().fromJson(json['created_at'] as String?),
     )
       ..belongsTo = json['belongs_to'] == null
           ? null
@@ -81,7 +81,7 @@ Map<String, dynamic> _$CategoryToJson(Category instance) => <String, dynamic>{
       'name': instance.nameFr,
       'name_ar': instance.nameAr,
       'belongs_to': instance.belongsTo,
-      'created_at': instance.createdAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
       'tags': instance.tags,
       'subcategories': instance.subcategories,
     };

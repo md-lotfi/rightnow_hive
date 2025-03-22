@@ -7,7 +7,7 @@ part of 'login_error.dart';
 // **************************************************************************
 
 LoginError _$LoginErrorFromJson(Map<String, dynamic> json) => LoginError(
-      status: json['status'] as int?,
+      status: (json['status'] as num?)?.toInt(),
       message: json['message'] as String?,
       error: json['error'] as String?,
     );

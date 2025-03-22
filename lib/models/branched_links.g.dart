@@ -64,13 +64,13 @@ class BranchedLinksAdapter extends TypeAdapter<BranchedLinks> {
 
 BranchedLinks _$BranchedLinksFromJson(Map<String, dynamic> json) =>
     BranchedLinks(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['condition'] as String?,
       json['is_active'] as bool?,
-      json['polymorphic_ctype'] as int?,
-      json['dependant_question'] as int?,
-      json['branch_question'] as int?,
-      json['questionId'] as int?,
+      (json['polymorphic_ctype'] as num?)?.toInt(),
+      (json['dependant_question'] as num?)?.toInt(),
+      (json['branch_question'] as num?)?.toInt(),
+      (json['questionId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$BranchedLinksToJson(BranchedLinks instance) =>

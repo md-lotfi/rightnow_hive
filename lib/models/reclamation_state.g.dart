@@ -52,7 +52,7 @@ class ReclamationStateAdapter extends TypeAdapter<ReclamationState> {
 
 ReclamationState _$ReclamationStateFromJson(Map<String, dynamic> json) =>
     ReclamationState(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       nameAr: json['name_ar'] as String?,
     );

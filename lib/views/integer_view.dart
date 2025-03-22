@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/inherits/field_controller.dart';
@@ -24,10 +25,12 @@ class IntegerWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _IntegerWidgetState createState() => _IntegerWidgetState(this.question, this.answerHolder, this.onSelectedValue);
+  _IntegerWidgetState createState() => _IntegerWidgetState(
+      this.question, this.answerHolder, this.onSelectedValue);
 }
 
-class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveClientMixin, FiledController {
+class _IntegerWidgetState extends State<IntegerWidget>
+    with AutomaticKeepAliveClientMixin, FiledController {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -60,7 +63,15 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
   _dataChanged() {
     print("integer text changed " + fieldDataController.text);
     onSelectedValue!(
-      Answer.fill(question?.id, question?.fieldSet, fieldDataController.text, null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, null),
+      Answer.fill(
+          question?.id,
+          question?.fieldSet,
+          fieldDataController.text,
+          null,
+          Jiffy.now(),
+          transtypeResourceType(question?.resourcetype),
+          answerHolder?.id,
+          null),
     );
   }
 
@@ -72,7 +83,8 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               TextFormField(
                 autovalidateMode: AutovalidateMode.always,
@@ -96,7 +108,8 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
                         onTap: () {
                           if (fieldDataController.text.isNotEmpty) {
                             if (isNumeric(fieldDataController.text)) {
-                              int i = int.tryParse(fieldDataController.text) ?? 0;
+                              int i =
+                                  int.tryParse(fieldDataController.text) ?? 0;
                               fieldDataController.text = (i + 1).toString();
                             }
                           } else {
@@ -109,7 +122,8 @@ class _IntegerWidgetState extends State<IntegerWidget> with AutomaticKeepAliveCl
                         onTap: () {
                           if (fieldDataController.text.isNotEmpty) {
                             if (isNumeric(fieldDataController.text)) {
-                              int i = int.tryParse(fieldDataController.text) ?? 0;
+                              int i =
+                                  int.tryParse(fieldDataController.text) ?? 0;
                               fieldDataController.text = (i - 1).toString();
                             }
                           } else {

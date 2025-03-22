@@ -70,6 +70,9 @@ class _$SuperCategoriesEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of SuperCategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -89,6 +92,9 @@ class __$$FetchLocalSuperCategoriesImplCopyWithImpl<$Res>
       _$FetchLocalSuperCategoriesImpl _value,
       $Res Function(_$FetchLocalSuperCategoriesImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of SuperCategoriesEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

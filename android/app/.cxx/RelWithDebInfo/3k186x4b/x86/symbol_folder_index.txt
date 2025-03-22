@@ -1,0 +1,1 @@
+/home/ferhat/FlutterProjects/rightnow_hive/build/app/intermediates/cxx/RelWithDebInfo/3k186x4b/obj/x86

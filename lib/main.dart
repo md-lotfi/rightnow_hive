@@ -21,7 +21,9 @@ import 'package:rightnow/blocs/profile_update_bloc.dart';
 import 'package:rightnow/blocs/questions_bloc.dart';
 import 'package:rightnow/blocs/reclamations_bloc.dart';
 import 'package:rightnow/blocs/set_user_profile_bloc.dart';
+import 'package:rightnow/classes/jiffy_hive_converter.dart';
 import 'package:rightnow/components/app_initializer.dart';
+import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/components/db_service.dart';
 import 'package:rightnow/components/dependency_injection.dart';
 import 'package:rightnow/constants/constants.dart';
@@ -44,6 +46,7 @@ import 'package:rightnow/models/branched_conditions.dart';
 import 'package:rightnow/models/branched_links.dart';
 import 'package:rightnow/models/category.dart' as cat;
 import 'package:rightnow/models/choice.dart';
+import 'package:rightnow/models/current_language.dart';
 import 'package:rightnow/models/decision_response.dart';
 import 'package:rightnow/models/dependent_condition.dart';
 import 'package:rightnow/models/disease.dart';
@@ -96,7 +99,9 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 
@@ -115,13 +120,23 @@ MaterialColor generateMaterialColor(Color color) {
   });
 }
 
-int tintValue(int value, double factor) => max(0, min((value + ((255 - value) * factor)).round(), 255));
+int tintValue(int value, double factor) =>
+    max(0, min((value + ((255 - value) * factor)).round(), 255));
 
-Color tintColor(Color color, double factor) => Color.fromRGBO(tintValue(color.red, factor), tintValue(color.green, factor), tintValue(color.blue, factor), 1);
+Color tintColor(Color color, double factor) => Color.fromRGBO(
+    tintValue(color.red, factor),
+    tintValue(color.green, factor),
+    tintValue(color.blue, factor),
+    1);
 
-int shadeValue(int value, double factor) => max(0, min(value - (value * factor).round(), 255));
+int shadeValue(int value, double factor) =>
+    max(0, min(value - (value * factor).round(), 255));
 
-Color shadeColor(Color color, double factor) => Color.fromRGBO(shadeValue(color.red, factor), shadeValue(color.green, factor), shadeValue(color.blue, factor), 1);
+Color shadeColor(Color color, double factor) => Color.fromRGBO(
+    shadeValue(color.red, factor),
+    shadeValue(color.green, factor),
+    shadeValue(color.blue, factor),
+    1);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -148,12 +163,15 @@ Future<void> main() async {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("user authorized *************** ");
       String? token = await messaging.getToken(
-        vapidKey: "BJeKH98XT41-833LnIfGpe9M_XFxK8XzBj38e28Csfsiaax-p4ZBho7NgS_OMeuNO7Pp0C9F8DdNFpIEPCgFR84",
+        vapidKey:
+            "BJeKH98XT41-833LnIfGpe9M_XFxK8XzBj38e28Csfsiaax-p4ZBho7NgS_OMeuNO7Pp0C9F8DdNFpIEPCgFR84",
       );
       print("user authorized *************** $token");
-      FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
     }
   }
+  Hive.registerAdapter(JiffyAdapter());
   Hive.registerAdapter(SuperCategoryAdapter());
   Hive.registerAdapter(LocalUserAdapter());
   Hive.registerAdapter(UserGroupAdapter());
@@ -187,6 +205,13 @@ Future<void> main() async {
   Hive.registerAdapter(FileSaverAdapter());
   Hive.registerAdapter(SubCategoryAdapter());
   Hive.registerAdapter(ReclamationStateAdapter());
+  Hive.registerAdapter(CurrentLanguageAdapter());
+
+  String local = await CurrentLanguage.getLang();
+  print("current local is $local");
+  await setJiffyLocal(local);
+
+  //setJiffyLocal('fr');
   /** End Hive */
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -194,8 +219,10 @@ Future<void> main() async {
     print('Message data: ${message.data}');
 
     if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}, ready to save to db');
-      await getDataBase<FCMNotificationsDao>().insertFCMNotification(FCMNotification(
+      print(
+          'Message also contained a notification: ${message.notification}, ready to save to db');
+      await getDataBase<FCMNotificationsDao>()
+          .insertFCMNotification(FCMNotification(
         id: DateTime.now().millisecondsSinceEpoch,
         title: message.notification?.title ?? "",
         message: message.notification?.body ?? "",
@@ -226,12 +253,16 @@ Future<void> main() async {
     );
   }*/
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((value) {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((value) {
     runApp(
       Phoenix(
         child: EasyLocalization(
           child: MyApp(),
-          supportedLocales: [Locale(LANGUAGE_FR), Locale(LANGUAGE_AR, LANGUAGE_AR_CODE)],
+          supportedLocales: [
+            Locale(LANGUAGE_FR),
+            Locale(LANGUAGE_AR, LANGUAGE_AR_CODE)
+          ],
           startLocale: Locale(LANGUAGE_FR),
           path: 'assets/translations',
         ),
@@ -241,7 +272,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final GlobalKey<FileWidgetState> fileWidgetState = GlobalKey<FileWidgetState>();
+  static final GlobalKey<FileWidgetState> fileWidgetState =
+      GlobalKey<FileWidgetState>();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -341,7 +373,9 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
             scaffoldBackgroundColor: Colors.grey.shade50,
-            primaryIconTheme: Theme.of(context).primaryIconTheme.copyWith(color: COLOR_PRIMARY),
+            primaryIconTheme: Theme.of(context)
+                .primaryIconTheme
+                .copyWith(color: COLOR_PRIMARY),
             primaryTextTheme: TextTheme(
               titleLarge: TextStyle(color: COLOR_PRIMARY),
             ),
@@ -356,15 +390,21 @@ class MyApp extends StatelessWidget {
                 ),
                 padding: EdgeInsets.all(15.0),
                 foregroundColor: Colors.white,
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
                 backgroundColor: generateMaterialColor(Palette.primary),
               ),
             ),
-            colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.white),
+            colorScheme:
+                ColorScheme.fromSwatch().copyWith(secondary: Colors.white),
             radioTheme: RadioThemeData(
               fillColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.selected)) return Theme.of(context).colorScheme.primary.withOpacity(0.5);
+                  if (states.contains(MaterialState.selected))
+                    return Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(0.5);
                   return Colors.grey; // Use the component's default.
                 },
               ),
@@ -375,7 +415,11 @@ class MyApp extends StatelessWidget {
             checkboxTheme: CheckboxThemeData(
               checkColor: MaterialStateProperty.resolveWith<Color>(
                 (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.selected)) return Theme.of(context).colorScheme.primary.withOpacity(0.5);
+                  if (states.contains(MaterialState.selected))
+                    return Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(0.5);
                   return Colors.grey; // Use the component's default.
                 },
               ),
@@ -387,7 +431,8 @@ class MyApp extends StatelessWidget {
               ),*/
             //cursorColor: : Colors.white,
             primaryColor: Colors.white,
-            primarySwatch: generateMaterialColor(Palette.primary), //APP_BK_COLOR.shade700,
+            primarySwatch:
+                generateMaterialColor(Palette.primary), //APP_BK_COLOR.shade700,
             dialogBackgroundColor: Colors.white,
             /*tooltipTheme: TooltipThemeData(
                 decoration: BoxDecoration(

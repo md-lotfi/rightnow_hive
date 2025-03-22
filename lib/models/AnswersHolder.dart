@@ -1,4 +1,5 @@
 import 'package:jiffy/jiffy.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/FormFields.dart';
 import 'package:rightnow/models/answer.dart';
 import 'package:hive/hive.dart';
@@ -11,6 +12,7 @@ const WEB_ARCHIVED = 1;
 const LOCAL_ARCHIVED = 0;
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 2)
 class AnswerHolder extends HiveObject {
   @HiveField(0)
@@ -34,10 +36,10 @@ class AnswerHolder extends HiveObject {
 
   @HiveField(5)
   @JsonKey(name: 'completed_at')
-  String? completedAt;
+  Jiffy? completedAt;
 
   @HiveField(6)
-  String? createdAt;
+  Jiffy? createdAt;
 
   @HiveField(7)
   @JsonKey(name: 'device_id')
@@ -62,14 +64,26 @@ class AnswerHolder extends HiveObject {
   DecisionResponse? decisionResponse;
 
   int createdAtTimeStamp() {
-    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
+    return (createdAt ?? Jiffy.now()).microsecondsSinceEpoch;
   }
 
-  AnswerHolder({this.id, this.formId, this.uploaded, this.state, this.closed, this.formTitle, this.completedAt, this.createdAt, this.deviceId, this.webArchived});
+  AnswerHolder(
+      {this.id,
+      this.formId,
+      this.uploaded,
+      this.state,
+      this.closed,
+      this.formTitle,
+      this.completedAt,
+      this.createdAt,
+      this.deviceId,
+      this.webArchived});
 
-  AnswerHolder.fill(this.formId, this.uploaded, this.closed, this.formTitle, this.completedAt, this.createdAt, this.deviceId, this.webArchived);
+  AnswerHolder.fill(this.formId, this.uploaded, this.closed, this.formTitle,
+      this.completedAt, this.createdAt, this.deviceId, this.webArchived);
 
-  factory AnswerHolder.fromJson(Map<String, dynamic> json) => _$AnswerHolderFromJson(json);
+  factory AnswerHolder.fromJson(Map<String, dynamic> json) =>
+      _$AnswerHolderFromJson(json);
 
   Map<String, dynamic> toJson() => _$AnswerHolderToJson(this);
 

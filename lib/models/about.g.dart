@@ -57,7 +57,7 @@ class AboutAdapter extends TypeAdapter<About> {
 // **************************************************************************
 
 About _$AboutFromJson(Map<String, dynamic> json) => About(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       titleAr: json['title_ar'] as String?,
       description: json['description'] as String?,

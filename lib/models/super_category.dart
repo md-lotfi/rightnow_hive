@@ -1,10 +1,13 @@
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/views/language_switch.dart';
 
 part 'super_category.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 23)
 class SuperCategory {
   @HiveField(0)
@@ -27,7 +30,7 @@ class SuperCategory {
 
   @HiveField(6)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   //List<Tag>? tags;
 
@@ -39,9 +42,11 @@ class SuperCategory {
     return (lang == LANGUAGE_FR ? name : nameAr) ?? name ?? "";
   }
 
-  SuperCategory(this.id, this.name, this.nameAr, this.nameFr, this.icon, this.createdAt);
+  SuperCategory(
+      this.id, this.name, this.nameAr, this.nameFr, this.icon, this.createdAt);
 
-  factory SuperCategory.fromJson(Map<String, dynamic> json) => _$SuperCategoryFromJson(json);
+  factory SuperCategory.fromJson(Map<String, dynamic> json) =>
+      _$SuperCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$SuperCategoryToJson(this);
 }

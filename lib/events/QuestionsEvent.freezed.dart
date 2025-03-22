@@ -72,6 +72,9 @@ class _$QuestionsEventCopyWithImpl<$Res, $Val extends QuestionsEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of QuestionsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -91,6 +94,8 @@ class __$$LoadQuestionsImplCopyWithImpl<$Res>
       _$LoadQuestionsImpl _value, $Res Function(_$LoadQuestionsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of QuestionsEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -140,7 +145,9 @@ class _$LoadQuestionsImpl
   @override
   int get hashCode => Object.hash(runtimeType, fieldSetId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of QuestionsEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadQuestionsImplCopyWith<_$LoadQuestionsImpl> get copyWith =>
@@ -213,7 +220,10 @@ abstract class LoadQuestions implements QuestionsEvent {
   const factory LoadQuestions(final int fieldSetId) = _$LoadQuestionsImpl;
 
   int get fieldSetId;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of QuestionsEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadQuestionsImplCopyWith<_$LoadQuestionsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -232,6 +242,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of QuestionsEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

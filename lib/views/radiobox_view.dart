@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -28,10 +29,12 @@ class RadioboxWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _RadioboxWidgetState createState() => _RadioboxWidgetState(this.question, this.answerHolder, this.onSelectedValue);
+  _RadioboxWidgetState createState() => _RadioboxWidgetState(
+      this.question, this.answerHolder, this.onSelectedValue);
 }
 
-class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAliveClientMixin {
+class _RadioboxWidgetState extends State<RadioboxWidget>
+    with AutomaticKeepAliveClientMixin {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -56,10 +59,12 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
                     if (answer.multiSelectAnswer!.length > 0) {
                       for (var choice in question!.choices!) {
                         log("radiobow selected answer first ${answer.multiSelectAnswer![0].selectedId}");
-                        if (choice.id == answer.multiSelectAnswer![0].selectedId) {
+                        if (choice.id ==
+                            answer.multiSelectAnswer![0].selectedId) {
                           setState(() {
                             _checkValue = choice.id!;
-                            _selectedAnswer = choice.getName(context.locale.languageCode);
+                            _selectedAnswer =
+                                choice.getName(context.locale.languageCode);
                             log("radiobow selected answer $_selectedAnswer");
                           });
                           break;
@@ -87,15 +92,26 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
 
   _setOnSeletedValue() {
     List<MultiSelectAnswer> m = [];
-    m.add(MultiSelectAnswer.fill(answerHolder?.id, _checkValue, _getChoiceLabel()));
-    onSelectedValue!(Answer.fill(question?.id, question?.fieldSet, _checkValue.toString(), null, DateTime.now().toString(), transtypeResourceType(question?.resourcetype), answerHolder?.id, m));
+    m.add(MultiSelectAnswer.fill(
+        answerHolder?.id, _checkValue, _getChoiceLabel()));
+    onSelectedValue!(Answer.fill(
+        question?.id,
+        question?.fieldSet,
+        _checkValue.toString(),
+        null,
+        Jiffy.now(),
+        transtypeResourceType(question?.resourcetype),
+        answerHolder?.id,
+        m));
   }
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        unselectedWidgetColor: (answerHolder?.answers?.length ?? 0) == 0 ? null : (_checkValue != 0 ? null : Colors.red),
+        unselectedWidgetColor: (answerHolder?.answers?.length ?? 0) == 0
+            ? null
+            : (_checkValue != 0 ? null : Colors.red),
       ),
       child: load(),
     );
@@ -108,7 +124,8 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(
+                question, context.locale.languageCode, widget.responseSet),
             if (!widget.viewOnly)
               FormField(
                 autovalidateMode: AutovalidateMode.always,
@@ -120,18 +137,26 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
                         //alignment: WrapAlignment.start,
                         children: _checkboxes(state),
                       ),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (value) {
-                  if (isRequired(widget.question)) if (_checkValue == null) return FORM_RADIO_NOT_SELECTED;
+                  if (isRequired(widget.question)) if (_checkValue == null)
+                    return FORM_RADIO_NOT_SELECTED;
                   return null;
                 },
               ),
             //if (widget.viewOnly) Text("radio box view"),
             //if (widget.viewOnly) fieldData(_selectedAnswer),
-            if (widget.viewOnly) fieldData(widget.responseSet?.getChoice()?.getName(context.locale.languageCode) ?? ""),
+            if (widget.viewOnly)
+              fieldData(widget.responseSet
+                      ?.getChoice()
+                      ?.getName(context.locale.languageCode) ??
+                  ""),
             Divider(),
           ],
         ),
@@ -159,7 +184,8 @@ class _RadioboxWidgetState extends State<RadioboxWidget> with AutomaticKeepAlive
                     });
                   },
                 ),
-                Expanded(child: Text(choice.getName(context.locale.languageCode))),
+                Expanded(
+                    child: Text(choice.getName(context.locale.languageCode))),
               ],
             ),
           );

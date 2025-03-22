@@ -57,7 +57,7 @@ class LinkAdapter extends TypeAdapter<Link> {
 // **************************************************************************
 
 Link _$LinkFromJson(Map<String, dynamic> json) => Link(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       titleAr: json['title_ar'] as String?,
       icon: json['icon'] as String?,

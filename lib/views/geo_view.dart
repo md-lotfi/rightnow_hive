@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/components/common_widgets.dart';
 import 'package:rightnow/constants/constants.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
@@ -29,10 +30,12 @@ class GeoWidget extends StatefulWidget {
     required this.viewOnly,
   }) : super(key: key);
   @override
-  _GeoWidgetState createState() => _GeoWidgetState(this.question, this.onSelectedValue, this.answerHolder);
+  _GeoWidgetState createState() =>
+      _GeoWidgetState(this.question, this.onSelectedValue, this.answerHolder);
 }
 
-class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixin {
+class _GeoWidgetState extends State<GeoWidget>
+    with AutomaticKeepAliveClientMixin {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -80,7 +83,12 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
       _image = res.image;
       //await saveUint8ListFile(_image!, getMapFilename());
       String n = getMapFilename();
-      await FileSaver.set(FileSaver(name: n, path: n, file: _image!, questionId: question!.id!, answerHolderId: answerHolder!.id!));
+      await FileSaver.set(FileSaver(
+          name: n,
+          path: n,
+          file: _image!,
+          questionId: question!.id!,
+          answerHolderId: answerHolder!.id!));
       print("getting image from map ");
       geoState = 1;
       List<MultiSelectAnswer> m = [];
@@ -90,8 +98,17 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
       if (f != null) {
         _fileKey = f.key;
         onSelectedValue!(
-          Answer.fill(question!.id, question!.fieldSet, (res.latLng.latitude.toString() + GPS_SEPARRATOR + res.latLng.longitude.toString()), null, DateTime.now().toString(),
-              transtypeResourceType(question!.resourcetype!), answerHolder!.id, m,
+          Answer.fill(
+              question!.id,
+              question!.fieldSet,
+              (res.latLng.latitude.toString() +
+                  GPS_SEPARRATOR +
+                  res.latLng.longitude.toString()),
+              null,
+              Jiffy.now(),
+              transtypeResourceType(question!.resourcetype!),
+              answerHolder!.id,
+              m,
               fileKey: f.key),
         );
       }
@@ -113,10 +130,12 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widgetQuestionTitle(question, context.locale.languageCode, widget.responseSet),
+          widgetQuestionTitle(
+              question, context.locale.languageCode, widget.responseSet),
           if (!widget.viewOnly)
             FutureBuilder<FileSaver?>(
-              future: FileSaver.getBykey(_fileKey), //getUint8ListFile(getMapFilename()),
+              future: FileSaver.getBykey(
+                  _fileKey), //getUint8ListFile(getMapFilename()),
               builder: (context, snapshot) {
                 if (ConnectionState.done == snapshot.connectionState) {
                   _image = snapshot.data?.file;
@@ -150,7 +169,10 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
                       SizedBox(
                         width: double.infinity,
                         child: TextButton.icon(
-                          icon: showWidget(Icon(Icons.map), Icon(Icons.check, color: Colors.green), geoState == 0),
+                          icon: showWidget(
+                              Icon(Icons.map),
+                              Icon(Icons.check, color: Colors.green),
+                              geoState == 0),
                           label: Text("Prendre ma position".tr()),
                           onPressed: () async {
                             await _setGeo(state);
@@ -162,12 +184,16 @@ class _GeoWidgetState extends State<GeoWidget> with AutomaticKeepAliveClientMixi
                       ),
                       (geoState == 0 || geoState == 1),
                     ),
-                    state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                    state.errorText == null
+                        ? Text("")
+                        : Text(state.errorText ?? "",
+                            style: TextStyle(color: Colors.red)),
                   ],
                 );
               },
               validator: (value) {
-                if (isRequired(question)) if (geoState == 0) return FORM_SELECT_GPS;
+                if (isRequired(question)) if (geoState == 0)
+                  return FORM_SELECT_GPS;
                 return null;
               },
             ),

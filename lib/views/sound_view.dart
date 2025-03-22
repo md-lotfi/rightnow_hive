@@ -34,7 +34,8 @@ class SoundView extends StatefulWidget {
   _SoundViewState createState() => _SoundViewState();
 }
 
-class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixin {
+class _SoundViewState extends State<SoundView>
+    with AutomaticKeepAliveClientMixin {
   Answer? _answer;
   double progress = 0;
 
@@ -77,7 +78,8 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
           _mRecorderIsInited = true;
         });
       });
-    if (widget.viewOnly && widget.responseSet != null) recordPath = widget.responseSet?.url ?? "";
+    if (widget.viewOnly && widget.responseSet != null)
+      recordPath = widget.responseSet?.url ?? "";
     super.initState();
   }
 
@@ -96,7 +98,7 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
       var tempDir = await getTemporaryDirectory();
       return '${tempDir.path}/myFile_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}.mp4';
     } else {
-      return 'myFile_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}';
+      return 'myFile_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}.webm';
     }
   }
 
@@ -106,10 +108,13 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
     log("start recording 4");
     if (_mRecorderIsInited) {
       log("start recording 5");
-      Map<Permission, PermissionStatus> statuses = await [
+      List<Permission> permissions = [
         Permission.microphone,
-        Permission.storage,
-      ].request();
+      ];
+      if (!kIsWeb) {
+        permissions.add(Permission.storage);
+      }
+      Map<Permission, PermissionStatus> statuses = await permissions.request();
       print(statuses[Permission.microphone]);
       print(statuses[Permission.storage]);
       //bool hasPermission = await FlutterAudioRecorder.hasPermissions ?? false;
@@ -120,7 +125,7 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
           log('recoreder is open $value');
           value
               ?.startRecorder(
-            codec: Codec.aacMP4,
+            //codec: Codec.opusWebM, //Codec.aacMP4,
             toFile: recordPath,
             sampleRate: 16000,
             numChannels: 1,
@@ -139,7 +144,14 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
     if (_myRecorder?.isRecording ?? false) {
       await _myRecorder?.stopRecorder();
       _answer = Answer.fill(
-          widget.question!.id, widget.question!.fieldSet, recordPath, recordPath, DateTime.now().toString(), transtypeResourceType(widget.question!.resourcetype!), widget.answerHolder?.id, null,
+          widget.question!.id,
+          widget.question!.fieldSet,
+          recordPath,
+          recordPath,
+          Jiffy.now(),
+          transtypeResourceType(widget.question!.resourcetype!),
+          widget.answerHolder?.id,
+          null,
           question: widget.question);
       widget.onSelectedValue!(
         _answer!,
@@ -212,7 +224,8 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
           //mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+            widgetQuestionTitle(widget.question, context.locale.languageCode,
+                widget.responseSet),
             if (widget.viewOnly && widget.responseSet != null) _playerMode(),
             if (!widget.viewOnly && _answer == null)
               FormField<bool>(
@@ -225,14 +238,17 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
                         width: double.infinity,
                         child: TextButton.icon(
                           style: TextButton.styleFrom(
-                            backgroundColor: _isRecording() ? Colors.red : COLOR_PRIMARY,
+                            backgroundColor:
+                                _isRecording() ? Colors.red : COLOR_PRIMARY,
                           ),
-                          icon: _isRecording() ? Icon(Icons.stop) : Icon(Icons.mic),
-                          label: _isRecording() ? Text("Stop recording".tr()) : Text("Enregistrer un audio".tr()),
+                          icon: _isRecording()
+                              ? Icon(Icons.stop)
+                              : Icon(Icons.mic),
+                          label: _isRecording()
+                              ? Text("Stop recording".tr())
+                              : Text("Enregistrer un audio".tr()),
                           onPressed: () async {
-                            log("start recording 1");
                             if (!_isRecording()) {
-                              log("start recording 2");
                               await _record(state);
                               state.didChange(hasRecord);
                             } else
@@ -240,12 +256,17 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
                           },
                         ),
                       ),
-                      state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                      state.errorText == null
+                          ? Text("")
+                          : Text(state.errorText ?? "",
+                              style: TextStyle(color: Colors.red)),
                     ],
                   );
                 },
                 validator: (value) {
-                  if (isRequired(widget.question)) if (!(value == null ? false : value)) return FORM_RECORD_SOUND;
+                  if (isRequired(widget.question)) if (!(value == null
+                      ? false
+                      : value)) return FORM_RECORD_SOUND;
                   return null;
                 },
               ),
@@ -280,17 +301,22 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
               _pausePlayer();
           },
           child: Container(
-              padding: EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
+              padding: EdgeInsets.symmetric(
+                  horizontal: btnWidth, vertical: btnHeight),
               decoration: BoxDecoration(
                 color: COLOR_PRIMARY,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(8),
+                    topLeft: Radius.circular(8)),
               ),
               child: Row(
                 children: [
-                  _isPlaying() ? Icon(Icons.pause, color: Colors.white) : Icon(Icons.play_arrow, color: Colors.white),
+                  _isPlaying()
+                      ? Icon(Icons.pause, color: Colors.white)
+                      : Icon(Icons.play_arrow, color: Colors.white),
                   Text(
                     "Play".tr(),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: 13),
                   ),
                 ],
               )),
@@ -306,10 +332,14 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
           _stopRecorder();
       },
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
+          padding:
+              EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
           decoration: BoxDecoration(
             color: COLOR_PRIMARY,
-            borderRadius: _isRecording() ? BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)) : null,
+            borderRadius: _isRecording()
+                ? BorderRadius.only(
+                    bottomLeft: Radius.circular(8), topLeft: Radius.circular(8))
+                : null,
 
             //borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), topLeft: Radius.circular(8)),
           ),
@@ -318,7 +348,10 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
               Icon(Icons.stop, color: Colors.white),
               Text(
                 "Stop".tr(),
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                ),
               ),
             ],
           )),
@@ -331,17 +364,21 @@ class _SoundViewState extends State<SoundView> with AutomaticKeepAliveClientMixi
         if (!_isRecording()) _record(null);
       },
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
+          padding:
+              EdgeInsets.symmetric(horizontal: btnWidth, vertical: btnHeight),
           decoration: BoxDecoration(
             color: _isRecording() ? Colors.red : Colors.green,
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(8), topRight: Radius.circular(8)),
+            borderRadius: BorderRadius.only(
+                bottomRight: Radius.circular(8), topRight: Radius.circular(8)),
           ),
           child: Row(
             children: [
-              _isRecording() ? Icon(Icons.fiber_manual_record, color: Colors.white) : Icon(Icons.mic, color: Colors.white),
+              _isRecording()
+                  ? Icon(Icons.fiber_manual_record, color: Colors.white)
+                  : Icon(Icons.mic, color: Colors.white),
               Text(
                 _isRecording() ? "Recording ..." : "Record".tr(),
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 13),
               ),
             ],
           )),

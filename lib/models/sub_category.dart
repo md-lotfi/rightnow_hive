@@ -1,4 +1,5 @@
 import 'package:jiffy/jiffy.dart';
+import 'package:rightnow/classes/jiffy_seconds_converter.dart';
 import 'package:rightnow/models/category.dart';
 import 'package:rightnow/models/category_forms.dart';
 import 'package:rightnow/models/tag.dart';
@@ -9,6 +10,7 @@ import 'package:rightnow/views/language_switch.dart';
 part 'sub_category.g.dart';
 
 @JsonSerializable()
+@JiffySecondsConverter()
 @HiveType(typeId: 110)
 class SubCategory {
   @HiveField(0)
@@ -31,7 +33,7 @@ class SubCategory {
 
   @HiveField(5)
   @JsonKey(name: 'created_at')
-  String? createdAt;
+  Jiffy? createdAt;
 
   List<Tag>? tags;
 
@@ -50,12 +52,13 @@ class SubCategory {
   }
 
   int createdAtTimeStamp() {
-    return Jiffy.parse(createdAt ?? Jiffy.now().format()).microsecondsSinceEpoch;
+    return (createdAt ?? Jiffy.now()).microsecondsSinceEpoch;
   }
 
   SubCategory(this.id, this.nameAr, this.nameFr, this.icon, this.createdAt);
 
-  factory SubCategory.fromJson(Map<String, dynamic> json) => _$SubCategoryFromJson(json);
+  factory SubCategory.fromJson(Map<String, dynamic> json) =>
+      _$SubCategoryFromJson(json);
 
   Map<String, dynamic> toJson() => _$SubCategoryToJson(this);
 }

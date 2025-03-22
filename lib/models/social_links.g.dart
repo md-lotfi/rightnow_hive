@@ -57,7 +57,7 @@ class SocialLinksAdapter extends TypeAdapter<SocialLinks> {
 // **************************************************************************
 
 SocialLinks _$SocialLinksFromJson(Map<String, dynamic> json) => SocialLinks(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       name: json['name'] as String?,
       nameAr: json['name_ar'] as String?,
       icon: json['icon'] as String?,

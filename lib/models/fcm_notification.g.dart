@@ -55,10 +55,10 @@ class FCMNotificationAdapter extends TypeAdapter<FCMNotification> {
 
 FCMNotification _$FCMNotificationFromJson(Map<String, dynamic> json) =>
     FCMNotification(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       title: json['title'] as String?,
       message: json['message'] as String?,
-      viewed: json['viewed'] as int?,
+      viewed: (json['viewed'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$FCMNotificationToJson(FCMNotification instance) =>

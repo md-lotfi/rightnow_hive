@@ -63,7 +63,7 @@ LocalUser _$LocalUserFromJson(Map<String, dynamic> json) => LocalUser(
       json['password'] as String?,
       json['email'] as String?,
       json['organization'] as String?,
-      json['user'] as int?,
+      (json['user'] as num?)?.toInt(),
     )..groups = (json['groups'] as List<dynamic>?)
         ?.map((e) => UserGroup.fromJson(e as Map<String, dynamic>))
         .toList();

@@ -22,7 +22,7 @@ class AnswerAdapter extends TypeAdapter<Answer> {
       fields[2] as int?,
       fields[5] as String?,
       fields[6] as String?,
-      fields[7] as String?,
+      fields[7] as Jiffy?,
       fields[4] as String?,
       fields[3] as int?,
     )..fileKey = fields[8] as int?;
@@ -68,18 +68,19 @@ class AnswerAdapter extends TypeAdapter<Answer> {
 // **************************************************************************
 
 Answer _$AnswerFromJson(Map<String, dynamic> json) => Answer(
-      json['id'] as int?,
-      json['question_id'] as int?,
-      json['fieldSetId'] as int?,
+      (json['id'] as num?)?.toInt(),
+      (json['question_id'] as num?)?.toInt(),
+      (json['fieldSetId'] as num?)?.toInt(),
       json['value'] as String?,
       json['valueExtra'] as String?,
-      json['createdAt'] as String?,
+      const JiffySecondsConverter().fromJson(json['createdAt'] as String?),
       json['resourcetype'] as String?,
-      json['answerHolderId'] as int?,
+      (json['answerHolderId'] as num?)?.toInt(),
     )
-      ..fileKey = json['fileKey'] as int?
-      ..choices =
-          (json['choices'] as List<dynamic>?)?.map((e) => e as int).toList()
+      ..fileKey = (json['fileKey'] as num?)?.toInt()
+      ..choices = (json['choices'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList()
       ..multiSelectAnswer = (json['multiSelectAnswer'] as List<dynamic>?)
           ?.map((e) => MultiSelectAnswer.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -92,7 +93,7 @@ Map<String, dynamic> _$AnswerToJson(Answer instance) => <String, dynamic>{
       'resourcetype': instance.resourcetype,
       'value': instance.answerValue,
       'valueExtra': instance.valueExtra,
-      'createdAt': instance.createdAt,
+      'createdAt': const JiffySecondsConverter().toJson(instance.createdAt),
       'fileKey': instance.fileKey,
       'choices': instance.choices,
       'multiSelectAnswer': instance.multiSelectAnswer,

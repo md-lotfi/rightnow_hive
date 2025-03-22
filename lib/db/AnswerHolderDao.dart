@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:hive/hive.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:rightnow/db/AnswerDao.dart';
 import 'package:rightnow/models/AnswersHolder.dart';
 import 'package:rightnow/models/FieldSet.dart';
@@ -22,28 +23,43 @@ class AnswerHolderDao extends AnswersDao {
   Future<List<AnswerHolder>?> fetchAnswerHolder(int formId) async {
     var r = await getAnswerHolderDb();
     //return r.values.where((element) => element.formId == formId).sorted((a, b) => a.id!.compareTo(b.id!));
-    return r.values.where((element) => element.formId == formId).sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp())).toList();
+    return r.values
+        .where((element) => element.formId == formId)
+        .sorted(
+            (a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
+        .toList();
   }
 
   //@Query("select * from AnswerHolder where uploaded = 0 order by id DESC") //completedAt
   Future<List<AnswerHolder>?> fetchAnswerHoldersNotUploaded() async {
     var r = await getAnswerHolderDb();
     //return r.values.where((element) => element.uploaded == false).sorted((a, b) => a.id!.compareTo(b.id!));
-    return r.values.where((element) => element.uploaded == false).sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp())).toList();
+    return r.values
+        .where((element) => element.uploaded == false)
+        .sorted(
+            (a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
+        .toList();
   }
 
   //@Query("select * from AnswerHolder where uploaded = 1 order by id DESC") //completedAt
   Future<List<AnswerHolder>?> fetchAnswerHoldersUploaded() async {
     var r = await getAnswerHolderDb();
     //return r.values.where((element) => element.uploaded == true).sorted((a, b) => a.id!.compareTo(b.id!));
-    return r.values.where((element) => element.uploaded == true).sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp())).toList();
+    return r.values
+        .where((element) => element.uploaded == true)
+        .sorted(
+            (a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
+        .toList();
   }
 
   //@Query("select * from AnswerHolder where formId = :formId and uploaded = 0 limit 1")
   Future<AnswerHolder?> fetchAnswerHolderOne(int formId, int completed) async {
     var r = await getAnswerHolderDb();
     for (var item in r.values) {
-      if (item.formId == formId && (item.uploaded == false) && (((item.completed ?? false) ? 1 : 0) == completed || completed == HOLDER_ANY_COMPLETED)) {
+      if (item.formId == formId &&
+          (item.uploaded == false) &&
+          (((item.completed ?? false) ? 1 : 0) == completed ||
+              completed == HOLDER_ANY_COMPLETED)) {
         print("answerHolder found $formId, ${item.toJson().toString()}");
         return item;
       } else {
@@ -57,15 +73,22 @@ class AnswerHolderDao extends AnswersDao {
   Future<AnswerHolder?> fetchAnswerHolderAny(int formId, int completed) async {
     //completed == 0 false, 1 true, 2 any
     var r = await getAnswerHolderDb();
-    if (completed == HOLDER_ANY_COMPLETED) return r.values.firstWhereOrNull((element) => (element.formId == formId));
-    return r.values.firstWhereOrNull((element) => (element.formId == formId) && (element.completed == (completed == HOLDER_NOT_COMPLETED ? false : true)));
+    if (completed == HOLDER_ANY_COMPLETED)
+      return r.values.firstWhereOrNull((element) => (element.formId == formId));
+    return r.values.firstWhereOrNull((element) =>
+        (element.formId == formId) &&
+        (element.completed ==
+            (completed == HOLDER_NOT_COMPLETED ? false : true)));
   }
 
   //@Query("select * from AnswerHolder order by id DESC") //createdAt, completedAt
   Future<List<AnswerHolder>?> fetchAllAnswerHolder() async {
     var r = await getAnswerHolderDb();
     //return r.values.sorted((a, b) => a.id!.compareTo(b.id!));
-    return r.values.sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp())).toList();
+    return r.values
+        .sorted(
+            (a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
+        .toList();
   }
 
   //@Query("select * from AnswerHolder where state = :state order by id DESC") //createdAt, completedAt
@@ -77,7 +100,8 @@ class AnswerHolderDao extends AnswersDao {
           //log('reclamation is elemnt ${element.state}, $state, ${element.state == state}');
           return element.state == state;
         })
-        .sorted((a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
+        .sorted(
+            (a, b) => b.createdAtTimeStamp().compareTo(a.createdAtTimeStamp()))
         .toList();
   }
 
@@ -104,7 +128,7 @@ class AnswerHolderDao extends AnswersDao {
   }
 
   //@Query("update AnswerHolder set completedAt = :t where id = :id")
-  Future<AnswerHolder?> setCompletedTime(String t, int id) async {
+  Future<AnswerHolder?> setCompletedTime(Jiffy t, int id) async {
     var r = await getAnswerHolderDb();
     AnswerHolder? x = r.values.firstWhereOrNull((element) => element.id == id);
     if (x != null) {
@@ -122,7 +146,8 @@ class AnswerHolderDao extends AnswersDao {
   //@Query("delete from AnswerHolder where closed = 0 and formId = :formId")
   Future<void> deleteUnclosedAnswerHolder(int formId) async {
     var r = await getAnswerHolderDb();
-    AnswerHolder? x = r.values.firstWhereOrNull((element) => element.formId == formId && element.closed == false);
+    AnswerHolder? x = r.values.firstWhereOrNull(
+        (element) => element.formId == formId && element.closed == false);
     if (x != null) {
       await x.delete();
     }
@@ -131,7 +156,8 @@ class AnswerHolderDao extends AnswersDao {
   //@Query("delete from AnswerHolder where closed = 0 and id = :id")
   Future<void> deleteAnswerHolder(int id) async {
     var r = await getAnswerHolderDb();
-    AnswerHolder? x = r.values.firstWhereOrNull((element) => element.id == id && element.closed == false);
+    AnswerHolder? x = r.values.firstWhereOrNull(
+        (element) => element.id == id && element.closed == false);
     if (x != null) {
       await x.delete();
     }
@@ -169,17 +195,24 @@ class AnswerHolderDao extends AnswersDao {
           ah.formFields = await loadForm(ah.formId!);
           ah.decisionResponse = await fetchDecisionResponse(ah.id!);
           ah.answers = [];
-          List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, null);
+          List<Answer>? answers =
+              await fetchAnswersOfAnswerHolder(ah.id!, null);
           if (answers != null) {
-            print("transact answers not uploaded size " + answers.length.toString());
+            print("transact answers not uploaded size " +
+                answers.length.toString());
             if (answers.length > 0) {
               for (var answer in answers) {
-                print("transact answers not uploaded are " + answers.length.toString() + ", " + answer.toString());
+                print("transact answers not uploaded are " +
+                    answers.length.toString() +
+                    ", " +
+                    answer.toString());
                 answer.multiSelectAnswer = [];
                 answer.question = await fetchQuestionOne(answer.qustionId!);
-                List<MultiSelectAnswer>? ms = await fetchMultiSelectAnswers(answer.id!);
+                List<MultiSelectAnswer>? ms =
+                    await fetchMultiSelectAnswers(answer.id!);
                 if (ms != null) {
-                  print("transact answers not uploaded multi select " + ms.toString());
+                  print("transact answers not uploaded multi select " +
+                      ms.toString());
                   answer.multiSelectAnswer!.addAll(List.from(ms));
                   ah.answers!.add(answer);
                 }
@@ -200,9 +233,10 @@ class AnswerHolderDao extends AnswersDao {
     }
   }
 
-  Future<void> closeAnswerHolderAndSetCompletedTime(AnswerHolder answerHolder) async {
+  Future<void> closeAnswerHolderAndSetCompletedTime(
+      AnswerHolder answerHolder) async {
     if (answerHolder.id != null) {
-      await setCompletedTime(DateTime.now().toString(), answerHolder.id!);
+      await setCompletedTime(Jiffy.now(), answerHolder.id!);
       await closeAnswerHolder(answerHolder.id!);
     }
   }
@@ -219,7 +253,8 @@ class AnswerHolderDao extends AnswersDao {
     }
   }
 
-  Future<List<AnswerHolder>?> fetchAnswerHoldersNotUploadedWithChildren() async {
+  Future<List<AnswerHolder>?>
+      fetchAnswerHoldersNotUploadedWithChildren() async {
     List<AnswerHolder>? ahs = await fetchAnswerHoldersNotUploaded();
     List<AnswerHolder> ahsTmp = [];
     if (ahs != null) {
@@ -228,17 +263,24 @@ class AnswerHolderDao extends AnswersDao {
           ah.formFields = await loadForm(ah.formId!);
           ah.decisionResponse = await fetchDecisionResponse(ah.id!);
           ah.answers = [];
-          List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, null);
+          List<Answer>? answers =
+              await fetchAnswersOfAnswerHolder(ah.id!, null);
           if (answers != null) {
-            print("transact answers not uploaded size " + answers.length.toString());
+            print("transact answers not uploaded size " +
+                answers.length.toString());
             if (answers.length > 0) {
               for (var answer in answers) {
-                print("transact answers not uploaded are " + answers.length.toString() + ", " + answer.toString());
+                print("transact answers not uploaded are " +
+                    answers.length.toString() +
+                    ", " +
+                    answer.toString());
                 answer.question = await fetchQuestionOne(answer.qustionId!);
                 answer.multiSelectAnswer = [];
-                List<MultiSelectAnswer>? ms = await fetchMultiSelectAnswers(answer.id!);
+                List<MultiSelectAnswer>? ms =
+                    await fetchMultiSelectAnswers(answer.id!);
                 if (ms != null) {
-                  print("transact answers not uploaded multi select " + ms.toString());
+                  print("transact answers not uploaded multi select " +
+                      ms.toString());
                   answer.multiSelectAnswer!.addAll(List.from(ms));
                   ah.answers!.add(answer);
                 }
@@ -253,20 +295,24 @@ class AnswerHolderDao extends AnswersDao {
     return List.from(ahsTmp);
   }
 
-  Future<AnswerHolder?> fetchAnswerHolderNotClosedWithChildren(int formId, int completed, int? fieldSetId) async {
-    AnswerHolder? ah = await fetchAnswerHolderOne(formId, completed); //fetchAnswerHolderNotClosed
+  Future<AnswerHolder?> fetchAnswerHolderNotClosedWithChildren(
+      int formId, int completed, int? fieldSetId) async {
+    AnswerHolder? ah = await fetchAnswerHolderOne(
+        formId, completed); //fetchAnswerHolderNotClosed
 
     if (ah != null) {
       ah.formFields = await loadFormFieldSets(formId, completed);
       ah.decisionResponse = await fetchDecisionResponse(ah.id!);
-      List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
+      List<Answer>? answers =
+          await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
       if (answers != null) {
         if (answers.length > 0) {
           ah.answers = [];
           for (var answer in answers) {
             answer.question = await fetchQuestionOne(answer.qustionId!);
             answer.multiSelectAnswer = [];
-            List<MultiSelectAnswer>? mA = await fetchMultiSelectAnswers(answer.id!);
+            List<MultiSelectAnswer>? mA =
+                await fetchMultiSelectAnswers(answer.id!);
             if (mA != null) answer.multiSelectAnswer!.addAll(List.from(mA));
             ah.answers!.add(answer);
           }
@@ -296,11 +342,13 @@ class AnswerHolderDao extends AnswersDao {
     //print("formId and fieldsetId ara $ah");
     if (ah != null) {
       //print("formId and fieldsetId not null ara ${ah.id}");
-      if (withFormFields) ah.formFields = await loadFormFieldSets(formId, completed);
+      if (withFormFields)
+        ah.formFields = await loadFormFieldSets(formId, completed);
       //print("formId and fieldsetId form fiilds");
       ah.decisionResponse = await fetchDecisionResponse(ah.id!);
       //print("formId and fieldsetId desicision response");
-      List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
+      List<Answer>? answers =
+          await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
       //print("formId and fieldsetId answers");
       if (answers != null) {
         //print("formId and fieldsetId answers are not null ${answers.length}");
@@ -309,7 +357,8 @@ class AnswerHolderDao extends AnswersDao {
           for (Answer answer in answers) {
             answer.question = await fetchQuestionOne(answer.qustionId!);
             answer.multiSelectAnswer = [];
-            List<MultiSelectAnswer>? mA = await fetchMultiSelectAnswers(answer.id!);
+            List<MultiSelectAnswer>? mA =
+                await fetchMultiSelectAnswers(answer.id!);
             if (mA != null) {
               log("answers found == result ${mA.length}, ${answer.qustionId}");
               answer.multiSelectAnswer!.addAll(List.from(mA));
@@ -323,14 +372,17 @@ class AnswerHolderDao extends AnswersDao {
     return ah;
   }
 
-  Future<List<AnswerHolder>> fetchAnswerHolderWithChildrenAll(int uploadedState, int completed, int? fieldSetId) async {
+  Future<List<AnswerHolder>> fetchAnswerHolderWithChildrenAll(
+      int uploadedState, int completed, int? fieldSetId) async {
     List<AnswerHolder>? answerHolders;
     if (uploadedState == -1) answerHolders = await fetchAllAnswerHolder();
     if (uploadedState == -2) answerHolders = await fetchAnswerHoldersUploaded();
-    if (uploadedState == -3) answerHolders = await fetchAnswerHoldersNotUploaded();
+    if (uploadedState == -3)
+      answerHolders = await fetchAnswerHoldersNotUploaded();
 
     //log('reclamation of states uplodaed $uploadedState');
-    if (uploadedState > 0) answerHolders = await fetchAnswerHolderState(uploadedState);
+    if (uploadedState > 0)
+      answerHolders = await fetchAnswerHolderState(uploadedState);
 
     List<AnswerHolder> holders = [];
     if (answerHolders != null) {
@@ -338,14 +390,16 @@ class AnswerHolderDao extends AnswersDao {
         ah.formFields = await loadFormFieldSets(ah.formId!, completed);
         ah.decisionResponse = await fetchDecisionResponse(ah.id!);
         //print("decision response loading ${ah.decisionResponse}, ${ah.id}");
-        List<Answer>? answers = await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
+        List<Answer>? answers =
+            await fetchAnswersOfAnswerHolder(ah.id!, fieldSetId);
         if (answers != null) {
           if (answers.length > 0) {
             ah.answers = [];
             for (var answer in answers) {
               answer.multiSelectAnswer = [];
               answer.question = await fetchQuestionOne(answer.qustionId!);
-              List<MultiSelectAnswer>? mA = await fetchMultiSelectAnswers(answer.id!);
+              List<MultiSelectAnswer>? mA =
+                  await fetchMultiSelectAnswers(answer.id!);
               if (mA != null) answer.multiSelectAnswer!.addAll(List.from(mA));
               ah.answers!.add(answer);
             }
@@ -361,7 +415,8 @@ class AnswerHolderDao extends AnswersDao {
   Future<int> insertAnswerHolder(AnswerHolder answer) async {
     answer.id = DateTime.now().millisecondsSinceEpoch;
     var r = await getAnswerHolderDb();
-    if (r.values.firstWhereOrNull((element) => element.id == answer.id) != null) return -1;
+    if (r.values.firstWhereOrNull((element) => element.id == answer.id) != null)
+      return -1;
     await r.add(answer);
     return answer.id!;
     /*AnswerHolder? a = r.getAt(index)!;
@@ -372,7 +427,8 @@ class AnswerHolderDao extends AnswersDao {
 
   Future<int> insertAnswerHolderWithId(AnswerHolder answer) async {
     var r = await getAnswerHolderDb();
-    if (r.values.firstWhereOrNull((element) => element.id == answer.id) != null) return -1;
+    if (r.values.firstWhereOrNull((element) => element.id == answer.id) != null)
+      return -1;
     await r.add(answer);
     return answer.id!;
   }

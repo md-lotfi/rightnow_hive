@@ -17,11 +17,12 @@ class _LanguageWidgetState extends State<LanguageWidget> {
     return InkWell(
       onTap: () async {
         if (context.locale.languageCode == LANGUAGE_FR) {
-          context.setLocale(Locale(LANGUAGE_AR, LANGUAGE_AR_CODE));
-          await Jiffy.setLocale(LANGUAGE_AR);
+          await setLocale(context, LANGUAGE_AR);
+          //context.setLocale(Locale(LANGUAGE_AR, LANGUAGE_AR_CODE));
+          //await setJiffyLocal(LANGUAGE_AR); //Jiffy.setLocale(LANGUAGE_AR);
         } else {
-          context.setLocale(Locale(LANGUAGE_FR));
-          await Jiffy.setLocale(LANGUAGE_FR);
+          await setLocale(context, LANGUAGE_FR);
+          //await setJiffyLocal(LANGUAGE_FR);
         }
         setState(() {});
       },

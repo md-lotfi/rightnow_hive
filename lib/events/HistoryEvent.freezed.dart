@@ -66,6 +66,9 @@ class _$HistoryEventCopyWithImpl<$Res, $Val extends HistoryEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of HistoryEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -82,6 +85,9 @@ class __$$LoadHistoryImplCopyWithImpl<$Res>
   __$$LoadHistoryImplCopyWithImpl(
       _$LoadHistoryImpl _value, $Res Function(_$LoadHistoryImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of HistoryEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

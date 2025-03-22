@@ -72,6 +72,9 @@ class _$ActualiteEventCopyWithImpl<$Res, $Val extends ActualiteEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of ActualiteEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -88,6 +91,9 @@ class __$$GetActualiteImplCopyWithImpl<$Res>
   __$$GetActualiteImplCopyWithImpl(
       _$GetActualiteImpl _value, $Res Function(_$GetActualiteImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of ActualiteEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -196,6 +202,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of ActualiteEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc

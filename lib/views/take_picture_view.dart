@@ -33,10 +33,12 @@ class TakePictureWidget extends StatefulWidget {
     required this.imageOnly,
   }) : super(key: key);
   @override
-  _TakePictureWidgetState createState() => _TakePictureWidgetState(this.question, this.onSelectedValue, this.answerHolder);
+  _TakePictureWidgetState createState() => _TakePictureWidgetState(
+      this.question, this.onSelectedValue, this.answerHolder);
 }
 
-class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKeepAliveClientMixin {
+class _TakePictureWidgetState extends State<TakePictureWidget>
+    with AutomaticKeepAliveClientMixin {
   final Question? question;
   final Function(Answer)? onSelectedValue;
   final AnswerHolder? answerHolder;
@@ -58,7 +60,8 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
               //fieldDataController.text = answer.answerValue;
               //if (answer.answerValue == null) break;
               setState(() {
-                if (answer.valueExtra != null) if (answer.valueExtra?.isNotEmpty ?? false) {
+                if (answer.valueExtra !=
+                    null) if (answer.valueExtra?.isNotEmpty ?? false) {
                   _currentAnswer = answer;
                   _fileKey = _currentAnswer?.fileKey;
                   imageState = 1;
@@ -80,7 +83,8 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   Uint8List? _image;
   final picker = ImagePicker();
 
-  _TakePictureWidgetState(this.question, this.onSelectedValue, this.answerHolder);
+  _TakePictureWidgetState(
+      this.question, this.onSelectedValue, this.answerHolder);
 
   String _getPictureFilename() {
     return "PICTURE_FILENAME_${widget.question?.id}_${Jiffy.now().microsecondsSinceEpoch}";
@@ -110,7 +114,16 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
       if (f != null) {
         _fileKey = f.key;
         onSelectedValue!(
-          Answer.fill(question!.id, question!.fieldSet, "", fPath, DateTime.now().toString(), transtypeResourceType(question!.resourcetype!), answerHolder?.id, null, fileKey: f.key),
+          Answer.fill(
+              question!.id,
+              question!.fieldSet,
+              "",
+              fPath,
+              Jiffy.now(),
+              transtypeResourceType(question!.resourcetype!),
+              answerHolder?.id,
+              null,
+              fileKey: f.key),
         );
       }
       setState(() {
@@ -124,13 +137,20 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
   Future getImage(FormFieldState<int> state) async {
     progress = 0;
     log("getting image ....");
-    final pickedFile = await picker.pickImage(source: ImageSource.camera, maxWidth: 1080, imageQuality: 75);
+    final pickedFile = await picker.pickImage(
+        source: ImageSource.camera, maxWidth: 1080, imageQuality: 75);
     if (pickedFile != null) {
       log("picked file is ....");
       _image = await pickedFile.readAsBytes();
       if (_image != null) {
         String n = _getPictureFilename();
-        await FileSaver.set(FileSaver(name: n, path: "", extension: "jpeg", file: _image!, questionId: question!.id!, answerHolderId: answerHolder!.id!));
+        await FileSaver.set(FileSaver(
+            name: n,
+            path: "",
+            extension: "jpeg",
+            file: _image!,
+            questionId: question!.id!,
+            answerHolderId: answerHolder!.id!));
         await _save(n, state);
         /*if (!kIsWeb) {
         _image = File(pickedFile.path);
@@ -168,18 +188,23 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          widgetQuestionTitle(widget.question, context.locale.languageCode, widget.responseSet),
+          widgetQuestionTitle(
+              widget.question, context.locale.languageCode, widget.responseSet),
           if (widget.imageOnly && widget.responseSet != null)
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: 10, top: 10),
               child: Image.network(
-                (widget.responseSet?.url ?? ""), //resoiurce humain, demande de fond
+                (widget.responseSet?.url ??
+                    ""), //resoiurce humain, demande de fond
                 width: 200,
                 height: 180,
               ),
             ),
-          if (!widget.imageOnly || (widget.imageOnly && widget.answerHolder != null && widget.responseSet == null))
+          if (!widget.imageOnly ||
+              (widget.imageOnly &&
+                  widget.answerHolder != null &&
+                  widget.responseSet == null))
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(bottom: 10, top: 10),
@@ -208,15 +233,28 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
                       SizedBox(
                         width: double.infinity,
                         child: TextButton.icon(
-                          icon: showWidget(Icon(Icons.add_a_photo), imageState == -1 ? Icon(Icons.error_outline, color: Colors.red) : Icon(Icons.check, color: Colors.green), imageState == 0),
-                          label: Text(_image != null ? (imageState != -1 ? "Prendre une nouvelle Photo".tr() : "Error uploading picture".tr()) : "Prendre une Photo".tr()),
+                          icon: showWidget(
+                              Icon(Icons.add_a_photo),
+                              imageState == -1
+                                  ? Icon(Icons.error_outline, color: Colors.red)
+                                  : Icon(Icons.check, color: Colors.green),
+                              imageState == 0),
+                          label: Text(_image != null
+                              ? (imageState != -1
+                                  ? "Prendre une nouvelle Photo".tr()
+                                  : "Error uploading picture".tr())
+                              : "Prendre une Photo".tr()),
                           onPressed: () {
                             getImage(state);
                           },
                         ),
                       ),
-                    if (imageState != 0 && imageState != 1 && imageState != -1) _setProgressBar(),
-                    state.errorText == null ? Text("") : Text(state.errorText ?? "", style: TextStyle(color: Colors.red)),
+                    if (imageState != 0 && imageState != 1 && imageState != -1)
+                      _setProgressBar(),
+                    state.errorText == null
+                        ? Text("")
+                        : Text(state.errorText ?? "",
+                            style: TextStyle(color: Colors.red)),
                   ],
                 );
               },
@@ -226,16 +264,26 @@ class _TakePictureWidgetState extends State<TakePictureWidget> with AutomaticKee
                     if (value == -1)
                       return FORM_SELECT_PICTURE_NOT_UPLOADED;
                     else if (value == 3)
-                      return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
-                    else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                      return FORM_SELECT_FILE_GRETAER +
+                          (widget.question?.maxSizeKb ?? 0).toString() +
+                          " Kb";
+                    else if (value == 4)
+                      return FORM_SELECT_FILE_LESS +
+                          (widget.question?.minSizeKb ?? 0).toString() +
+                          " Kb";
                     return FORM_SELECT_PICTURE;
                   }
                 } else {
                   if (value == -1)
                     return FORM_SELECT_PICTURE_NOT_UPLOADED;
                   else if (value == 3)
-                    return FORM_SELECT_FILE_GRETAER + (widget.question?.maxSizeKb ?? 0).toString() + " Kb";
-                  else if (value == 4) return FORM_SELECT_FILE_LESS + (widget.question?.minSizeKb ?? 0).toString() + " Kb";
+                    return FORM_SELECT_FILE_GRETAER +
+                        (widget.question?.maxSizeKb ?? 0).toString() +
+                        " Kb";
+                  else if (value == 4)
+                    return FORM_SELECT_FILE_LESS +
+                        (widget.question?.minSizeKb ?? 0).toString() +
+                        " Kb";
                 }
                 return null;
               },

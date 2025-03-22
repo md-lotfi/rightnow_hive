@@ -72,7 +72,7 @@
   "Missing Fields": "الحقول ناقصة",
   "You have some missing fields, please complete before validating.": "لديك بعض الحقول المفقودة ، يرجى إكمالها قبل التحقق من الصحة.",
   "OK": "نعم",
-  "Erreur de données de champs": "خطأ في بيانات الحقل",
+  "Erreur de données de champs": "خطأ !",
   "Vous avez quelques champs contenant des erreurs, veuillez vérifier vos données avant de valider": "لديك بعض الحقول التي تحتوي على أخطاء ، يرجى التحقق من بياناتك قبل التحقق من صحتها",
   "Quitter le formulaire?": "ترك النموذج؟",
   "Voulez-vous quitter le formulaire? Vous risquez de perdre les données.": "هل تريد الخروج من النموذج؟ أنت تخاطر بفقدان البيانات.",
@@ -220,8 +220,8 @@
   "et ": "و",
   "la politique de confidentialité ": "سياسة الخصوصية",
   "de FahS ": "عن طريق فحص",
-  "Authentification en cours ...":"المصادقة قيد التقدم",
-  "N° réclamation":"رقم طلب",
-  "Chat":"محادثة",
-  "Voulez-vous supprimer cette réponse ?":"هل ترغب في حذف هذه اﻹجابة؟"
+  "Authentification en cours ...": "المصادقة قيد التقدم",
+  "N° réclamation": "رقم طلب",
+  "Chat": "محادثة",
+  "Voulez-vous supprimer cette réponse ?": "هل ترغب في حذف هذه اﻹجابة؟"
 }

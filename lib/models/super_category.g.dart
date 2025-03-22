@@ -22,7 +22,7 @@ class SuperCategoryAdapter extends TypeAdapter<SuperCategory> {
       fields[3] as String?,
       fields[2] as String?,
       fields[1] as String?,
-      fields[6] as String?,
+      fields[6] as Jiffy?,
     );
   }
 
@@ -61,12 +61,12 @@ class SuperCategoryAdapter extends TypeAdapter<SuperCategory> {
 
 SuperCategory _$SuperCategoryFromJson(Map<String, dynamic> json) =>
     SuperCategory(
-      json['id'] as int?,
+      (json['id'] as num?)?.toInt(),
       json['name'] as String?,
       json['name_ar'] as String?,
       json['name_fr'] as String?,
       json['icon'] as String?,
-      json['created_at'] as String?,
+      const JiffySecondsConverter().fromJson(json['created_at'] as String?),
     );
 
 Map<String, dynamic> _$SuperCategoryToJson(SuperCategory instance) =>
@@ -76,5 +76,5 @@ Map<String, dynamic> _$SuperCategoryToJson(SuperCategory instance) =>
       'name_fr': instance.nameFr,
       'name_ar': instance.nameAr,
       'name': instance.name,
-      'created_at': instance.createdAt,
+      'created_at': const JiffySecondsConverter().toJson(instance.createdAt),
     };

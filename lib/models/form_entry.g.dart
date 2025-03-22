@@ -20,8 +20,8 @@ class FormEntryAdapter extends TypeAdapter<FormEntry> {
       id: fields[0] as int?,
       form: fields[1] as int?,
       user: fields[2] as int?,
-      uploadedAt: fields[3] as String?,
-      completedAt: fields[4] as String?,
+      uploadedAt: fields[3] as Jiffy?,
+      completedAt: fields[4] as Jiffy?,
       deviceId: fields[5] as String?,
     );
   }
@@ -60,11 +60,13 @@ class FormEntryAdapter extends TypeAdapter<FormEntry> {
 // **************************************************************************
 
 FormEntry _$FormEntryFromJson(Map<String, dynamic> json) => FormEntry(
-      id: json['id'] as int?,
-      form: json['form'] as int?,
-      user: json['user'] as int?,
-      uploadedAt: json['uploaded_at'] as String?,
-      completedAt: json['completed_at'] as String?,
+      id: (json['id'] as num?)?.toInt(),
+      form: (json['form'] as num?)?.toInt(),
+      user: (json['user'] as num?)?.toInt(),
+      uploadedAt: const JiffySecondsConverter()
+          .fromJson(json['uploaded_at'] as String?),
+      completedAt: const JiffySecondsConverter()
+          .fromJson(json['completed_at'] as String?),
       deviceId: json['device_id'] as String?,
     );
 
@@ -72,7 +74,8 @@ Map<String, dynamic> _$FormEntryToJson(FormEntry instance) => <String, dynamic>{
       'id': instance.id,
       'form': instance.form,
       'user': instance.user,
-      'uploaded_at': instance.uploadedAt,
-      'completed_at': instance.completedAt,
+      'uploaded_at': const JiffySecondsConverter().toJson(instance.uploadedAt),
+      'completed_at':
+          const JiffySecondsConverter().toJson(instance.completedAt),
       'device_id': instance.deviceId,
     };

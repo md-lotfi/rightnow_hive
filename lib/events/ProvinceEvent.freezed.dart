@@ -84,6 +84,9 @@ class _$ProvinceEventCopyWithImpl<$Res, $Val extends ProvinceEvent>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -100,6 +103,9 @@ class __$$ServerLoadProvincesImplCopyWithImpl<$Res>
   __$$ServerLoadProvincesImplCopyWithImpl(_$ServerLoadProvincesImpl _value,
       $Res Function(_$ServerLoadProvincesImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -224,6 +230,9 @@ class __$$LoadProvincesImplCopyWithImpl<$Res>
   __$$LoadProvincesImplCopyWithImpl(
       _$LoadProvincesImpl _value, $Res Function(_$LoadProvincesImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -349,6 +358,8 @@ class __$$LoadTownsImplCopyWithImpl<$Res>
       _$LoadTownsImpl _value, $Res Function(_$LoadTownsImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -396,7 +407,9 @@ class _$LoadTownsImpl with DiagnosticableTreeMixin implements LoadTowns {
   @override
   int get hashCode => Object.hash(runtimeType, provinceId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LoadTownsImplCopyWith<_$LoadTownsImpl> get copyWith =>
@@ -481,7 +494,10 @@ abstract class LoadTowns implements ProvinceEvent {
   const factory LoadTowns(final String provinceId) = _$LoadTownsImpl;
 
   String get provinceId;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LoadTownsImplCopyWith<_$LoadTownsImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -500,6 +516,9 @@ class __$$DistractImplCopyWithImpl<$Res>
   __$$DistractImplCopyWithImpl(
       _$DistractImpl _value, $Res Function(_$DistractImpl) _then)
       : super(_value, _then);
+
+  /// Create a copy of ProvinceEvent
+  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
